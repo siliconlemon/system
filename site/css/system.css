@@ -312,7 +312,8 @@ body::after {
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.065em;
-  margin-left: -0.055em;
+  /* the S's ink starts 0.0156 em right of its origin (Inter Tight 600), so pull it back onto the line */
+  margin-left: -0.0156em;
   text-box: trim-both cap alphabetic;
   white-space: nowrap;
 }
@@ -338,7 +339,7 @@ body::after {
 .cover-bottom { align-items: baseline; }
 .cover-bottom > * { grid-column: span 3; }
 .cover-bottom > .wide { grid-column: span 6; }
-.cover-bottom p { font-size: 20px; line-height: 32px; }
+.cover-bottom p { font-size: 20px; line-height: 32px; padding-left: var(--inset); }
 @media (max-width: 720px) {
   .cover-bottom > *, .cover-bottom > .wide { grid-column: span 2; }
   .cover-bottom > .wide { grid-column: 1 / -1; margin-bottom: calc(var(--u) * 3); }
