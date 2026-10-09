@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en" data-logo="with" data-icons="with" data-imagery="with">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System — Brand Manual</title>
+<meta name="description" content="A Swiss-minimal, blueprint-style template for brand manuals, landing pages and design systems.">
+<meta name="theme-color" content="#f4f4f1">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/system.css">
+<script>
+  /* Flags first, so the page never paints the wrong variant. */
+  try {
+    var s = JSON.parse(localStorage.getItem("system:flags") || "{}");
+    for (var k in s) document.documentElement.setAttribute("data-" + k, s[k]);
+    var t = localStorage.getItem("system:theme") || "light";
+    if (t !== "auto") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+</script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- The brand mark placeholder: a circle and a square, touching. -->
+    <symbol id="mark" viewBox="0 0 240 120">
+      <circle cx="60" cy="60" r="60" fill="currentColor"/>
+      <rect x="120" y="0" width="120" height="120" fill="currentColor"/>
+    </symbol>
+    <filter id="goo" x="-10%" y="-50%" width="120%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+      <feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="bar top">
+  <div class="wrap grid">
+    <a class="bar-name label ink" href="#cover">System<span style="color:var(--accent)">.</span></a>
+    <span class="bar-here label" data-here>Cover</span>
+    <span class="bar-ed label">Edition 1.0 · 2026-10</span>
+    <div class="bar-theme goo" data-goo="theme" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light">Paper</button>
+      <button type="button" role="radio" data-theme-set="dark">Ink</button>
+      <button type="button" role="radio" data-theme-set="auto">Auto</button>
+    </div>
+  </div>
+</header>
+
+<div class="rules" aria-hidden="true">
+  <div class="wrap"><div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+</div>
+
+<main>
+
+<!-- ============ 00 Cover ============ -->
+<section class="cover wrap" id="cover" data-nav="Cover">
+  <div class="cover-word-wrap">
+    <div class="cover-guides">
+      <h1 class="cover-word">System<span class="ac">.</span></h1>
+    </div>
+    <div class="cover-dim">
+      <span class="label">Cap height to baseline</span>
+      <span class="label">Inter Tight 600 · −6.5% tracking</span>
+      <span class="label">Brand &amp; product manual</span>
+    </div>
+  </div>
+
+  <div class="grid cover-bottom">
+    <p class="wide">A blueprint for brands that start from type and grid, and add a logo, icons and pictures when they have them.</p>
+    <span class="label">Web · Apps · Type · Marketing</span>
+    <span class="label" style="text-align:right">Sheets 00–16</span>
+  </div>
+</section>
+
+<!-- ============ 01 Contents + flags ============ -->
+<section class="sheet wrap" id="contents" data-nav="Index">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>01</b> / 16</span>
+    <h2 class="sheet-title">Contents</h2>
+    <span class="sheet-tag label">Index</span>
+    <p class="sheet-lede">Every sheet is optional. Switch off what the client doesn’t bring, and the manual falls back to type and grid instead of leaving a hole.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <nav class="c-6 toc" aria-label="Contents">
+      <a href="#landing"><span class="label">02</span><span class="t">Landing page</span><span class="label">Web</span></a>
+      <a href="#logo"><span class="label">03</span><span class="t">Logo</span><span class="label">Identity</span></a>
+      <a href="#colour"><span class="label">04</span><span class="t">Colour</span><span class="label">Identity</span></a>
+      <a href="#type"><span class="label">05</span><span class="t">Typography</span><span class="label">Identity</span></a>
+      <a href="#grid"><span class="label">06</span><span class="t">Grid &amp; spacing</span><span class="label">Layout</span></a>
+      <a href="#icons"><span class="label">07</span><span class="t">Icons &amp; shapes</span><span class="label">Identity</span></a>
+      <a href="#imagery"><span class="label">08</span><span class="t">Imagery</span><span class="label">Identity</span></a>
+      <a href="#ui"><span class="label">09</span><span class="t">Components</span><span class="label">Product</span></a>
+    </nav>
+    <nav class="c-6 toc" aria-label="Contents, continued">
+      <a href="#app"><span class="label">10</span><span class="t">App screens</span><span class="label">Product</span></a>
+      <a href="#motion"><span class="label">11</span><span class="t">Motion</span><span class="label">Product</span></a>
+      <a href="#voice"><span class="label">12</span><span class="t">Voice &amp; tone</span><span class="label">Writing</span></a>
+      <a href="#marketing"><span class="label">13</span><span class="t">Marketing</span><span class="label">Media</span></a>
+      <a href="#print"><span class="label">14</span><span class="t">Print &amp; stationery</span><span class="label">Media</span></a>
+      <a href="#downloads"><span class="label">15</span><span class="t">Downloads</span><span class="label">Files</span></a>
+      <a href="#utility"><span class="label">16</span><span class="t">Utility pages</span><span class="label">Web</span></a>
+      <a href="#cover"><span class="label">00</span><span class="t">Back to the cover</span><span class="label">↑</span></a>
+    </nav>
+
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">With / without</span><span class="label">Set at setup</span></div>
+      <div class="flags">
+        <div class="flag"><span>Logo</span><button class="switch" role="switch" aria-checked="true" data-flag="logo"><span>With</span><span>Without</span></button></div>
+        <div class="flag"><span>Icon set</span><button class="switch" role="switch" aria-checked="true" data-flag="icons"><span>With</span><span>Without</span></button></div>
+        <div class="flag"><span>Imagery</span><button class="switch" role="switch" aria-checked="true" data-flag="imagery"><span>With</span><span>Without</span></button></div>
+      </div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Fallbacks</span><span class="label">Never an empty slot</span></div>
+      <p class="muted">Each switch flips its sheets between the client’s assets and the template’s own fallback: a typographic wordmark for the logo, mono glyph cells for the icons, and drafting frames for the pictures.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 Landing ============ -->
+<section class="sheet wrap" id="landing" data-nav="Web">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>02</b> / 16</span>
+    <h2 class="sheet-title">Landing page</h2>
+    <span class="sheet-tag label">Web</span>
+    <p class="sheet-lede">One column of argument: a headline that says what it is, one action, then three reasons. The grid lines keep running behind it.</p>
+  </div>
+
+  <div class="browser">
+    <div class="browser-bar"><i></i><i></i><i></i><span class="label">system.example</span></div>
+    <div class="landing">
+      <div class="landing-nav">
+        <span class="wordmark" style="font-size:24px">System<span style="color:var(--accent)">.</span></span>
+        <ul class="label ink"><li>Product</li><li>Pricing</li><li>Docs</li></ul>
+        <a class="btn sm" href="#ui">Sign in</a>
+      </div>
+      <div class="grid landing-hero">
+        <div class="c-8">
+          <h3>Build the brand once, use it everywhere</h3>
+          <p>Type, grid and colour set up as one system, so the website, the app and the posters come out looking related.</p>
+          <div class="landing-cta">
+            <a class="btn accent" href="#downloads">Get the files</a>
+            <a class="btn" href="#logo">Read the manual</a>
+          </div>
+        </div>
+        <div class="c-4" style="align-self:end">
+          <div class="frame" style="--ar: 4 / 5"><span class="label">4:5 · 960 × 1200</span></div>
+        </div>
+      </div>
+      <div class="grid landing-feat">
+        <div class="c-4">
+          <svg viewBox="0 0 40 40"><circle class="sk" cx="20" cy="20" r="19"/><path class="sk-2" d="M1 20h38M20 1v38"/><circle class="dot-a" cx="20" cy="20" r="3"/></svg>
+          <h4>One source</h4>
+          <p>Tokens live in one file. Change the accent there and every sheet updates.</p>
+        </div>
+        <div class="c-4">
+          <svg viewBox="0 0 40 40"><rect class="sk" x="1" y="1" width="38" height="38"/><path class="sk-2" d="M1 39 39 1M14 1v38M27 1v38"/></svg>
+          <h4>Works without assets</h4>
+          <p>No logo or icon set yet? Type and grid carry the identity until they arrive.</p>
+        </div>
+        <div class="c-4">
+          <svg viewBox="0 0 40 40"><path class="sk" d="M1 39h38M1 39V1"/><path class="sk-a" d="M1 39C14 39 16 4 39 1"/><circle class="dot" cx="39" cy="1" r="2"/></svg>
+          <h4>Ships as files</h4>
+          <p>Logos, tokens and print PDFs come out of one script, ready to send.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 Logo ============ -->
+<section class="sheet wrap" id="logo" data-nav="Brand">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>03</b> / 16</span>
+    <h2 class="sheet-title">Logo</h2>
+    <span class="sheet-tag label" data-when="logo">With logo</span>
+    <span class="sheet-tag label" data-when="no-logo">Without logo</span>
+    <p class="sheet-lede" data-when="logo">The mark is a circle and a square of equal height. Clear space equals the circle’s radius on every side.</p>
+    <p class="sheet-lede" data-when="no-logo">With no logo, the name set in the house face is the logo. These rules fix its weight, tracking and the full stop.</p>
+  </div>
+
+  <div class="grid row-gap" data-when="logo">
+    <figure class="c-6">
+      <div class="block-head"><span class="label ink">Construction</span><span class="label">r = 1 unit</span></div>
+      <div class="logo-stage">
+        <svg viewBox="-60 -60 360 240">
+          <path class="sk-2" d="M-60 0h360M-60 120h360M0 -60v240M120 -60v240M240 -60v240M-60 60h360"/>
+          <use href="#mark" width="240" height="120" style="color:var(--ink)"/>
+          <circle class="sk-a" cx="60" cy="60" r="60"/>
+          <rect class="sk-a" x="120" y="0" width="120" height="120"/>
+          <path class="sk-a" d="M60 60 102.4 17.6"/>
+          <text class="svg-text" x="-56" y="-46">0,0</text>
+          <text class="svg-text" x="246" y="134">240,120</text>
+        </svg>
+      </div>
+    </figure>
+    <figure class="c-6">
+      <div class="block-head"><span class="label ink">Clear space</span><span class="label">x = 60</span></div>
+      <div class="logo-stage">
+        <svg viewBox="-80 -80 400 280">
+          <rect class="sk-d" x="-60" y="-60" width="360" height="240"/>
+          <use href="#mark" width="240" height="120" style="color:var(--ink)"/>
+          <path class="sk-a" d="M-60 140h60M-60 136v8M0 136v8"/>
+          <text class="svg-text" x="-42" y="160">x</text>
+          <path class="sk-a" d="M310 -60v60M306 -60h8M306 0h8"/>
+          <text class="svg-text" x="318" y="-26">x</text>
+        </svg>
+      </div>
+    </figure>
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Lockups &amp; backgrounds</span><span class="label">Min. 24 px mark height</span></div>
+      <div class="grid row-gap">
+        <div class="c-4"><div class="logo-stage" style="background:#f4f4f1;border-color:#dcdcd7"><svg viewBox="0 0 740 120"><use href="#mark" width="240" height="120" style="color:#111"/><text x="272" y="120" style="font:600 166px var(--sans);letter-spacing:-11px;fill:#111">System</text></svg></div><p class="label" style="margin-top:12px">Horizontal · paper</p></div>
+        <div class="c-4"><div class="logo-stage" style="background:#111;border-color:#111"><svg viewBox="0 0 740 120"><use href="#mark" width="240" height="120" style="color:#f4f4f1"/><text x="272" y="120" style="font:600 166px var(--sans);letter-spacing:-11px;fill:#f4f4f1">System</text></svg></div><p class="label" style="margin-top:12px">Horizontal · ink</p></div>
+        <div class="c-4"><div class="logo-stage accent"><svg viewBox="0 0 240 120"><use href="#mark" width="240" height="120" style="color:#fff"/></svg></div><p class="label" style="margin-top:12px">Mark only · accent</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid row-gap" data-when="no-logo">
+    <figure class="c-8">
+      <div class="block-head"><span class="label ink">Wordmark</span><span class="label">Inter Tight 600</span></div>
+      <div class="logo-stage" style="aspect-ratio: 2 / 1">
+        <svg viewBox="0 0 640 220">
+          <path class="sk-2" d="M0 58h640M0 160h640"/>
+          <text x="40" y="160" style="font:600 140px var(--sans);letter-spacing:-9px;fill:var(--ink)">System<tspan style="fill:var(--accent)">.</tspan></text>
+          <text class="svg-text" x="40" y="48">Cap height</text>
+          <text class="svg-text" x="40" y="182">Baseline</text>
+        </svg>
+      </div>
+    </figure>
+    <div class="c-4 stack">
+      <div class="block-head" style="margin-bottom:0"><span class="label ink">Rules</span><span class="label">3</span></div>
+      <div class="card" style="border-top:0;padding-top:0"><h4>Weight 600, tracking −6.5%</h4><p>Set the name tighter than body text so it reads as one shape.</p></div>
+      <div class="card"><h4>The full stop is the mark</h4><p>It is the only part that takes the accent. Never colour the letters.</p></div>
+      <div class="card"><h4>Sentence case only</h4><p>No all caps, no outlines, no second line.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 Colour ============ -->
+<section class="sheet wrap" id="colour">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>04</b> / 16</span>
+    <h2 class="sheet-title">Colour</h2>
+    <span class="sheet-tag label">Tokens</span>
+    <p class="sheet-lede">Paper, ink and three grays do the work. The accent is a drop: one key word, one active state, one full stop.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-12">
+      <div class="grid row-gap">
+        <div class="swatch c-2"><div class="swatch-chip" style="background:#f4f4f1"></div><h4>Paper</h4><dl><dt>Hex</dt><dd>#F4F4F1</dd><dt>RGB</dt><dd>244 244 241</dd><dt>CMYK</dt><dd>0 0 1 4</dd></dl></div>
+        <div class="swatch c-2"><div class="swatch-chip" style="background:#111111"></div><h4>Ink</h4><dl><dt>Hex</dt><dd>#111111</dd><dt>RGB</dt><dd>17 17 17</dd><dt>CMYK</dt><dd>0 0 0 93</dd></dl></div>
+        <div class="swatch c-2"><div class="swatch-chip" style="background:#5c5c5a"></div><h4>Gray 600</h4><dl><dt>Hex</dt><dd>#5C5C5A</dd><dt>RGB</dt><dd>92 92 90</dd><dt>CMYK</dt><dd>0 0 2 64</dd></dl></div>
+        <div class="swatch c-2"><div class="swatch-chip" style="background:#9a9a96"></div><h4>Gray 400</h4><dl><dt>Hex</dt><dd>#9A9A96</dd><dt>RGB</dt><dd>154 154 150</dd><dt>CMYK</dt><dd>0 0 3 40</dd></dl></div>
+        <div class="swatch c-2"><div class="swatch-chip" style="background:#e6e6e2"></div><h4>Gray 100</h4><dl><dt>Hex</dt><dd>#E6E6E2</dd><dt>RGB</dt><dd>230 230 226</dd><dt>CMYK</dt><dd>0 0 2 10</dd></dl></div>
+        <div class="swatch c-2"><div class="swatch-chip" style="background:var(--accent);border-color:var(--accent)"></div><h4>Accent</h4><dl><dt>Hex</dt><dd>#FF4A1C</dd><dt>RGB</dt><dd>255 74 28</dd><dt>CMYK</dt><dd>0 71 89 0</dd></dl></div>
+      </div>
+    </div>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Proportion</span><span class="label">Per layout, by area</span></div>
+      <div class="prop">
+        <i style="flex:60;background:#f4f4f1"></i><i style="flex:22;background:#111"></i><i style="flex:8;background:#9a9a96"></i><i style="flex:7;background:#e6e6e2"></i><i style="flex:3;background:var(--accent)"></i>
+      </div>
+      <div class="prop-legend label">
+        <span style="flex:60">Paper 60%</span><span style="flex:22">Ink 22%</span><span style="flex:8">8%</span><span style="flex:7">7%</span><span style="flex:3;text-align:right;white-space:nowrap">3%</span>
+      </div>
+    </div>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Contrast pairs</span><span class="label">WCAG 2.2</span></div>
+      <div class="grid pairs">
+        <div class="pair" style="background:#f4f4f1;color:#111"><span class="label" style="color:#5c5c5a">Ink on paper</span><b>17.4</b><span class="label" style="color:#111">AAA</span></div>
+        <div class="pair" style="background:#111;color:#f4f4f1;border-color:#111"><span class="label" style="color:#9a9a96">Paper on ink</span><b>17.4</b><span class="label" style="color:#f4f4f1">AAA</span></div>
+        <div class="pair" style="background:#f4f4f1;color:#5c5c5a"><span class="label">Gray 600 on paper</span><b>6.2</b><span class="label" style="color:#111">AA</span></div>
+        <div class="pair" style="background:var(--accent);color:#fff;border-color:var(--accent)"><span class="label" style="color:#fff">White on accent</span><b>3.3</b><span class="label" style="color:#fff">Large text only</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 Typography ============ -->
+<section class="sheet wrap" id="type" data-nav="Type">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>05</b> / 16</span>
+    <h2 class="sheet-title">Typography</h2>
+    <span class="sheet-tag label">2 families</span>
+    <p class="sheet-lede">One grotesk for everything you read, one mono for everything you measure. Sizes step on a 1.25 scale and snap to an 8 px baseline.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Inter Tight</span><span class="label">300 – 600</span></div>
+      <div class="specimen">Aa</div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">IBM Plex Mono</span><span class="label">400 – 500</span></div>
+      <div class="specimen" style="font-family:var(--mono);letter-spacing:-0.08em;font-weight:400">Aa</div>
+    </div>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Scale</span><span class="label">Size / line height</span></div>
+      <ul class="scale">
+        <li><span class="label">Display</span><span style="font-size:72px;line-height:72px;font-weight:500;letter-spacing:-0.035em">Start from type</span><span class="label">72 / 72</span></li>
+        <li><span class="label">H1</span><span style="font-size:48px;line-height:56px;font-weight:500;letter-spacing:-0.03em">Start from type and grid</span><span class="label">48 / 56</span></li>
+        <li><span class="label">H2</span><span style="font-size:32px;line-height:40px;font-weight:500;letter-spacing:-0.02em">Start from type and grid, then add the rest</span><span class="label">32 / 40</span></li>
+        <li><span class="label">Lede</span><span style="font-size:20px;line-height:32px">Start from type and grid, then add the logo, the icons and the pictures.</span><span class="label">20 / 32</span></li>
+        <li><span class="label">Body</span><span style="font-size:16px;line-height:24px">Start from type and grid, then add the logo, the icons and the pictures when the client has them.</span><span class="label">16 / 24</span></li>
+        <li><span class="label">Label</span><span class="label ink" style="font-size:12px">Start from type and grid</span><span class="label">12 / 16</span></li>
+      </ul>
+    </div>
+
+    <div class="c-8">
+      <div class="block-head"><span class="label ink">Type tester</span><span class="label" data-tester-out>56 px</span></div>
+      <textarea class="tester" spellcheck="false" aria-label="Type tester" data-tester>Hairlines, grids &amp; a drop of colour</textarea>
+      <div class="tester-ctrl">
+        <span class="label">Size</span>
+        <input type="range" min="24" max="120" step="8" value="56" data-tester-size aria-label="Size">
+        <span class="label">Weight</span>
+        <input type="range" min="300" max="600" step="100" value="500" data-tester-weight aria-label="Weight">
+      </div>
+    </div>
+    <div class="c-4">
+      <div class="block-head"><span class="label ink">Weights</span><span class="label">4</span></div>
+      <div class="weights" style="grid-template-columns:1fr 1fr">
+        <div style="font-weight:300">Light</div><div style="font-weight:400">Regular</div>
+        <div style="font-weight:500">Medium</div><div style="font-weight:600">Semibold</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 Grid ============ -->
+<section class="sheet wrap" id="grid">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>06</b> / 16</span>
+    <h2 class="sheet-title">Grid &amp; spacing</h2>
+    <span class="sheet-tag label">8 px unit</span>
+    <p class="sheet-lede">Twelve columns on desktop, four on phones. The ruler lines behind this page are the grid itself, so anything off it shows.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Columns</span><span class="label">12 × fluid · 24 gap · 48 margin</span></div>
+      <div class="colmap"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Spacing</span><span class="label">× 8 px</span></div>
+      <ul class="spacing">
+        <li><span class="label ink">S-1</span><i style="width:8px"></i><span class="label">8</span></li>
+        <li><span class="label ink">S-2</span><i style="width:16px"></i><span class="label">16</span></li>
+        <li><span class="label ink">S-3</span><i style="width:24px"></i><span class="label">24</span></li>
+        <li><span class="label ink">S-5</span><i style="width:40px"></i><span class="label">40</span></li>
+        <li><span class="label ink">S-8</span><i style="width:64px"></i><span class="label">64</span></li>
+        <li><span class="label ink">S-12</span><i style="width:96px"></i><span class="label">96</span></li>
+        <li><span class="label ink">S-16</span><i style="width:128px"></i><span class="label">128</span></li>
+      </ul>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Breakpoints</span><span class="label">Min width</span></div>
+      <table class="table">
+        <thead><tr><th>Name</th><th>Columns</th><th>Gap</th><th class="r">Width</th></tr></thead>
+        <tbody>
+          <tr><td>Phone</td><td class="mono">4</td><td class="mono">16</td><td class="mono r">0</td></tr>
+          <tr><td>Tablet</td><td class="mono">12</td><td class="mono">16</td><td class="mono r">720</td></tr>
+          <tr><td>Desktop</td><td class="mono">12</td><td class="mono">24</td><td class="mono r">1024</td></tr>
+          <tr><td>Wide</td><td class="mono">12</td><td class="mono">24</td><td class="mono r">1440</td></tr>
+        </tbody>
+      </table>
+      <p class="small muted" style="margin-top:24px">Past 1440 the content stops growing. The ruler lines keep going to the edge of the screen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 Icons & shapes ============ -->
+<section class="sheet wrap" id="icons">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>07</b> / 16</span>
+    <h2 class="sheet-title">Icons &amp; shapes</h2>
+    <span class="sheet-tag label" data-when="icons">With icon set</span>
+    <span class="sheet-tag label" data-when="no-icons">Without icon set</span>
+    <p class="sheet-lede" data-when="icons">Icons are drawn on a 24 grid with a single 1 px hairline, open ends and no fills, so they sit with the ruler lines.</p>
+    <p class="sheet-lede" data-when="no-icons">Without an icon set, labels and numerals do the job. Mono capitals in a square cell, never a borrowed icon pack.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-3" data-when="icons">
+      <div class="block-head"><span class="label ink">Anatomy</span><span class="label">24 grid</span></div>
+      <div class="icon-anat">
+        <svg viewBox="0 0 24 24">
+          <path class="sk-2" d="M0 0h24v24H0zM2 2h20v20H2zM12 0v24M0 12h24"/>
+          <circle class="sk-d" cx="12" cy="12" r="10"/>
+          <path class="sk-a" d="M5 12h14M12 5v14"/>
+        </svg>
+      </div>
+    </div>
+    <div class="c-9" data-when="icons">
+      <div class="block-head"><span class="label ink">Set</span><span class="label">1 px stroke · 2 px padding</span></div>
+      <div class="icons">
+        <div><svg viewBox="0 0 24 24"><path class="sk" d="M3 12h18M14 5l7 7-7 7"/></svg><span class="label">Arrow</span></div>
+        <div><svg viewBox="0 0 24 24"><circle class="sk" cx="11" cy="11" r="7"/><path class="sk" d="M16 16l5 5"/></svg><span class="label">Search</span></div>
+        <div><svg viewBox="0 0 24 24"><path class="sk" d="M12 3v18M3 12h18"/></svg><span class="label">Add</span></div>
+        <div><svg viewBox="0 0 24 24"><path class="sk" d="M4 7h16M4 12h16M4 17h16"/></svg><span class="label">Menu</span></div>
+        <div><svg viewBox="0 0 24 24"><path class="sk" d="M12 3v13M6 10l6 6 6-6M4 21h16"/></svg><span class="label">Get</span></div>
+        <div><svg viewBox="0 0 24 24"><rect class="sk" x="3" y="5" width="18" height="14"/><path class="sk" d="M3 5l9 8 9-8"/></svg><span class="label">Mail</span></div>
+        <div><svg viewBox="0 0 24 24"><circle class="sk" cx="12" cy="12" r="9"/><path class="sk" d="M12 7v5l3 3"/></svg><span class="label">Time</span></div>
+        <div><svg viewBox="0 0 24 24"><path class="sk" d="M5 5l14 14M19 5L5 19"/></svg><span class="label">Close</span></div>
+      </div>
+    </div>
+
+    <div class="c-12" data-when="no-icons">
+      <div class="block-head"><span class="label ink">Glyph cells</span><span class="label">IBM Plex Mono 500</span></div>
+      <div class="glyphs">
+        <div>→<span class="label">Arrow</span></div><div>?<span class="label">Search</span></div><div>+<span class="label">Add</span></div><div>≡<span class="label">Menu</span></div>
+        <div>↓<span class="label">Get</span></div><div>@<span class="label">Mail</span></div><div>01<span class="label">Step</span></div><div>×<span class="label">Close</span></div>
+      </div>
+    </div>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Sketch shapes</span><span class="label">Always available</span></div>
+      <div class="shapes">
+        <figure><svg viewBox="0 0 200 200">
+          <circle class="sk" cx="100" cy="100" r="64"/><path class="sk-2" d="M0 100h200M100 0v200"/>
+          <path class="sk-a" d="M100 100 145.3 54.7"/><path class="sk-d" d="M132 100a32 32 0 0 0-9.4-22.6"/>
+          <text class="svg-text" x="132" y="72">r</text><text class="svg-text" x="140" y="96">45°</text>
+        </svg></figure>
+        <figure><svg viewBox="0 0 200 200">
+          <path class="sk" d="M100 36a64 64 0 1 1-64 64"/><path class="sk-d" d="M36 100a64 64 0 0 1 64-64"/>
+          <circle class="dot-a" cx="36" cy="100" r="3"/><circle class="dot" cx="100" cy="36" r="3"/><path class="sk-2" d="M100 100h64"/>
+          <text class="svg-text" x="112" y="94">¾</text>
+        </svg></figure>
+        <figure><svg viewBox="0 0 200 200">
+          <path class="sk" d="M100 40l52 30v60l-52 30-52-30V70z"/><path class="sk" d="M48 70l52 30 52-30M100 100v60"/>
+          <path class="sk-d" d="M48 130l52-30 52 30M100 40v60"/>
+        </svg></figure>
+        <figure><svg viewBox="0 0 200 200">
+          <circle class="sk" cx="68" cy="100" r="36"/><circle class="sk" cx="148" cy="100" r="20"/>
+          <path class="sk-a" d="M78.6 65.6C105 78 120 82 136 84.3M78.6 134.4C105 122 120 118 136 115.7"/>
+          <path class="sk-2" d="M20 100h160"/><text class="svg-text" x="98" y="94">bridge</text>
+        </svg></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 Imagery ============ -->
+<section class="sheet wrap" id="imagery" data-nav="Media">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>08</b> / 16</span>
+    <h2 class="sheet-title">Imagery</h2>
+    <span class="sheet-tag label" data-when="imagery">With imagery</span>
+    <span class="sheet-tag label" data-when="no-imagery">Without imagery</span>
+    <p class="sheet-lede" data-when="imagery">Pictures run in gray, flat and quiet. The accent may appear once per image, on the thing the picture is about.</p>
+    <p class="sheet-lede" data-when="no-imagery">Until there are photos, every picture slot is a drafting frame: a light gray fill, crossed corner to corner, labelled with its ratio.</p>
+  </div>
+
+  <div class="grid row-gap" data-when="imagery">
+    <figure class="c-8">
+      <div class="illo" style="--ar: 16 / 9">
+        <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+          <circle class="g1" cx="236" cy="56" r="28"/>
+          <path class="g1" d="M0 132 64 92l52 30 70-54 66 46 68-28v94H0z"/>
+          <path class="g2" d="M0 150l84-36 64 26 76-40 96 44v56H0z"/>
+          <path class="g3" d="M0 166h320v14H0z"/>
+          <rect class="g4" x="148" y="120" width="24" height="46"/><path class="g4" d="M144 120l16-14 16 14z"/>
+          <rect class="ac" x="157" y="140" width="6" height="10"/>
+        </svg>
+      </div>
+      <figcaption class="label" style="margin-top:12px">Gray flat · 16:9 · accent once</figcaption>
+    </figure>
+    <figure class="c-4">
+      <div class="illo" style="--ar: 4 / 5">
+        <svg viewBox="0 0 160 200" preserveAspectRatio="xMidYMid slice">
+          <rect class="g1" x="0" y="140" width="160" height="60"/>
+          <rect class="g2" x="40" y="60" width="80" height="96"/>
+          <rect class="g3" x="52" y="72" width="56" height="40"/>
+          <circle class="g4" cx="80" cy="132" r="8"/>
+          <circle class="ac" cx="80" cy="132" r="3"/>
+        </svg>
+      </div>
+      <figcaption class="label" style="margin-top:12px">Gray flat · 4:5 · object</figcaption>
+    </figure>
+  </div>
+
+  <div class="grid row-gap" data-when="no-imagery">
+    <figure class="c-8"><div class="frame" style="--ar: 16 / 9"><span class="label">16:9 · 1600 × 900</span></div></figure>
+    <figure class="c-4"><div class="frame" style="--ar: 4 / 5"><span class="label">4:5 · 960 × 1200</span></div></figure>
+  </div>
+
+  <div class="grid row-gap" style="margin-top:64px">
+    <figure class="c-3"><div class="frame" style="--ar: 1"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small">Crop on the grid</span></p></figure>
+    <figure class="c-3"><div class="frame" style="--ar: 1;transform:rotate(-4deg)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small">Don’t tilt or skew</span></p></figure>
+    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: var(--fill-2)"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small">Gray, one accent at most</span></p></figure>
+    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: #ffd2c4;box-shadow:0 16px 32px -12px rgba(0,0,0,.3)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small">No tints or drop shadows</span></p></figure>
+  </div>
+</section>
+
+<!-- ============ 09 Components ============ -->
+<section class="sheet wrap" id="ui" data-nav="UI">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>09</b> / 16</span>
+    <h2 class="sheet-title">Components</h2>
+    <span class="sheet-tag label">Product</span>
+    <p class="sheet-lede">Hairlines instead of boxes, pills for actions, and the accent saved for the one thing the screen wants you to do.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Buttons</span><span class="label">48 / 32 px</span></div>
+      <div class="stack">
+        <div class="row"><a class="btn accent" href="#ui">Primary</a><a class="btn solid" href="#ui">Secondary</a><a class="btn" href="#ui">Tertiary</a></div>
+        <div class="row"><a class="btn sm accent" href="#ui">Small</a><a class="btn sm" href="#ui">Small</a><button class="btn sm" disabled>Disabled</button></div>
+      </div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Chips &amp; checks</span><span class="label">24 px</span></div>
+      <div class="stack">
+        <div class="row"><span class="chip on">Selected</span><span class="chip">Web</span><span class="chip">Apps</span><span class="chip">Print</span></div>
+        <div class="row" style="gap:24px"><span class="check"><i class="on"></i>Logo</span><span class="check"><i class="on"></i>Icons</span><span class="check"><i></i>Imagery</span></div>
+      </div>
+    </div>
+
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Fields</span><span class="label">Underline only</span></div>
+      <div class="stack">
+        <label class="field"><span class="label">Name</span><input placeholder="Your name"></label>
+        <label class="field error"><span class="label accent">Email · needs an @</span><input value="hello.example.com" aria-invalid="true"></label>
+      </div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Cards</span><span class="label">Top rule, no box</span></div>
+      <div class="grid" style="--cols:2">
+        <div class="card"><div class="frame" style="--ar: 3 / 2"></div><h4>Case study</h4><p>Short summary in two lines at most.</p></div>
+        <div class="card"><div class="frame" style="--ar: 3 / 2"></div><h4>Release notes</h4><p>What changed and why it matters.</p></div>
+      </div>
+    </div>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Tokens</span><span class="label">css/system.css</span></div>
+      <table class="table on-grid">
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th><th class="r">Dark</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--paper</td><td class="mono">#F4F4F1</td><td>Page background</td><td class="mono r">#111110</td></tr>
+          <tr><td class="mono">--ink</td><td class="mono">#111111</td><td>Text, rules, primary fills</td><td class="mono r">#EEEEEA</td></tr>
+          <tr><td class="mono">--ink-3</td><td class="mono">#9A9A96</td><td>Labels, annotations</td><td class="mono r">#6B6B67</td></tr>
+          <tr><td class="mono">--fill</td><td class="mono">#E6E6E2</td><td>Drafting frames, skeletons</td><td class="mono r">#222220</td></tr>
+          <tr><td class="mono">--accent</td><td class="mono">#FF4A1C</td><td>One thing per screen</td><td class="mono r">#FF4A1C</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 App screens ============ -->
+<section class="sheet wrap" id="app">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>10</b> / 16</span>
+    <h2 class="sheet-title">App screens</h2>
+    <span class="sheet-tag label">States</span>
+    <p class="sheet-lede">Four states every app needs before it needs anything else: the welcome, the empty list, the wait and the error.</p>
+  </div>
+
+  <div class="phones">
+    <figure>
+      <div class="phone">
+        <span class="label" style="margin-top:8px">01 · Welcome</span>
+        <div class="frame" style="--ar: 1"></div>
+        <h5>Everything in one place</h5>
+        <p>Your files, your tokens and your manual, always in sync.</p>
+        <span class="grow"></span>
+        <a class="btn accent" href="#app">Get started</a>
+      </div>
+    </figure>
+    <figure>
+      <div class="phone">
+        <span class="label" style="margin-top:8px">02 · Empty</span>
+        <span class="grow"></span>
+        <svg viewBox="0 0 120 80" style="width:60%;margin-inline:auto"><rect class="sk" x="10" y="10" width="100" height="60"/><path class="sk-2" d="M10 10l100 60M110 10 10 70"/><path class="sk-a" d="M0 10h10M110 70h10"/></svg>
+        <h5 style="text-align:center">Nothing here yet</h5>
+        <p style="text-align:center">Add your first project and it will show up on this page.</p>
+        <span class="grow"></span>
+        <a class="btn" href="#app">Add a project</a>
+      </div>
+    </figure>
+    <figure>
+      <div class="phone">
+        <span class="label" style="margin-top:8px">03 · Loading</span>
+        <div class="skel"><i></i><i></i><i></i></div>
+        <div class="frame" style="--ar: 16 / 9;opacity:.6"></div>
+        <div class="skel"><i></i><i></i><i></i></div>
+        <span class="grow"></span>
+        <svg class="spinner" viewBox="0 0 40 40"><circle class="sk-2" cx="20" cy="20" r="18"/><path class="sk-a" d="M20 2a18 18 0 0 1 18 18"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1.2s" repeatCount="indefinite"/></path></svg>
+        <span class="grow"></span>
+      </div>
+    </figure>
+    <figure>
+      <div class="phone">
+        <span class="label" style="margin-top:8px">04 · Error</span>
+        <span class="grow"></span>
+        <span class="label accent">Error · E-104</span>
+        <h5>We couldn’t reach the server</h5>
+        <p>Check your connection and try again. Your changes are saved on this phone.</p>
+        <span class="grow"></span>
+        <a class="btn solid" href="#app">Try again</a>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 11 Motion ============ -->
+<section class="sheet wrap" id="motion">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>11</b> / 16</span>
+    <h2 class="sheet-title">Motion</h2>
+    <span class="sheet-tag label">Hover to play</span>
+    <p class="sheet-lede">Things arrive fast and settle slowly. Three durations, one curve for most of it, and a spring for anything you drag.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-4 motion-demo">
+      <div class="block-head"><span class="label ink">Standard</span><span class="label">240 ms</span></div>
+      <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C20 30 10 0 100 0"/></svg></div>
+      <div class="track"><i style="transition-duration:240ms;transition-timing-function:cubic-bezier(.2,.7,.1,1)"></i></div>
+      <p class="mono muted">cubic-bezier(.2, .7, .1, 1)</p>
+    </div>
+    <div class="c-4 motion-demo">
+      <div class="block-head"><span class="label ink">Enter</span><span class="label">400 ms</span></div>
+      <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C0 0 40 0 100 0"/></svg></div>
+      <div class="track"><i style="transition-duration:400ms;transition-timing-function:cubic-bezier(0,0,.2,1)"></i></div>
+      <p class="mono muted">cubic-bezier(0, 0, .2, 1)</p>
+    </div>
+    <div class="c-4 motion-demo">
+      <div class="block-head"><span class="label ink">Spring</span><span class="label">≈ 560 ms</span></div>
+      <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100M0 20h100"/><path class="sk-a" d="M0 100C10 -20 22 -12 34 12S56 26 68 18 88 20 100 20"/></svg></div>
+      <div class="track"><i style="transition-duration:560ms;transition-timing-function:linear(0, .35 8%, .86 18%, 1.08 28%, 1.12 34%, 1.04 48%, .99 62%, 1)"></i></div>
+      <p class="mono muted">stiffness 320 · damping 22</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 Voice ============ -->
+<section class="sheet wrap" id="voice">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>12</b> / 16</span>
+    <h2 class="sheet-title">Voice &amp; tone</h2>
+    <span class="sheet-tag label">Writing</span>
+    <p class="sheet-lede">Write the way the page looks: short, plain, nothing that doesn’t carry weight. Say what happened and what to do next.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <dl class="c-4 voice"><dt>Plain words</dt><dd>“Use”, not “leverage”. “Send”, not “submit”. If a word needs a tooltip, pick another one.</dd></dl>
+    <dl class="c-4 voice"><dt>Sentence case</dt><dd>Headings, buttons and labels all start with one capital. Mono labels are the only capitals.</dd></dl>
+    <dl class="c-4 voice"><dt>Verbs on buttons</dt><dd>A button says what it does: “Get the files”, never “OK” or “Click here”.</dd></dl>
+
+    <div class="c-12">
+      <div class="block-head"><span class="label ink">Rewrites</span><span class="label">Before → after</span></div>
+      <div class="grid">
+        <div class="c-6">
+          <div class="quote-pair"><span class="verdict no"><i></i><span class="label">Before</span></span><div class="no"><p>Oops! Something went wrong. Please try again later.</p></div></div>
+          <div class="quote-pair"><span class="verdict no"><i></i><span class="label">Before</span></span><div class="no"><p>Unlock the power of seamless brand synergy today.</p></div></div>
+        </div>
+        <div class="c-6">
+          <div class="quote-pair"><span class="verdict yes"><i></i><span class="label">After</span></span><p>We couldn’t reach the server. Your changes are saved, so try again in a minute.</p></div>
+          <div class="quote-pair"><span class="verdict yes"><i></i><span class="label">After</span></span><p>Keep the website, the app and the posters looking like one brand.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 Marketing ============ -->
+<section class="sheet wrap" id="marketing">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>13</b> / 16</span>
+    <h2 class="sheet-title">Marketing</h2>
+    <span class="sheet-tag label">Social · OG · Ads</span>
+    <p class="sheet-lede">The cover idea at every size: one big line of type, a label in the corner, and the accent on one thing.</p>
+  </div>
+
+  <div class="grid mkt">
+    <figure class="c-4">
+      <div class="post"><div class="row"><span class="label">System</span><span class="label">01</span></div><h4>Start from type<span style="color:var(--accent)">.</span></h4></div>
+      <figcaption class="label" style="margin-top:12px">Post · 1:1 · 1080 × 1080</figcaption>
+    </figure>
+    <figure class="c-3">
+      <div class="post paper" style="--ar: 9 / 16"><div class="row"><span class="label">Story</span><span class="label">02</span></div><div class="frame" style="--ar: 1"></div><h4>Then add the rest</h4></div>
+      <figcaption class="label" style="margin-top:12px">Story · 9:16 · 1080 × 1920</figcaption>
+    </figure>
+    <figure class="c-5">
+      <div class="post accent" style="--ar: 1.91 / 1"><div class="row"><span class="label">system.example</span><span class="label">OG</span></div><h4>Build the brand once</h4></div>
+      <figcaption class="label" style="margin-top:12px">Link preview · 1.91:1 · 1200 × 630</figcaption>
+    </figure>
+    <figure class="c-12">
+      <div class="post paper" style="--ar: 728 / 90;padding-block:0;flex-direction:row;align-items:center"><h4 style="font-size:clamp(20px,2.4vw,32px)">Build the brand once, use it everywhere</h4><span class="btn sm accent">Get the files</span></div>
+      <figcaption class="label" style="margin-top:12px">Leaderboard · 728 × 90</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 14 Print ============ -->
+<section class="sheet wrap" id="print">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>14</b> / 16</span>
+    <h2 class="sheet-title">Print &amp; stationery</h2>
+    <span class="sheet-tag label">CMYK · 3 mm bleed</span>
+    <p class="sheet-lede">Cards and letterheads use the same grid, scaled to millimetres. Uncoated paper, one ink plus the accent.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-6 stack">
+      <div class="block-head" style="margin-bottom:0"><span class="label ink">Business card</span><span class="label">85 × 55 mm</span></div>
+      <div class="grid" style="--cols:2">
+        <div class="paper-card">
+          <div class="row" style="justify-content:space-between">
+            <span class="wordmark" data-when="no-logo">System<span style="color:var(--accent)">.</span></span>
+            <svg data-when="logo" viewBox="0 0 240 120" style="width:64px;height:32px"><use href="#mark" width="240" height="120" style="color:var(--ink)"/></svg>
+            <span class="label">Front</span>
+          </div>
+          <div><p style="font-weight:500">Jana Nováková</p><p class="small muted">Design lead · jana@system.example</p></div>
+        </div>
+        <div class="paper-card ink">
+          <span class="label">Back</span>
+          <span class="wordmark" style="font-size:40px">System<span style="color:var(--accent)">.</span></span>
+        </div>
+      </div>
+      <p class="small muted">Front in ink on uncoated white, back flooded in ink. The name is the only line set larger than 12 pt.</p>
+    </div>
+    <div class="c-6 stack">
+      <div class="block-head" style="margin-bottom:0"><span class="label ink">Letterhead</span><span class="label">A4 · 210 × 297 mm</span></div>
+      <div class="grid" style="--cols:2">
+        <div class="a4">
+          <div class="row" style="justify-content:space-between"><span class="wordmark" style="font-size:16px">System<span style="color:var(--accent)">.</span></span><span class="label" style="font-size:8px">2026-10-09</span></div>
+          <div class="skel"><i></i><i></i></div>
+          <div class="skel grow" style="align-content:start"><i></i><i style="width:100%"></i><i style="width:92%"></i><i style="width:100%"></i><i style="width:64%"></i></div>
+          <span class="label" style="font-size:8px">system.example · Prague</span>
+        </div>
+        <div class="a4" style="background:var(--fill)">
+          <span class="label" style="font-size:8px">Envelope · DL</span>
+          <span class="grow"></span>
+          <span class="wordmark" style="font-size:32px">System<span style="color:var(--accent)">.</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15 Downloads ============ -->
+<section class="sheet wrap" id="downloads" data-nav="Files">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>15</b> / 16</span>
+    <h2 class="sheet-title">Downloads</h2>
+    <span class="sheet-tag label">Brand files</span>
+    <p class="sheet-lede">Everything on these pages as files, built by one script. Hand over the link and you never send a logo by email again.</p>
+  </div>
+
+  <ul class="files">
+    <li><div><h4>Logo package</h4><p class="small muted">SVG, PNG and PDF, every lockup, clear space built in</p></div><span class="label">ZIP</span><span class="label">2.4 MB</span><a class="btn sm" href="#downloads">Download</a></li>
+    <li><div><h4>Design tokens</h4><p class="small muted">Colour, type and spacing as CSS variables and JSON</p></div><span class="label">CSS · JSON</span><span class="label">8 KB</span><a class="btn sm" href="#downloads">Download</a></li>
+    <li><div><h4>Fonts</h4><p class="small muted">Inter Tight and IBM Plex Mono, both under the OFL</p></div><span class="label">TTF · WOFF2</span><span class="label">1.1 MB</span><a class="btn sm" href="#downloads">Download</a></li>
+    <li><div><h4>This manual</h4><p class="small muted">The whole manual as one file, fonts embedded</p></div><span class="label">PDF · HTML</span><span class="label">8.5 MB</span><a class="btn sm accent" href="#downloads">Download</a></li>
+  </ul>
+</section>
+
+<!-- ============ 16 Utility ============ -->
+<section class="sheet wrap" id="utility">
+  <div class="grid sheet-head">
+    <span class="sheet-no"><b>16</b> / 16</span>
+    <h2 class="sheet-title">Utility pages</h2>
+    <span class="sheet-tag label">404 · Changelog</span>
+    <p class="sheet-lede">The pages nobody designs. They get the same grid and the same voice, and they always offer a way back.</p>
+  </div>
+
+  <div class="grid row-gap">
+    <div class="c-6 stack" style="gap:32px">
+      <div class="block-head" style="margin-bottom:0"><span class="label ink">Not found</span><span class="label">404.html</span></div>
+      <div class="e404">4<span style="color:var(--accent)">0</span>4</div>
+      <p class="muted">This page moved or never existed. The cover is a good place to start again.</p>
+      <div class="row"><a class="btn solid" href="#cover">Back to the cover</a></div>
+    </div>
+    <div class="c-6">
+      <div class="block-head"><span class="label ink">Changelog</span><span class="label">Newest first</span></div>
+      <ul class="log">
+        <li><span class="label ink">1.0</span><p>First edition. Sheets 00 to 16, the with/without switches, light and dark.</p></li>
+        <li><span class="label">0.2</span><p>The ferrofluid nav, drafting frames and the gray illustration style.</p></li>
+        <li><span class="label">0.1</span><p>Tokens, the 8 px grid and the infinite ruler lines.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="foot wrap grid">
+  <span class="label ink">System<span style="color:var(--accent)">.</span></span>
+  <span class="label">Edition 1.0</span>
+  <span class="label">Set in Inter Tight &amp; IBM Plex Mono</span>
+  <a class="label" href="#cover">Back to top ↑</a>
+</footer>
+
+</main>
+
+<nav class="bar bottom" aria-label="Sheets">
+  <div class="wrap"><div class="goo" data-goo="nav"></div></div>
+</nav>
+
+<script src="js/system.js" defer></script>
+</body>
+</html>
