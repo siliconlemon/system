@@ -42,11 +42,6 @@
     <a class="bar-name label ink" href="#cover">System<span style="color:var(--accent)">.</span></a>
     <span class="bar-here label" data-here>Cover</span>
     <span class="bar-ed label">Edition 1.0 · 2026-10</span>
-    <div class="bar-theme goo" data-goo="theme" role="radiogroup" aria-label="Theme">
-      <button type="button" role="radio" data-theme-set="light">Paper</button>
-      <button type="button" role="radio" data-theme-set="dark">Ink</button>
-      <button type="button" role="radio" data-theme-set="auto">Auto</button>
-    </div>
   </div>
 </header>
 
@@ -804,9 +799,16 @@
 
 </main>
 
-<nav class="bar bottom" aria-label="Sheets">
-  <div class="wrap"><div class="goo" data-goo="nav"></div></div>
-</nav>
+<div class="bar bottom">
+  <div class="wrap">
+    <nav class="goo" data-goo="nav" aria-label="Sheets"></nav>
+    <div class="bar-theme goo" data-goo="theme" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light">Light</button>
+      <button type="button" role="radio" data-theme-set="dark">Dark</button>
+      <button type="button" role="radio" data-theme-set="auto">Auto</button>
+    </div>
+  </div>
+</div>
 
 <script src="js/system.js" defer></script>
 </body>

@@ -342,6 +342,8 @@ body::after {
 @media (max-width: 720px) {
   .cover-bottom > *, .cover-bottom > .wide { grid-column: span 2; }
   .cover-bottom > .wide { grid-column: 1 / -1; margin-bottom: calc(var(--u) * 3); }
+  .cover-bottom > .label:first-of-type { grid-column: 1 / -1; }
+  .cover-bottom > .label:last-child { display: none; }
   .cover-word { font-size: 25vw; }
   .cover-dim > :not(:first-child) { display: none; }
   .landing-hero { row-gap: calc(var(--u) * 6); }
@@ -795,17 +797,18 @@ html { scroll-padding-top: var(--bar); }
 .bar-name { grid-column: span 3; }
 .bar-here { grid-column: span 3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar-ed { grid-column: span 3; }
-.bar-theme { grid-column: span 3; justify-self: end; }
+/* bottom bar: the sheet links take what is left, the theme switch keeps its width on the right */
+.bar.bottom .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--gap); }
+.bar.bottom [data-goo="nav"] { flex: 1 1 auto; min-width: 0; }
+.bar-theme { flex: none; }
 @media (max-width: 1024px) {
   .bar-ed { display: none; }
   .bar-here { grid-column: span 6; }
 }
 @media (max-width: 720px) {
-  .bar-name { grid-column: span 1; }
   .bar-here { display: none; }
-  .bar-theme { grid-column: 2 / span 3; }
-  .bar.bottom .wrap { padding-inline: 0; }
-  .bar.bottom .goo { margin-left: 0; padding-inline: 4px; }
+  .bar.bottom .wrap { padding-inline: 4px; gap: 0; }
+  .bar-theme { border-left: 1px solid var(--rule-2); padding-left: 4px; }
 }
 
 .goo {
