@@ -21,6 +21,8 @@
   --fill-2: #d4d4cf;
   --accent: #ff4a1c;
   --on-accent: #ffffff;
+  --canvas: #e3e3de;
+  --canvas-mark: #a9a9a3;
 
   --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -42,6 +44,8 @@
     --rule-2: rgba(238, 238, 234, 0.16);
     --fill: #222220;
     --fill-2: #33332f;
+    --canvas: #080808;
+    --canvas-mark: #3a3a37;
     color-scheme: dark;
   }
 }
@@ -55,14 +59,18 @@
   --rule-2: rgba(238, 238, 234, 0.16);
   --fill: #222220;
   --fill-2: #33332f;
+  --canvas: #080808;
+  --canvas-mark: #3a3a37;
   color-scheme: dark;
 }
 
-@media (max-width: 1024px) {
-  :root { --gut: 32px; --gap: 16px; }
+/* Breakpoints read the artboard, not the screen: a sheet keeps its layout
+   at any zoom, and a narrower artboard would get the phone grid. */
+@container board (max-width: 1024px) {
+  .wrap { --gut: 32px; --gap: 16px; }
 }
-@media (max-width: 720px) {
-  :root { --cols: 4; --gut: 16px; --gap: 16px; }
+@container board (max-width: 720px) {
+  .wrap { --cols: 4; --gut: 16px; --gap: 16px; }
 }
 
 /* ---------- Base ---------- */
@@ -114,15 +122,14 @@ p, li, dd, td, figcaption { text-wrap: pretty; }
 .rules .grid > i:nth-child(4),
 .rules .grid > i:nth-child(7) { border-left: 1px solid var(--rule); }
 .rules .grid > i:nth-child(12) { border-right: 1px solid var(--rule-2); }
-@media (max-width: 1024px) {
+@container board (max-width: 1024px) {
   .rules .grid > i:nth-child(4) { border-left: 0; }
 }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .rules .grid > i:nth-child(n + 5) { display: none; }
   .rules .grid > i:nth-child(4) { border-right: 1px solid var(--rule-2); }
 }
 
-main { position: relative; z-index: 1; }
 
 /* A faint paper grain over everything, so the page reads as a printed sheet. */
 body::after {
@@ -165,7 +172,7 @@ body::after {
 .sheet-no b { color: var(--ink); font-weight: 500; }
 .sheet-title {
   grid-column: span 6;
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(40px, 5cqw, 72px);
   line-height: 1;
   letter-spacing: -0.035em;
 }
@@ -183,7 +190,7 @@ body::after {
   justify-self: end;
   text-align: right;
 }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .sheet { padding-block: calc(var(--u) * 8) calc(var(--u) * 12); }
   .sheet-no, .sheet-title, .sheet-lede { grid-column: 1 / -1; }
   .sheet-tag { display: none; }
@@ -228,14 +235,14 @@ body::after {
 .s-7 { grid-column-start: 7; }
 .s-10 { grid-column-start: 10; }
 .row-gap { row-gap: calc(var(--u) * 8); }
-@media (max-width: 1024px) {
+@container board (max-width: 1024px) {
   .c-3, .c-2 { grid-column: span 6; }
   .c-4 { grid-column: span 6; }
   .c-8, .c-9 { grid-column: span 12; }
   .c-5, .c-7 { grid-column: span 6; }
   .s-4, .s-7, .s-10 { grid-column-start: auto; }
 }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .c-12, .c-9, .c-8, .c-7, .c-6, .c-5, .c-4, .c-3 { grid-column: 1 / -1; }
   .c-2 { grid-column: span 2; }
 }
@@ -294,10 +301,10 @@ body::after {
 
 .cover {
   position: relative;
-  min-height: 100svh;
+  min-height: 900px;
   display: flex;
   flex-direction: column;
-  padding-block: var(--bar) calc(var(--bar) + var(--u) * 6);
+  padding-block: calc(var(--u) * 6);
 }
 .cover-word-wrap {
   flex: 1;
@@ -308,7 +315,7 @@ body::after {
 }
 .cover-word {
   position: relative;
-  font-size: clamp(120px, 23.5vw, 352px);
+  font-size: clamp(120px, 23.5cqw, 352px);
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.065em;
@@ -334,18 +341,18 @@ body::after {
   display: flex;
   justify-content: space-between;
   /* clear the descender of the y, which hangs about 0.22 em below the baseline */
-  margin-top: 6vw;
+  margin-top: 6cqw;
 }
 .cover-bottom { align-items: baseline; }
 .cover-bottom > * { grid-column: span 3; }
 .cover-bottom > .wide { grid-column: span 6; }
 .cover-bottom p { font-size: 20px; line-height: 32px; padding-left: var(--inset); }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .cover-bottom > *, .cover-bottom > .wide { grid-column: span 2; }
   .cover-bottom > .wide { grid-column: 1 / -1; margin-bottom: calc(var(--u) * 3); }
   .cover-bottom > .label:first-of-type { grid-column: 1 / -1; }
   .cover-bottom > .label:last-child { display: none; }
-  .cover-word { font-size: 25vw; }
+  .cover-word { font-size: 25cqw; }
   .cover-dim > :not(:first-child) { display: none; }
   .landing-hero { row-gap: calc(var(--u) * 6); }
 }
@@ -434,7 +441,7 @@ body::after {
 .landing-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--u) * 12); }
 .landing-nav ul { display: flex; gap: calc(var(--u) * 4); }
 .landing-hero h3 {
-  font-size: clamp(40px, 5.6vw, 80px);
+  font-size: clamp(40px, 5.6cqw, 80px);
   line-height: 1;
   letter-spacing: -0.04em;
   max-width: 11em;
@@ -445,7 +452,7 @@ body::after {
 .landing-feat h4 { font-size: 20px; line-height: 24px; letter-spacing: -0.01em; margin: calc(var(--u) * 2) 0 var(--u); }
 .landing-feat p { color: var(--ink-2); font-size: 14px; line-height: 24px; }
 .landing-feat svg { width: 40px; height: 40px; }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .landing { padding: calc(var(--u) * 5) calc(var(--u) * 3); }
   .landing-nav ul { display: none; }
 }
@@ -542,12 +549,12 @@ body::after {
 .pairs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .pair { aspect-ratio: 3 / 2; padding: calc(var(--u) * 2); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--rule-2); }
 .pair b { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.03em; }
-@media (max-width: 1024px) { .pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--gap); } }
+@container board (max-width: 1024px) { .pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--gap); } }
 
 /* ---------- Typography ---------- */
 
 .specimen {
-  font-size: clamp(160px, 22vw, 320px);
+  font-size: clamp(160px, 22cqw, 320px);
   line-height: 1;
   letter-spacing: -0.05em;
   font-weight: 500;
@@ -588,7 +595,7 @@ body::after {
 .tester-ctrl input[type="range"] { accent-color: var(--accent); width: calc(var(--u) * 20); }
 .weights { display: grid; grid-template-columns: repeat(4, 1fr); }
 .weights div { padding-block: calc(var(--u) * 2); border-bottom: 1px solid var(--rule-2); font-size: 32px; line-height: 40px; letter-spacing: -0.02em; }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .scale li { grid-template-columns: calc(var(--u) * 7) 1fr; }
   .scale li > :last-child { display: none; }
   .tester { font-size: 36px; line-height: 44px; }
@@ -625,7 +632,7 @@ body::after {
 .shapes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
 .shapes > figure { aspect-ratio: 1; background: var(--sheet); border: 1px solid var(--rule-2); }
 .shapes svg { width: 100%; height: 100%; }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .icons, .glyphs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .shapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -664,7 +671,7 @@ body::after {
 .skel i:nth-child(2) { width: 72%; }
 .skel i:nth-child(3) { width: 48%; }
 .spinner { width: 40px; height: 40px; margin: auto; }
-@media (max-width: 1024px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: calc(var(--u) * 5); } }
+@container board (max-width: 1024px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: calc(var(--u) * 5); } }
 
 /* ---------- Motion ---------- */
 
@@ -698,7 +705,7 @@ body::after {
 }
 .post.paper { background: var(--sheet); color: var(--ink); border: 1px solid var(--rule-2); }
 .post.accent { background: var(--accent); color: var(--on-accent); }
-.post h4 { font-size: clamp(28px, 3.2vw, 48px); line-height: 1; letter-spacing: -0.04em; font-weight: 600; }
+.post h4 { font-size: clamp(28px, 3.2cqw, 48px); line-height: 1; letter-spacing: -0.04em; font-weight: 600; }
 .post .label { color: inherit; opacity: 0.7; }
 .post .row { justify-content: space-between; }
 .mkt { align-items: end; row-gap: calc(var(--u) * 5); }
@@ -747,7 +754,7 @@ body::after {
 .files li > :nth-child(2), .files li > :nth-child(3) { grid-column: span 2; }
 .files li > :nth-child(4) { grid-column: span 2; justify-self: end; }
 .files h4 { font-size: 20px; line-height: 24px; letter-spacing: -0.01em; }
-@media (max-width: 720px) {
+@container board (max-width: 720px) {
   .files li { padding-block: calc(var(--u) * 2); }
   .files li > :nth-child(1) { grid-column: span 3; }
   .files li > :nth-child(4) { grid-column: span 1; }
@@ -757,7 +764,7 @@ body::after {
 /* ---------- Utility ---------- */
 
 .e404 {
-  font-size: clamp(120px, 14vw, 200px);
+  font-size: clamp(120px, 14cqw, 200px);
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.06em;
@@ -768,19 +775,96 @@ body::after {
 
 /* ---------- Footer ---------- */
 
-.foot { padding-block: calc(var(--u) * 6) calc(var(--bar) + var(--u) * 6); }
+.foot { padding-block: calc(var(--u) * 6); }
 .foot > * { grid-column: span 3; }
 .foot > :last-child { text-align: right; }
-@media (max-width: 720px) { .foot > * { grid-column: span 2; } }
+@container board (max-width: 720px) { .foot > * { grid-column: span 2; } }
+
+/* ---------- Canvas ----------
+   Every sheet is a 1440 px artboard as tall as its content, floating on a pannable,
+   zoomable canvas. Phones pinch and pan the same artboards instead of
+   getting a reflowed page. The canvas carries register crosses on a
+   160 px grid, which lines up with the artboard columns. canvas.js
+   drives it, and print ignores all of it. */
+
+@media screen {
+  html, body { height: 100%; overflow: clip; touch-action: none; overscroll-behavior: none; }
+  html { scroll-behavior: auto; }
+  body { position: fixed; inset: 0; background: var(--canvas); }
+  body.panning, body.panning * { cursor: move !important; user-select: none; }
+  /* Each cross is two 1 px lines, a horizontal and a vertical one through
+     4 px into the tile, cut to a 9 px square by the mask. Every stop is in
+     screen pixels, so only the tile size changes with zoom and the lines
+     stay 1 px on every frame, with nothing to redraw. */
+  .marks {
+    position: fixed;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    will-change: transform;
+    background-image:
+      linear-gradient(to bottom, transparent 4px, var(--canvas-mark) 4px 5px, transparent 5px),
+      linear-gradient(to right, transparent 4px, var(--canvas-mark) 4px 5px, transparent 5px);
+    -webkit-mask-image:
+      linear-gradient(to right, #000 9px, transparent 9px),
+      linear-gradient(to bottom, #000 9px, transparent 9px);
+    mask-image:
+      linear-gradient(to right, #000 9px, transparent 9px),
+      linear-gradient(to bottom, #000 9px, transparent 9px);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  main.deck {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    gap: 160px;
+    align-items: start;
+    transform-origin: 0 0;
+  }
+  .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .cam.moving { will-change: transform; }
+  .cam.fly { transition: transform 0.7s var(--ease); }
+}
+.board {
+  position: relative;
+  width: 1440px;
+  container: board / inline-size;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--rule-2);
+  overflow: hidden;
+}
+.board > .rules { position: absolute; z-index: 0; }
+.board > :not(.rules) { position: relative; z-index: 1; }
+.board .sheet::before { content: none; }
+.board .wrap { max-width: none; }
+html { -webkit-tap-highlight-color: transparent; }
+.bar { -webkit-touch-callout: none; user-select: none; }
+
+@media print {
+  html { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  body { margin: 0; }
+  body::after, .bar, .marks { display: none; }
+  .cam, .deck { position: static; transform: none !important; zoom: 1 !important; display: block; }
+  .board { box-shadow: none; break-after: page; }
+}
 
 /* ---------- Top and bottom bars ----------
-   Plain rectangles pinned to the viewport. Inside each, a goo control:
-   the blob and the dots sit in one small SVG under a goo filter
-   (blur + alpha threshold), and the labels sit on top with difference
-   blending, so they invert where the fluid passes. */
+   Plain rectangles pinned to the window edges, read like the head and
+   foot of a printed sheet. The top bar holds the crumb (the name, an
+   arrow, the sheet in view) and everything about the manual: edition,
+   theme and the PDF. The bottom bar only moves you: the sheet cells and
+   zoom, centred in one framed row of cells split by hairlines.
+   One ink block marks the current cell, with an accent register mark on
+   its top edge. When it moves, the leading edge runs ahead and the
+   trailing edge follows, so the block wipes across like a shutter.
+   The labels sit on top with difference blending, so they invert where
+   the block passes. */
 
-:root { --bar: calc(var(--u) * 7); }
-html { scroll-padding-top: var(--bar); }
+:root { --bar: calc(var(--u) * 5); }
+/* phones keep a full 56 px bar for thumbs */
+@media (max-width: 720px) { :root { --bar: calc(var(--u) * 7); } }
 
 .bar {
   position: fixed;
@@ -793,53 +877,130 @@ html { scroll-padding-top: var(--bar); }
 }
 .bar.top { top: 0; border-bottom: 1px solid var(--rule-2); }
 .bar.bottom { bottom: 0; border-top: 1px solid var(--rule-2); }
-.bar .wrap, .bar .grid { height: 100%; align-items: center; }
-.bar .grid > * { min-width: 0; }
-.bar-name { grid-column: span 3; }
-.bar-here { grid-column: span 3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-ed { grid-column: span 3; }
-/* bottom bar: the sheet links take what is left, the theme switch keeps its width on the right */
-.bar.bottom .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--gap); }
-.bar.bottom [data-goo="nav"] { flex: 1 1 auto; min-width: 0; }
-.bar-theme { flex: none; }
+/* the bars span the window, not the 1440 sheet column, so their content runs edge to edge too */
+.bar .wrap { display: flex; align-items: stretch; height: 100%; max-width: none; padding-inline: 0; }
+.bar.top .wrap { justify-content: space-between; padding-left: var(--u); }
+.bar.bottom .wrap { justify-content: center; }
+.bar-path { display: flex; align-items: center; min-width: 0; }
+.bar-name { flex: none; }
+.bar-arr { flex: none; width: 16px; height: 16px; color: var(--accent); }
+.bar-here { padding-left: var(--inset); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-here b { font-weight: 500; color: var(--ink-3); margin-right: 8px; }
+.bar-end { display: flex; align-items: stretch; flex: none; }
+.bar-ed { align-self: center; }
+.bar-theme, .bar-pdf { flex: none; border-left: 1px solid var(--rule-2); }
+.bar-pdf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-inline: var(--inset);
+  font: 500 12px/16px var(--mono);
+  letter-spacing: 0.02em;
+}
+.bar-pdf svg { width: 16px; height: 16px; color: var(--accent); }
+@media (hover: hover) { .bar-pdf:hover { background: var(--fill); } }
+/* bottom bar: one framed row in the middle, the sheet cells scroll if the window gets narrow */
+.bar.bottom [data-seg="nav"] { flex: 0 1 auto; min-width: 0; border-left: 1px solid var(--rule-2); }
+.bar-zoom { flex: none; display: flex; border-inline: 1px solid var(--rule-2); }
+.bar-zoom button {
+  height: 100%;
+  min-width: 40px;
+  padding-inline: var(--inset);
+  font: 500 12px/16px var(--mono);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.bar-zoom button + button { box-shadow: inset 1px 0 0 var(--rule); }
+.bar-zoom [data-zoom-label] { min-width: 72px; color: var(--ink-2); }
+@media (hover: hover) { .bar-zoom button:hover { background: var(--fill); color: var(--ink); } }
 @media (max-width: 1024px) {
   .bar-ed { display: none; }
-  .bar-here { grid-column: span 6; }
 }
+/* Phones, like the Viewgraft manual: All on the left and a pager whose
+   arrows hug the sheet in view and never move. Up top, only the current
+   theme shows, a tap moves on to the next one, and PDF keeps just its icon. */
+.bar-phone { display: none; }
+.bar-all, .bar-pager button, .bar-cur {
+  height: 100%;
+  font: 500 12px/16px var(--mono);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.bar-all { flex: none; padding-inline: var(--inset); border-right: 1px solid var(--rule-2); position: relative; }
+.bar-all[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
+.bar-pager { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-width: 0; }
+.bar-pager button { display: flex; align-items: center; justify-content: center; width: 40px; color: var(--accent); }
+.bar-pager button:disabled { color: var(--ink-3); opacity: 0.4; cursor: default; }
+.bar-pager svg { width: 16px; height: 16px; }
+.bar-cur { display: flex; align-items: center; justify-content: center; width: 15ch; white-space: nowrap; overflow: hidden; }
+.bar-cur b { font-weight: 500; color: var(--ink-3); margin-right: 8px; }
 @media (max-width: 720px) {
-  .bar-here { display: none; }
-  .bar.bottom .wrap { padding-inline: 4px; gap: 0; }
-  .bar-theme { border-left: 1px solid var(--rule-2); padding-left: 4px; }
+  .bar.bottom .wrap { justify-content: stretch; }
+  .bar-zoom, .bar.bottom [data-seg="nav"] { display: none; }
+  .bar-pdf { font-size: 0; gap: 0; }
+  .bar-phone { display: flex; flex: 1 1 auto; min-width: 0; }
+  .bar-theme > [aria-checked="false"] { display: none; }
 }
 
-.goo {
+.seg {
   position: relative;
   display: flex;
-  height: 40px;
+  height: 100%;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.goo::-webkit-scrollbar { display: none; }
-.goo-layer {
+.seg::-webkit-scrollbar { display: none; }
+.seg-layer {
   position: absolute;
   left: 0;
   top: 0;
-  height: 40px;
-  overflow: visible;
+  height: 100%;
   pointer-events: none;
 }
-.goo-layer .fluid { fill: var(--ink); }
-.goo > a, .goo > button {
+.seg-layer > i {
+  position: absolute;
+  top: 30%;
+  bottom: 30%;
+  width: 1px;
+  background: var(--rule-2);
+}
+.seg-block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  background: var(--ink);
+  transform-origin: 0 0;
+}
+.seg-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.seg > a, .seg > button {
   position: relative;
   flex: none;
-  height: 40px;
-  padding-inline: 12px;
-  font: 500 12px/40px var(--mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding-inline: var(--inset);
+  font: 500 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #fff;
   mix-blend-mode: difference;
   white-space: nowrap;
+}
+/* the sheet number, a step quieter than the name on paper and on ink alike */
+.seg > a b { font-weight: 500; color: #8a8a87; }
+@media (max-width: 720px) {
+  .seg > a b { display: none; }
 }
 
 /* ---------- Legend inset ----------
@@ -848,7 +1009,7 @@ html { scroll-padding-top: var(--bar); }
    that meets one. */
 
 .sheet-no,
-.bar-name, .bar-here, .bar-ed,
+.bar-name, .bar-ed,
 .cover-dim, .cover-bottom > .label,
 .foot > *,
 figcaption.label, figure > p.label, .stack > p.label, .grid > div > p.label,
@@ -860,6 +1021,11 @@ figcaption.label, figure > p.label, .stack > p.label, .grid > div > p.label,
 .table th:last-child, .table td:last-child { padding-right: var(--inset); }
 .swatch dl { padding-inline: var(--inset); }
 .swatch h4 { padding-left: var(--inset); }
+
+/* Landscape phones: no room for chrome, drag, pinch and tap still work */
+@media (orientation: landscape) and (max-height: 500px) {
+  .bar { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
