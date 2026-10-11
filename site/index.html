@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=10">
+<link rel="stylesheet" href="css/system.css?v=15">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -37,6 +37,16 @@
       <rect x="120" y="0" width="120" height="120" fill="currentColor"/>
     </symbol>
     <!-- The arrow between crumbs: square caps and a mitred head, drawn on the 8 px grid. -->
+    <!-- Lockups: the mark plus the name in Inter Tight 600, tracked −11 at 166 px so its cap height meets the mark.
+         Horizontal: a gap of a quarter mark height. Stacked: the mark centred over the name, two fifths apart. -->
+    <symbol id="lockup" viewBox="0 0 778 120">
+      <use href="#mark" width="240" height="120"/>
+      <text x="272" y="120" fill="currentColor" style="font:600 166px var(--sans);letter-spacing:-11px">System</text>
+    </symbol>
+    <symbol id="lockup-stack" viewBox="0 0 505 291">
+      <use href="#mark" x="132.5" width="240" height="120"/>
+      <text x="-4" y="291" fill="currentColor" style="font:600 166px var(--sans);letter-spacing:-11px">System</text>
+    </symbol>
     <symbol id="chevron" viewBox="0 0 16 16">
       <path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter"/>
     </symbol>
@@ -54,7 +64,7 @@
     <span class="bar-path">
       <a class="bar-name label ink" href="#cover">System<span style="color:var(--accent)">.</span></a>
       <svg class="bar-arr" width="16" height="16" aria-hidden="true"><use href="#arrow"/></svg>
-      <span class="bar-here label ink" data-here><b>00</b> Cover</span>
+      <span class="bar-here label ink" data-here>All sheets</span>
     </span>
     <div class="bar-end">
       <span class="bar-ed label">Edition 1.0 · 2026-10</span>
@@ -198,7 +208,7 @@
     <h2 class="sheet-title">Logo</h2>
     <span class="sheet-tag label" data-when="logo">With logo</span>
     <span class="sheet-tag label" data-when="no-logo">Without logo</span>
-    <p class="sheet-lede" data-when="logo">The mark is a circle and a square of equal height. Clear space equals the circle’s radius on every side.</p>
+    <p class="sheet-lede" data-when="logo">The mark is a circle and a square of equal height. Keep half the mark height clear around the logo, and two thirds after the name, so the open end of the word balances the mark.</p>
     <p class="sheet-lede" data-when="no-logo">With no logo, the name set in the house face is the logo. These rules fix its weight, tracking and the full stop.</p>
   </div>
 
@@ -218,25 +228,36 @@
       </div>
     </figure>
     <figure class="c-6">
-      <div class="block-head"><span class="label ink">Clear space</span><span class="label">x = 60</span></div>
-      <div class="logo-stage">
-        <svg viewBox="-80 -80 400 280">
-          <rect class="sk-d" x="-60" y="-60" width="360" height="240"/>
-          <use href="#mark" width="240" height="120" style="color:var(--ink)"/>
-          <path class="sk-a" d="M-60 140h60M-60 136v8M0 136v8"/>
-          <text class="svg-text" x="-42" y="160">x</text>
-          <path class="sk-a" d="M310 -60v60M306 -60h8M306 0h8"/>
-          <text class="svg-text" x="318" y="-26">x</text>
+      <div class="block-head"><span class="label ink">Clear space</span><span class="label">½ and ⅔ of the mark height</span></div>
+      <div class="logo-stage wide-lockup">
+        <svg viewBox="-110 -100 1078 340">
+          <rect class="sk-d" x="-60" y="-60" width="918" height="240"/>
+          <use href="#lockup" width="778" height="120" style="color:var(--ink)"/>
+          <path class="sk-a" d="M-60 150h60M-60 146v8M0 146v8"/>
+          <text class="svg-text cs" x="-38" y="176">½</text>
+          <path class="sk-a" d="M-80 -60v60M-84 -60h8M-84 0h8"/>
+          <text class="svg-text cs" x="-104" y="-22">½</text>
+          <path class="sk-a" d="M778 150h80M778 146v8M858 146v8"/>
+          <text class="svg-text cs" x="808" y="176">⅔</text>
         </svg>
       </div>
     </figure>
-    <div class="c-12">
-      <div class="block-head"><span class="label ink">Lockups &amp; backgrounds</span><span class="label">Min. 24 px mark height</span></div>
-      <div class="grid row-gap">
-        <div class="c-4"><div class="logo-stage" style="background:#f4f4f1;border-color:#dcdcd7"><svg viewBox="0 0 740 120"><use href="#mark" width="240" height="120" style="color:#111"/><text x="272" y="120" style="font:600 166px var(--sans);letter-spacing:-11px;fill:#111">System</text></svg></div><p class="label" style="margin-top:12px">Horizontal · paper</p></div>
-        <div class="c-4"><div class="logo-stage" style="background:#111;border-color:#111"><svg viewBox="0 0 740 120"><use href="#mark" width="240" height="120" style="color:#f4f4f1"/><text x="272" y="120" style="font:600 166px var(--sans);letter-spacing:-11px;fill:#f4f4f1">System</text></svg></div><p class="label" style="margin-top:12px">Horizontal · ink</p></div>
-        <div class="c-4"><div class="logo-stage accent"><svg viewBox="0 0 240 120"><use href="#mark" width="240" height="120" style="color:#fff"/></svg></div><p class="label" style="margin-top:12px">Mark only · accent</p></div>
-      </div>
+    <div class="c-4 lockup-notes">
+      <div class="block-head"><span class="label ink">Lockups</span><span class="label">Min. 24 px mark</span></div>
+      <ol>
+        <li><b class="label">A</b><span><em>Primary.</em> Ink on paper. Use it wherever you can.</span></li>
+        <li><b class="label">B</b><span><em>Stacked.</em> For square and narrow formats, avatars and stickers.</span></li>
+        <li><b class="label">C</b><span><em>On ink.</em> Paper on the ink colour, for dark screens and the back of cards.</span></li>
+        <li><b class="label">D</b><span><em>Reversed.</em> White on the accent, once per spread at most.</span></li>
+        <li><b class="label">E</b><span><em>Mark only.</em> When the name is already on screen, and below 120 px of lockup width.</span></li>
+      </ol>
+    </div>
+    <div class="c-8 lockups">
+      <div class="pn paper wide"><svg viewBox="-60 -60 918 240" role="img" aria-label="System"><use href="#lockup" x="0" y="0" width="778" height="120"/></svg><i>A</i></div>
+      <div class="pn stone"><svg class="stack" viewBox="0 0 505 291" role="img" aria-label="System"><use href="#lockup-stack"/></svg><i>B</i></div>
+      <div class="pn ink"><svg viewBox="-60 -60 918 240" role="img" aria-label="System"><use href="#lockup" x="0" y="0" width="778" height="120"/></svg><i>C</i></div>
+      <div class="pn accent"><svg viewBox="-60 -60 918 240" role="img" aria-label="System"><use href="#lockup" x="0" y="0" width="778" height="120"/></svg><i>D</i></div>
+      <div class="pn paper"><svg class="mark" viewBox="0 0 240 120" role="img" aria-label="System"><use href="#mark"/></svg><i>E</i></div>
     </div>
   </div>
 
@@ -841,7 +862,7 @@
   </div>
 </div>
 
-<script src="js/canvas.js?v=10" defer></script>
-<script src="js/system.js?v=10" defer></script>
+<script src="js/canvas.js?v=15" defer></script>
+<script src="js/system.js?v=15" defer></script>
 </body>
 </html>

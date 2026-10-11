@@ -34,7 +34,7 @@
   cam.className = "cam";
   deck.parentNode.insertBefore(cam, deck);
   cam.appendChild(deck);
-  var marks = document.createElement("div");
+  var marks = document.createElement("canvas");
   marks.className = "marks";
   marks.setAttribute("aria-hidden", "true");
   document.body.insertBefore(marks, document.body.firstChild);
@@ -49,31 +49,52 @@
   /* ---------- Register crosses ----------
      A uniform grid of crosses fixed to the canvas, not the screen, every
      400 px from the first sheet's top-left corner. 400 divides a sheet
-     column (1440 + 160 px), so every sheet's left edge and the first
-     row's top edge land on the grid. The crosses are CSS gradients sized
-     in screen pixels (see .marks), so a frame only sets the tile size and
-     the offset: 1 px lines at any zoom, nothing redrawn. */
+     column (1440 + 160 px), so every sheet's left edge lands on the grid,
+     and each row of sheets starts on a grid line too. They are drawn on a
+     screen-sized <canvas>, every cross snapped to whole device pixels, so
+     the lines are exactly 1 px and the arms 9 px at any zoom. */
 
   var STEP = 400, ARM = 4;
+  var ctx = marks.getContext("2d"), markColor = null;
   function crosses(x, y, s) {
-    var t = STEP * s, size = t + "px " + t + "px";
-    marks.style.backgroundSize = size + ", " + size;
-    marks.style.webkitMaskSize = marks.style.maskSize = size + ", " + size;
-    marks.style.width = innerWidth + 2 * t + "px";
-    marks.style.height = innerHeight + 2 * t + "px";
-    // the cross centre sits ARM px into its tile, so shift back by that to put it on the canvas point
-    var ox = (((x - ARM) % t) + t) % t - t;
-    var oy = (((y - ARM) % t) + t) % t - t;
-    marks.style.transform = "translate(" + ox + "px," + oy + "px)";
+    var dpr = window.devicePixelRatio || 1;
+    var W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
+    if (marks.width !== W || marks.height !== H) { marks.width = W; marks.height = H; }
+    if (!markColor) markColor = getComputedStyle(root).getPropertyValue("--canvas-mark").trim();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = markColor;
+    var t = STEP * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(ARM * dpr), reach = arm + lw;
+    var x0 = x * dpr, y0 = y * dpr;
+    var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
+    for (var i = i0; x0 + i * t < W + reach; i++) {
+      var px = Math.round(x0 + i * t);
+      for (var j = j0; y0 + j * t < H + reach; j++) {
+        var py = Math.round(y0 + j * t);
+        ctx.fillRect(px - arm, py, 2 * arm + lw, lw);
+        ctx.fillRect(px, py - arm, lw, 2 * arm + lw);
+      }
+    }
   }
 
   /* ---------- Layout ----------
      Columns follow the screen: the count whose overview comes out largest. */
 
-  function measure() {
+  // Each row starts on the cross grid: the next row's top is the first grid line at least a gap below
+  // the tallest sheet of the row above. The last row is just as tall as its tallest sheet.
+  function rows(hs, n) {
+    var out = [];
+    for (var i = 0; i < hs.length; i += n) {
+      var tall = Math.max.apply(null, hs.slice(i, i + n));
+      out.push(i + n < hs.length ? Math.ceil((tall + GAP) / STEP) * STEP : tall);
+    }
+    return out;
+  }
+  function measure(hs) {
     var z0 = deck.style.zoom;
     deck.style.zoom = 1;
     deck.style.gridTemplateColumns = "repeat(" + cols + ", 1440px)";
+    deck.style.gridTemplateRows = rows(hs, cols).map(function (h) { return h + "px"; }).join(" ");
+    deck.style.rowGap = "0px";
     rects = boards.map(function (b) { return { x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; });
     box = { w: deck.offsetWidth, h: deck.offsetHeight };
     deck.style.zoom = z0;
@@ -86,13 +107,12 @@
     deck.style.zoom = z0;
     var a = area(), best = 1, bestS = 0;
     for (var n = 1; n <= 8; n++) {
-      var h = 0;
-      for (var i = 0; i < hs.length; i += n) h += Math.max.apply(null, hs.slice(i, i + n)) + (i ? GAP : 0);
+      var h = rows(hs, n).reduce(function (sum, r) { return sum + r; }, 0);
       var s = Math.min((a.W - 80) / (n * w + (n - 1) * GAP), (a.H - 80) / h);
       if (s > bestS + 1e-6) { bestS = s; best = n; }
     }
     cols = best;
-    measure();
+    measure(hs);
     pages();
   }
 
@@ -272,6 +292,7 @@
     if (restyle) return;
     restyle = requestAnimationFrame(function () {
       restyle = 0;
+      markColor = null;
       steady();
       layout();
       apply();
