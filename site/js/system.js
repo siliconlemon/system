@@ -243,6 +243,8 @@
       el.appendChild(document.createTextNode(name));
     };
     if (allBtn) allBtn.addEventListener("click", function () { canvas.go("all", true); });
+    var home = document.querySelector("[data-home]");
+    if (home) home.addEventListener("click", function (e) { e.preventDefault(); canvas.go("all", true); });
     // the pager runs All, cover, ..., the last sheet
     Array.prototype.forEach.call(steps, function (b) {
       b.addEventListener("click", function () {
@@ -253,6 +255,8 @@
 
     canvas.onchange(function (f, pct) {
       if (allBtn) allBtn.setAttribute("aria-pressed", String(f === "all"));
+      // on phones the zoom cell mirrors All, so it takes the same pressed look
+      if (zoomLabel) zoomLabel.setAttribute("aria-pressed", String(f === "all"));
       if (cur) crumb(cur, f);
       if (steps.length) {
         steps[0].disabled = f === "all";
@@ -262,15 +266,10 @@
       if (f !== "all") chapters.forEach(function (c, j) { if (c <= f) idx = j + 1; });
       navSeg.set(idx);
       if (zoomLabel) zoomLabel.textContent = pct + "%";
+      // the crumb chains like the wordmark: System. on its own for all sheets, System.logo on a sheet
       if (here) {
-        here.innerHTML = "";
-        var nb = document.createElement("b");
         var t = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
-        if (f !== "all") {
-          nb.textContent = number(canvas.boards[f]);
-          here.appendChild(nb);
-        }
-        here.appendChild(document.createTextNode(f === "all" ? "All sheets" : t ? t.textContent : "Cover"));
+        here.textContent = f === "all" ? "" : (t ? t.textContent : "cover").toLowerCase();
       }
     });
     document.querySelectorAll("[data-zoom]").forEach(function (b) {

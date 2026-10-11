@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=15">
+<link rel="stylesheet" href="css/system.css?v=20">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -36,7 +36,6 @@
       <circle cx="60" cy="60" r="60" fill="currentColor"/>
       <rect x="120" y="0" width="120" height="120" fill="currentColor"/>
     </symbol>
-    <!-- The arrow between crumbs: square caps and a mitred head, drawn on the 8 px grid. -->
     <!-- Lockups: the mark plus the name in Inter Tight 600, tracked −11 at 166 px so its cap height meets the mark.
          Horizontal: a gap of a quarter mark height. Stacked: the mark centred over the name, two fifths apart. -->
     <symbol id="lockup" viewBox="0 0 778 120">
@@ -53,19 +52,13 @@
     <symbol id="download" viewBox="0 0 16 16">
       <path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13.5h10" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter"/>
     </symbol>
-    <symbol id="arrow" viewBox="0 0 16 16">
-      <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter"/>
-    </symbol>
   </defs>
 </svg>
 
 <header class="bar top">
   <div class="wrap">
-    <span class="bar-path">
-      <a class="bar-name label ink" href="#cover">System<span style="color:var(--accent)">.</span></a>
-      <svg class="bar-arr" width="16" height="16" aria-hidden="true"><use href="#arrow"/></svg>
-      <span class="bar-here label ink" data-here>All sheets</span>
-    </span>
+    <!-- The crumb chains like the wordmark: System. then the sheet in view, System.logo, System.colour. -->
+    <a class="bar-path" href="#" data-home aria-label="All sheets"><span class="bar-name">System<span class="dot">.</span></span><span class="bar-here" data-here></span></a>
     <div class="bar-end">
       <span class="bar-ed label">Edition 1.0 · 2026-10</span>
       <div class="bar-theme seg" data-seg="theme" role="radiogroup" aria-label="Theme">
@@ -115,24 +108,24 @@
 
   <div class="grid row-gap">
     <nav class="c-6 toc" aria-label="Contents">
-      <a href="#landing"><span class="label">02</span><span class="t">Landing page</span><span class="label">Web</span></a>
+      <a href="#landing"><span class="label">02</span><span class="t">Landing</span><span class="label">Web</span></a>
       <a href="#logo"><span class="label">03</span><span class="t">Logo</span><span class="label">Identity</span></a>
       <a href="#colour"><span class="label">04</span><span class="t">Colour</span><span class="label">Identity</span></a>
       <a href="#type"><span class="label">05</span><span class="t">Typography</span><span class="label">Identity</span></a>
-      <a href="#grid"><span class="label">06</span><span class="t">Grid &amp; spacing</span><span class="label">Layout</span></a>
-      <a href="#icons"><span class="label">07</span><span class="t">Icons &amp; shapes</span><span class="label">Identity</span></a>
+      <a href="#grid"><span class="label">06</span><span class="t">Grid</span><span class="label">Layout</span></a>
+      <a href="#icons"><span class="label">07</span><span class="t">Icons</span><span class="label">Identity</span></a>
       <a href="#imagery"><span class="label">08</span><span class="t">Imagery</span><span class="label">Identity</span></a>
       <a href="#ui"><span class="label">09</span><span class="t">Components</span><span class="label">Product</span></a>
     </nav>
     <nav class="c-6 toc" aria-label="Contents, continued">
-      <a href="#app"><span class="label">10</span><span class="t">App screens</span><span class="label">Product</span></a>
+      <a href="#app"><span class="label">10</span><span class="t">Apps</span><span class="label">Product</span></a>
       <a href="#motion"><span class="label">11</span><span class="t">Motion</span><span class="label">Product</span></a>
-      <a href="#voice"><span class="label">12</span><span class="t">Voice &amp; tone</span><span class="label">Writing</span></a>
+      <a href="#voice"><span class="label">12</span><span class="t">Voice</span><span class="label">Writing</span></a>
       <a href="#marketing"><span class="label">13</span><span class="t">Marketing</span><span class="label">Media</span></a>
-      <a href="#print"><span class="label">14</span><span class="t">Print &amp; stationery</span><span class="label">Media</span></a>
+      <a href="#print"><span class="label">14</span><span class="t">Print</span><span class="label">Media</span></a>
       <a href="#downloads"><span class="label">15</span><span class="t">Downloads</span><span class="label">Files</span></a>
-      <a href="#utility"><span class="label">16</span><span class="t">Utility pages</span><span class="label">Web</span></a>
-      <a href="#cover"><span class="label">00</span><span class="t">Back to the cover</span><span class="label">↑</span></a>
+      <a href="#utility"><span class="label">16</span><span class="t">Utility</span><span class="label">Web</span></a>
+      <a href="#cover"><span class="label">00</span><span class="t">Cover</span><span class="label">↑</span></a>
     </nav>
 
     <div class="c-6">
@@ -154,7 +147,7 @@
 <section class="sheet wrap" id="landing" data-nav="Web">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>02</b> / 16</span>
-    <h2 class="sheet-title">Landing page</h2>
+    <h2 class="sheet-title">Landing</h2>
     <span class="sheet-tag label">Web</span>
     <p class="sheet-lede">One column of argument: a headline that says what it is, one action, then three reasons. The grid lines keep running behind it.</p>
   </div>
@@ -380,7 +373,7 @@
 <section class="sheet wrap" id="grid">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>06</b> / 16</span>
-    <h2 class="sheet-title">Grid &amp; spacing</h2>
+    <h2 class="sheet-title">Grid</h2>
     <span class="sheet-tag label">8 px unit</span>
     <p class="sheet-lede">Twelve columns on desktop, four on phones. The ruler lines behind this page are the grid itself, so anything off it shows.</p>
   </div>
@@ -422,7 +415,7 @@
 <section class="sheet wrap" id="icons">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>07</b> / 16</span>
-    <h2 class="sheet-title">Icons &amp; shapes</h2>
+    <h2 class="sheet-title">Icons</h2>
     <span class="sheet-tag label" data-when="icons">With icon set</span>
     <span class="sheet-tag label" data-when="no-icons">Without icon set</span>
     <p class="sheet-lede" data-when="icons">Icons are drawn on a 24 grid with a single 1 px hairline, open ends and no fills, so they sit with the ruler lines.</p>
@@ -597,11 +590,11 @@
   </div>
 </section>
 
-<!-- ============ 10 App screens ============ -->
+<!-- ============ 10 Apps ============ -->
 <section class="sheet wrap" id="app">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>10</b> / 16</span>
-    <h2 class="sheet-title">App screens</h2>
+    <h2 class="sheet-title">Apps</h2>
     <span class="sheet-tag label">States</span>
     <p class="sheet-lede">Four states every app needs before it needs anything else: the welcome, the empty list, the wait and the error.</p>
   </div>
@@ -688,7 +681,7 @@
 <section class="sheet wrap" id="voice">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>12</b> / 16</span>
-    <h2 class="sheet-title">Voice &amp; tone</h2>
+    <h2 class="sheet-title">Voice</h2>
     <span class="sheet-tag label">Writing</span>
     <p class="sheet-lede">Write the way the page looks: short, plain, nothing that doesn’t carry weight. Say what happened and what to do next.</p>
   </div>
@@ -747,7 +740,7 @@
 <section class="sheet wrap" id="print">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>14</b> / 16</span>
-    <h2 class="sheet-title">Print &amp; stationery</h2>
+    <h2 class="sheet-title">Print</h2>
     <span class="sheet-tag label">CMYK · 3 mm bleed</span>
     <p class="sheet-lede">Cards and letterheads use the same grid, scaled to millimetres. Uncoated paper, one ink plus the accent.</p>
   </div>
@@ -811,7 +804,7 @@
 <section class="sheet wrap" id="utility">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>16</b> / 16</span>
-    <h2 class="sheet-title">Utility pages</h2>
+    <h2 class="sheet-title">Utility</h2>
     <span class="sheet-tag label">404 · Changelog</span>
     <p class="sheet-lede">The pages nobody designs. They get the same grid and the same voice, and they always offer a way back.</p>
   </div>
@@ -862,7 +855,7 @@
   </div>
 </div>
 
-<script src="js/canvas.js?v=15" defer></script>
-<script src="js/system.js?v=15" defer></script>
+<script src="js/canvas.js?v=20" defer></script>
+<script src="js/system.js?v=20" defer></script>
 </body>
 </html>

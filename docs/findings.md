@@ -85,8 +85,9 @@ The skill asks "what do you have?" up front and sets the flags.
 
 - Sheets are 1440 px artboards, as tall as their content, on a pannable, zoomable canvas, like the Viewgraft manual. Phones pinch and pan the same artboards, no reflow.
 - The canvas carries a uniform grid of register crosses fixed to it, every 400 px from the first sheet's top-left corner. Each sheet's left edge sits on it, and each row starts on a grid line. The crosses are drawn on a canvas snapped to device pixels, so lines stay 1 px at any zoom.
-- Top and bottom bars run full width, glued to the screen edges. The top bar holds the crumb (name, arrow, the sheet in view), the theme and the PDF. The bottom bar only moves you: sheet cells and zoom, centred.
-- Phones follow Viewgraft: All, a pager whose arrows never move, and only the current theme, a tap moves on.
+- Sheet names are always one word. The top bar crumb chains them onto the wordmark like Viewgraft's: System.logo, System.colour, plain System. on the overview.
+- Top and bottom bars run full width, glued to the screen edges. The top bar holds the crumb, the theme and the PDF. The bottom bar only moves you: sheet cells and zoom, centred.
+- Phones follow Viewgraft: All, a pager whose arrows never move, zoom bottom right, and only the current theme up top, a tap moves on.
 - Tap or click a sheet you are not on and the canvas flies to it, even over a link or a switch.
 - The PDF is a file rendered by `scripts/pdf.py`, like Viewgraft's, not a print dialog.
 - The bottom bar is a row of rectangular cells split by hairlines. One ink block with an accent top edge marks the current cell. When it moves, the leading edge runs ahead and the trailing edge follows, so it wipes across like a shutter. Labels use `mix-blend-mode: difference`, so they invert where the block passes.
