@@ -91,7 +91,7 @@ The skill asks "what do you have?" up front and sets the flags.
 - Tap or click a sheet you are not on and the canvas flies to it, even over a link or a switch.
 - The PDF is a file rendered by `scripts/pdf.py`, like Viewgraft's, not a print dialog.
 - The bottom bar is a row of rectangular cells split by hairlines. One ink block with an accent top edge marks the current cell. When it moves, the leading edge runs ahead and the trailing edge follows, so it wipes across like a shutter. Labels use `mix-blend-mode: difference`, so they invert where the block passes.
-- Logo sheet after Viewgraft's: lockups A to E (primary, stacked, on ink, reversed, mark only) and clear space of half the mark height around, two thirds after the name. The horizontal lockups centre on that clear space, so the open end of the word gets its room.
+- Logo sheet after Viewgraft's: lockups A to E (primary, stacked, on ink, reversed, mark only) and clear space of half the mark height around, two thirds after the name. The horizontal lockups centre on that clear space, so the open end of the word gets its room. The mark alone sits on its optical centre: the square outweighs the circle, so it shifts 7.2 units (3% of its width) left, shown with rulers on the sheet.
 - The goo blob was dropped: round pills do not fit a Swiss sheet.
 
 ## Plumbing (to confirm in the sweep)

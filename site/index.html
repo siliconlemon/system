@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=20">
+<link rel="stylesheet" href="css/system.css?v=27">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -38,11 +38,12 @@
     </symbol>
     <!-- Lockups: the mark plus the name in Inter Tight 600, tracked −11 at 166 px so its cap height meets the mark.
          Horizontal: a gap of a quarter mark height. Stacked: the mark centred over the name, two fifths apart. -->
-    <symbol id="lockup" viewBox="0 0 778 120">
+    <!-- overflow visible: the y descends below the mark, a symbol would clip it to its box. -->
+    <symbol id="lockup" viewBox="0 0 778 120" overflow="visible">
       <use href="#mark" width="240" height="120"/>
       <text x="272" y="120" fill="currentColor" style="font:600 166px var(--sans);letter-spacing:-11px">System</text>
     </symbol>
-    <symbol id="lockup-stack" viewBox="0 0 505 291">
+    <symbol id="lockup-stack" viewBox="0 0 505 291" overflow="visible">
       <use href="#mark" x="132.5" width="240" height="120"/>
       <text x="-4" y="291" fill="currentColor" style="font:600 166px var(--sans);letter-spacing:-11px">System</text>
     </symbol>
@@ -54,6 +55,9 @@
     </symbol>
   </defs>
 </svg>
+
+<!-- Splash: the mark on paper (or ink, in dark). The mark sits on its optical centre, 7.2 units left of the geometric one. A hairline ring draws around it, then the ring springs and hands over to the canvas, which lays itself out underneath meanwhile. -->
+<div class="splash" aria-hidden="true"><svg viewBox="-110 -170 460 460"><circle cx="120" cy="60" r="220" pathLength="1"/><use href="#mark" x="-7.2" width="240" height="120"/></svg></div>
 
 <header class="bar top">
   <div class="wrap">
@@ -235,6 +239,32 @@
         </svg>
       </div>
     </figure>
+    <figure class="c-8">
+      <div class="block-head"><span class="label ink">Optical centre</span><span class="label">Shift 7.2 = 3% of the width</span></div>
+      <div class="logo-stage optical">
+        <svg viewBox="0 0 840 380">
+          <!-- left: centred on the box, the square's weight pulls it right -->
+          <rect class="sk-2" x="60" y="30" width="300" height="300"/>
+          <path class="sk-d" d="M210 30v300M60 180h300"/>
+          <use href="#mark" x="90" y="120" width="240" height="120" style="color:var(--ink)"/>
+          <text class="svg-text" x="60" y="362">Geometric centre</text>
+          <!-- right: moved left until the centre of mass meets the centre line -->
+          <rect class="sk-2" x="480" y="30" width="300" height="300"/>
+          <path class="sk-d" d="M630 30v300M480 180h300"/>
+          <use href="#mark" x="502.8" y="120" width="240" height="120" style="color:var(--ink)"/>
+          <path class="sk-a" d="M630 18v324"/>
+          <path class="sk-a" d="M622.8 96v-12M630 96v-12M622.8 90h7.2"/>
+          <text class="svg-text cs" x="596" y="78">7.2</text>
+          <text class="svg-text" x="480" y="362">Optical centre · mass on the line</text>
+        </svg>
+      </div>
+    </figure>
+    <div class="c-4 stack optical-notes">
+      <div class="block-head" style="margin-bottom:0"><span class="label ink">Why</span><span class="label">Mark alone</span></div>
+      <div class="card" style="border-top:0;padding-top:0"><h4>The square is heavier</h4><p>It holds 14 400 units² against the circle's 11 310, so the mark's centre of mass sits at 127.2 of its 240, not at 120.</p></div>
+      <div class="card"><h4>Shift it 7.2 left</h4><p>Wherever the mark stands alone and centred, on the splash, app icons and avatars, move it 3% of its width to the left, so the weight lands on the centre.</p></div>
+      <div class="card"><h4>Not in lockups</h4><p>Next to the name the word balances it. Lockups align on their clear space instead.</p></div>
+    </div>
     <div class="c-4 lockup-notes">
       <div class="block-head"><span class="label ink">Lockups</span><span class="label">Min. 24 px mark</span></div>
       <ol>
@@ -250,7 +280,7 @@
       <div class="pn stone"><svg class="stack" viewBox="0 0 505 291" role="img" aria-label="System"><use href="#lockup-stack"/></svg><i>B</i></div>
       <div class="pn ink"><svg viewBox="-60 -60 918 240" role="img" aria-label="System"><use href="#lockup" x="0" y="0" width="778" height="120"/></svg><i>C</i></div>
       <div class="pn accent"><svg viewBox="-60 -60 918 240" role="img" aria-label="System"><use href="#lockup" x="0" y="0" width="778" height="120"/></svg><i>D</i></div>
-      <div class="pn paper"><svg class="mark" viewBox="0 0 240 120" role="img" aria-label="System"><use href="#mark"/></svg><i>E</i></div>
+      <div class="pn paper"><svg class="mark" viewBox="7.2 0 240 120" role="img" aria-label="System"><use href="#mark"/></svg><i>E</i></div>
     </div>
   </div>
 
@@ -855,7 +885,7 @@
   </div>
 </div>
 
-<script src="js/canvas.js?v=20" defer></script>
-<script src="js/system.js?v=20" defer></script>
+<script src="js/canvas.js?v=27" defer></script>
+<script src="js/system.js?v=27" defer></script>
 </body>
 </html>

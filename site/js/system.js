@@ -280,6 +280,18 @@
     });
   }
 
+  /* ---------- Splash ----------
+     The ring takes the first second from the start of the load, then the
+     spring zoom and fade hand over to the canvas. */
+
+  var splash = document.querySelector(".splash");
+  if (splash) {
+    setTimeout(function () {
+      splash.classList.add("out");
+      setTimeout(function () { splash.remove(); }, reduce.matches ? 0 : 600);
+    }, Math.max(0, 1050 - performance.now()));
+  }
+
   /* ---------- No runts ----------
      Tie the last three words of every paragraph and heading together,
      so no block ends on a line with one or two lonely words. */

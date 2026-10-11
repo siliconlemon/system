@@ -531,6 +531,8 @@ body::after {
 .logo-stage { background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; aspect-ratio: 4 / 3; }
 .logo-stage svg { width: 72%; height: auto; overflow: visible; }
 .logo-stage.wide-lockup svg { width: 92%; }
+.logo-stage.optical { aspect-ratio: 840 / 380; }
+.logo-stage.optical svg { width: 92%; }
 .logo-stage.ink { background: var(--ink); border-color: var(--ink); }
 .logo-stage.accent { background: var(--accent); border-color: var(--accent); }
 .svg-text.cs { font-size: 22px; fill: var(--accent); }
@@ -884,6 +886,45 @@ html { -webkit-tap-highlight-color: transparent; }
   .cam, .deck { position: static; transform: none !important; zoom: 1 !important; display: block; }
   .board { box-shadow: none; break-after: page; }
 }
+
+/* ---------- Splash ----------
+   The mark alone on the page colour, above everything. A 1 px ring draws
+   around it from twelve o'clock, then the ring gives a small spring zoom,
+   in a touch and out past its size, while the splash fades. system.js
+   starts the exit and removes it. */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--ink);
+  transition: opacity 0.34s ease-in 0.24s;
+}
+.splash svg { width: min(280px, 56vw); height: auto; overflow: visible; }
+.splash circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transform: rotate(-90deg);
+  transform-origin: 120px 60px;
+  animation: splash-ring 0.9s var(--ease) 0.1s forwards;
+}
+.splash.out { opacity: 0; pointer-events: none; }
+/* only the ring bobs, the mark holds still; the ring keeps its quarter turn so it stays closed at twelve */
+.splash.out circle { stroke-dashoffset: 0; animation: splash-bob 0.55s cubic-bezier(0.3, 0, 0.2, 1) forwards; }
+@keyframes splash-ring { to { stroke-dashoffset: 0; } }
+@keyframes splash-bob {
+  0% { transform: rotate(-90deg) scale(1); }
+  35% { transform: rotate(-90deg) scale(0.94); }
+  100% { transform: rotate(-90deg) scale(1.12); }
+}
+@media print { .splash { display: none; } }
 
 /* ---------- Top and bottom bars ----------
    Plain rectangles pinned to the window edges, read like the head and
