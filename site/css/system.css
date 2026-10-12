@@ -1111,13 +1111,6 @@ html { -webkit-tap-highlight-color: transparent; }
   height: 100%;
   pointer-events: none;
 }
-.seg-layer > i {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--rule-2);
-}
 .seg-block {
   position: absolute;
   top: 0;
@@ -1157,6 +1150,12 @@ html { -webkit-tap-highlight-color: transparent; }
   transition: color var(--t) var(--ease) 60ms;
 }
 .seg > [aria-checked="true"], .seg > [aria-current="true"] { color: var(--paper); }
+/* a hairline between neighboring cells, none on the outer edges. A border
+   on the cell itself snaps to device pixels; a separate 1 px line at a
+   fractional offset smeared over two on scaled screens */
+.seg > :is(a, button) + :is(a, button) { border-left: 1px solid var(--rule-2); }
+/* the sheet cells lead with a gray number, so a touch more room on the right balances them */
+.seg > a { padding-right: calc(var(--inset) + 4px); }
 /* A quiet segment, for the language: no block and no accent edge, the
    labels only change color, so the one accent in the bar stays on the
    theme. It sits next to the theme switch without merging into it. */
