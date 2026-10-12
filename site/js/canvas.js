@@ -75,12 +75,12 @@
      column's edge. */
 
   var STEP = 400, ARM = 6, ARM_PHONE = 4;
-  var ctx = marks.getContext("2d"), markColor = null, drawn = "";
+  var ctx = marks.getContext("2d"), markColor = null, drawn = "", lastS = 0, dirtyW = 0, dirtyH = 0;
   /* While crosses sit close together, as in the overview, the canvas is drawn once a tile larger
      than the screen and panning only slides it, modulo one spacing, with a GPU transform: no
-     redraw and no re-upload per frame, which stuttered on phones. It is redrawn only when the
-     spacing, size or color changes, that is while zooming. Far apart, as close up, the canvas is
-     the screen and redraws, since the few crosses are cheap and a tile would be huge. */
+     redraw and no re-upload per frame, which stuttered on phones. The backing buffer is sized
+     once from the window (with room for the largest tile), never from the spacing t, so zooming
+     never reallocates the GPU canvas texture or dirties layout. */
   function crosses(x, y, s) {
     var dpr = window.devicePixelRatio || 1;
     var W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
@@ -91,10 +91,18 @@
     // the far end of the zoom out does it fall back to every second one
     while (k < 4 && STEP * k * s < 2 * armPx + 9) k *= 2;
     var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(armPx * dpr), reach = arm + lw;
+    var pad = Math.ceil(Math.min(W, H) / 2) + reach + 1, bufW = W + pad, bufH = H + pad;
+    if (marks.width !== bufW || marks.height !== bufH) {
+      marks.width = bufW; marks.height = bufH;
+      marks.style.width = bufW / dpr + "px"; marks.style.height = bufH / dpr + "px";
+      drawn = "";
+    }
     var x0 = x * dpr, y0 = y * dpr;
-    var tiled = t <= Math.min(W, H) / 2;
-    var cw = tiled ? W + Math.ceil(t) + reach + 1 : W, ch = tiled ? H + Math.ceil(t) + reach + 1 : H;
+    var zooming = s !== lastS;
+    lastS = s;
+    var tiled = !zooming && t <= Math.min(W, H) / 2;
     if (tiled) {
+      var cw = W + Math.ceil(t) + reach + 1, ch = H + Math.ceil(t) + reach + 1;
       var key = [t, arm, lw, markColor, cw, ch].join();
       var ox = Math.round(((x0 % t) + t) % t), oy = Math.round(((y0 % t) + t) % t);
       if (key !== drawn) { draw(cw, ch, 0, 0, t, arm, lw, reach); drawn = key; }
@@ -102,16 +110,12 @@
     } else {
       drawn = "";
       marks.style.transform = "";
-      draw(cw, ch, x0, y0, t, arm, lw, reach);
+      draw(W, H, x0, y0, t, arm, lw, reach);
     }
   }
   function draw(cw, ch, x0, y0, t, arm, lw, reach) {
-    var dpr = window.devicePixelRatio || 1;
-    if (marks.width !== cw || marks.height !== ch) {
-      marks.width = cw; marks.height = ch;
-      marks.style.width = cw / dpr + "px"; marks.style.height = ch / dpr + "px";
-    }
-    ctx.clearRect(0, 0, cw, ch);
+    ctx.clearRect(0, 0, Math.max(cw, dirtyW), Math.max(ch, dirtyH));
+    dirtyW = cw; dirtyH = ch;
     ctx.fillStyle = markColor;
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
     for (var i = i0; x0 + i * t < cw + reach; i++) {
@@ -138,22 +142,18 @@
     return out;
   }
   function measure(hs) {
-    var z0 = deck.style.zoom;
-    deck.style.zoom = 1;
     deck.style.gridTemplateColumns = "repeat(" + cols + ", 1440px)";
     deck.style.gridTemplateRows = rows(hs, cols).map(function (h) { return h + "px"; }).join(" ");
     deck.style.rowGap = "0px";
     rects = boards.map(function (b) { return { x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; });
     box = { w: deck.offsetWidth, h: deck.offsetHeight };
-    deck.style.zoom = z0;
   }
-  function layout() {
+  function layout(keepZoom) {
     var z0 = deck.style.zoom;
-    deck.style.zoom = 1;
+    if (!keepZoom) deck.style.zoom = 1;
+    var a = measureArea(), best = 1, bestS = 0;
     var w = boards[0].offsetWidth;
     var hs = boards.map(function (b) { return b.offsetHeight; });
-    deck.style.zoom = z0;
-    var a = area(), best = 1, bestS = 0;
     for (var n = 1; n <= 8; n++) {
       var h = rows(hs, n).reduce(function (sum, r) { return sum + r; }, 0);
       var s = Math.min((a.W - 80) / (n * w + (n - 1) * GAP), (a.H - 80) / h);
@@ -161,16 +161,20 @@
     }
     cols = best;
     measure(hs);
+    if (!keepZoom) deck.style.zoom = z0;
     pages();
   }
 
-  // The space between the two bars
-  function area() {
+  // The space between the two bars, measured on layout/resize so frames never query layout
+  var win = { top: 0, left: 0, W: innerWidth, H: innerHeight };
+  function measureArea() {
     var shown = function (el) { return el && getComputedStyle(el).display !== "none"; };
     var top = shown(topbar) ? topbar.getBoundingClientRect().bottom : 0;
     var bottom = shown(bottombar) ? bottombar.getBoundingClientRect().top : innerHeight;
-    return { top: top, left: 0, W: root.getBoundingClientRect().width, H: bottom - top };
+    win = { top: top, left: 0, W: root.getBoundingClientRect().width, H: bottom - top };
+    return win;
   }
+  function area() { return win; }
 
   /* ---------- Camera ----------
      Moving only translates the camera. A zoom change scales it for the
@@ -195,7 +199,6 @@
     if (!cam.classList.contains("fly")) return;
     var m = new DOMMatrix(getComputedStyle(cam).transform);
     crosses(m.e, m.f, m.a * z);
-    hair(m.a * z, true);
     following = requestAnimationFrame(follow);
   }
   function apply(mode) {
@@ -206,12 +209,11 @@
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
     if (mode === "fly") {
-      // on phones the lines take the target weight once: as a zoom in starts, or as a zoom out
-      // ends (settle), so they never draw heavier than the view they're in
-      if (phone() && view.s > z) hair(view.s);
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 750);
       if (!following) following = requestAnimationFrame(follow);
     }
-    else { crosses(view.x, view.y, view.s); hair(view.s, true); }
+    else crosses(view.x, view.y, view.s);
     tell();
   }
   function moving(on) { cam.classList.toggle("moving", on); }
@@ -219,6 +221,7 @@
   function settle() {
     flush();
     clearTimeout(settleTimer);
+    if (following) { cancelAnimationFrame(following); following = 0; }
     cam.classList.remove("fly", "moving");
     if (z !== view.s) { z = view.s; deck.style.zoom = z; }
     hair(z);
@@ -327,35 +330,23 @@
      Below one a line would land on a whole pixel or on none, so some lines
      vanished and others didn't. */
 
-  // --k is device pixels per sheet pixel, s × dpr however the zoom splits between CSS zoom and the
-  // camera's transform. Every line is drawn as a whole number of device pixels, at least one:
-  // a 1 px line at 1.1 device pixels smeared over two columns on one side and not the other.
-  // Each change of --k restyles every line on every sheet, so a running zoom only moves it when
-  // the floor is in play (k below 1) and the hairlines, scaled by the camera meanwhile, have
-  // drifted more than a fifth of a pixel from one: a handful of steps per zoom, not one a frame,
-  // and the width still changes smoothly. When the zoom settles it lands exactly. Phones skip the
-  // steps: a zoom in takes its target weight as it starts, a zoom out or a pinch as it settles.
+  // --k is device pixels per sheet pixel, s × dpr. Every change of --k restyles every line on
+  // every sheet, so it updates once when a zoom settles alongside deck.style.zoom, never in steps
+  // mid-flight while the camera is scaling on the compositor.
   var lastK = 0;
-  function hair(s, live) {
+  function hair(s) {
     var k = s * (window.devicePixelRatio || 1);
-    if (live) {
-      // phones restyle once, at the start of a fly (see apply), never in between: every step jolted
-      if (phone()) return;
-      if (k >= 1 && lastK >= 1) return;
-      var drawn = Math.min(1, lastK) / Math.min(1, k);
-      if (drawn > 0.8 && drawn < 1.25) return;
-    }
     if (k === lastK) return;
     lastK = k;
     deck.style.setProperty("--k", k);
   }
 
   var steadySheet = null;
-  function steady() {
+  function steady(keepZoom) {
     if (steadySheet) steadySheet.remove();
     Array.prototype.forEach.call(deck.querySelectorAll("[data-steady]"), function (el) { el.removeAttribute("data-steady"); });
-    var z0 = deck.style.zoom, rules = [], n = 0;
-    deck.style.zoom = 1;
+    var z0 = deck.style.zoom, rules = [], map = {}, hits = [], n = 0;
+    if (!keepZoom) deck.style.zoom = 1;
     var sides = { Top: [0, 1], Right: [-1, 0], Bottom: [0, -1], Left: [1, 0] };
     Array.prototype.forEach.call(deck.querySelectorAll("*"), function (el) {
       var cs = getComputedStyle(el), decl = [], shadows = [];
@@ -372,13 +363,19 @@
       if (!decl.length) return;
       if (cs.boxShadow !== "none") shadows.push(cs.boxShadow);
       decl.push("box-shadow: " + shadows.join(", "));
-      el.setAttribute("data-steady", ++n);
-      rules.push('[data-steady="' + n + '"] { ' + decl.join(" !important; ") + " !important; }");
+      var body = decl.join(" !important; ") + " !important;";
+      var id = map[body];
+      if (!id) {
+        id = map[body] = ++n;
+        rules.push('[data-steady="' + id + '"] { ' + body + " }");
+      }
+      hits.push([el, id]);
     });
+    hits.forEach(function (h) { h[0].setAttribute("data-steady", h[1]); });
     steadySheet = document.createElement("style");
     steadySheet.textContent = "@media screen {\n" + rules.join("\n") + "\n}";
     document.head.appendChild(steadySheet);
-    deck.style.zoom = z0;
+    if (!keepZoom) deck.style.zoom = z0;
   }
 
   // Theme and flags live on the root: restyle, and if a flag changed the sheet heights, lay out again
@@ -388,8 +385,11 @@
     restyle = requestAnimationFrame(function () {
       restyle = 0;
       markColor = null; drawn = "";
-      steady();
-      layout();
+      var z0 = deck.style.zoom;
+      deck.style.zoom = 1;
+      steady(true);
+      layout(true);
+      deck.style.zoom = z0;
       // a sheet or the overview in view gets fitted again, a free view just stays put
       if (current === null) apply(); else go(current, false);
     });
@@ -577,7 +577,7 @@
   layout();
   var start = ids.indexOf(location.hash.slice(1));
   go(start < 0 ? "all" : start, false);
-  if (document.fonts) document.fonts.ready.then(function () { steady(); layout(); go(current === null ? focus() : current, false); });
+  if (document.fonts) document.fonts.ready.then(refresh);
 
   /* ---------- PDF pages ----------
      Print, and scripts/pdf.py which renders system.pdf with it, gets one

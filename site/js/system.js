@@ -167,13 +167,12 @@
     block.className = "seg-block";
     layer.appendChild(block);
     box.insertBefore(layer, box.firstChild);
-    var items = [], slots = [], active = -1;
+    var items = [], slots = [], totalW = 0, boxW = 0, active = -1;
 
     function place(instant) {
       if (active < 0 || !slots[active]) return;
       if (instant) block.classList.add("still");
-      block.style.transform = "translateX(" + slots[active].x + "px)";
-      block.style.width = slots[active].w + "px";
+      block.style.transform = "translateX(" + slots[active].x + "px) scaleX(" + slots[active].w + ")";
       if (instant) {
         block.getBoundingClientRect();
         block.classList.remove("still");
@@ -185,16 +184,18 @@
       });
       slots = items.map(function (el) { return { x: el.offsetLeft, w: el.offsetWidth }; });
       var last = slots[slots.length - 1];
-      layer.style.width = (last ? last.x + last.w : 0) + "px";
+      totalW = last ? last.x + last.w : 0;
+      boxW = box.clientWidth;
+      layer.style.width = totalW + "px";
       place(true);
       reveal("auto");
     }
     // keep the active cell in view when the cells overflow, and the row at its start when they fit again
     function reveal(behavior) {
-      if (box.scrollWidth <= box.clientWidth) { box.scrollLeft = 0; return; }
+      if (totalW <= boxW) { if (box.scrollLeft) box.scrollLeft = 0; return; }
       if (active < 0) return;
-      var el = items[active];
-      box.scrollTo({ left: el.offsetLeft - (box.clientWidth - el.offsetWidth) / 2, behavior: behavior });
+      var s = slots[active];
+      box.scrollTo({ left: s.x - (boxW - s.w) / 2, behavior: behavior });
     }
     function set(i, jump) {
       if (i === active || !slots[i]) return;
@@ -315,26 +316,30 @@
       });
     });
 
-    var lastF = "all", lastPct = 100;
-    var bars = function (f, pct) {
-      lastF = f;
-      lastPct = pct;
-      if (allBtn) allBtn.setAttribute("aria-pressed", String(f === "all"));
-      // on phones the zoom cell mirrors All, so it takes the same pressed look
-      if (zoomLabel) zoomLabel.setAttribute("aria-pressed", String(f === "all"));
-      if (cur) crumb(cur, f);
-      if (steps.length) {
-        steps[0].disabled = f === "all";
-        steps[1].disabled = f === last;
+    var lastF = null, lastPct = 0;
+    var bars = function (f, pct, force) {
+      if (f !== lastF || force) {
+        lastF = f;
+        if (allBtn) allBtn.setAttribute("aria-pressed", String(f === "all"));
+        // on phones the zoom cell mirrors All, so it takes the same pressed look
+        if (zoomLabel) zoomLabel.setAttribute("aria-pressed", String(f === "all"));
+        if (cur) crumb(cur, f);
+        if (steps.length) {
+          steps[0].disabled = f === "all";
+          steps[1].disabled = f === last;
+        }
+        var idx = 0;
+        if (f !== "all") chapters.forEach(function (c, j) { if (c <= f) idx = j + 1; });
+        navSeg.set(idx);
+        // the crumb chains like the wordmark: System. on its own for all sheets, System.logo on a sheet
+        if (here) {
+          var title = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
+          here.textContent = f === "all" ? "" : (title ? title.textContent : "cover").toLocaleLowerCase(lang);
+        }
       }
-      var idx = 0;
-      if (f !== "all") chapters.forEach(function (c, j) { if (c <= f) idx = j + 1; });
-      navSeg.set(idx);
-      if (zoomLabel) zoomLabel.textContent = pct + "%";
-      // the crumb chains like the wordmark: System. on its own for all sheets, System.logo on a sheet
-      if (here) {
-        var title = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
-        here.textContent = f === "all" ? "" : (title ? title.textContent : "cover").toLocaleLowerCase(lang);
+      if (pct !== lastPct || force) {
+        lastPct = pct;
+        if (zoomLabel) zoomLabel.textContent = pct + "%";
       }
     };
     canvas.onchange(bars);
@@ -375,7 +380,7 @@
       }
       relayout();
       if (window.canvas) window.canvas.relayout();
-      if (typeof bars === "function") bars(lastF, lastPct);
+      if (typeof bars === "function") bars(lastF, lastPct, true);
     };
     setLang(langs.indexOf(lang) < 0 ? "en" : lang, true);
     langBtns.forEach(function (b) {

@@ -1033,14 +1033,14 @@ body:not(:has(.deck))::after {
       --line-2: calc(max(1px, 2px * var(--k, 1)) / var(--k, 1));
     }
   }
-  .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-  .cam.moving { will-change: transform; }
+  .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
   .cam.fly { transition: transform 0.7s var(--ease); }
 }
 .board {
   position: relative;
   width: 1440px;
   container: board / inline-size;
+  contain: layout style;
   background: var(--paper);
   box-shadow: 0 0 0 var(--line) var(--rule-2);
   overflow: hidden;
@@ -1279,10 +1279,12 @@ html { -webkit-tap-highlight-color: transparent; }
   top: 0;
   bottom: 0;
   left: 0;
-  width: 0;
+  width: 1px;
   background: var(--ink);
+  transform: scaleX(0);
   transform-origin: 0 0;
-  transition: transform var(--t) var(--ease), width var(--t) var(--ease);
+  will-change: transform;
+  transition: transform var(--t) var(--ease);
 }
 .seg-block.still { transition: none; }
 .seg-block::before {
