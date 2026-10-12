@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=34">
+<link rel="stylesheet" href="css/system.css?v=36">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -237,15 +237,16 @@
     <figure class="c-6">
       <div class="block-head"><span class="label ink" data-i18n="logo.clear-space">Clear space</span><span class="label" data-i18n="logo.and-of-the-mark">½ and ⅔ of the mark height</span></div>
       <div class="logo-stage wide-lockup">
-        <svg viewBox="-110 -100 1078 340">
+        <!-- dimensions sit outside the clear-space frame, 24 off its edge, like on a drawing -->
+        <svg viewBox="-130 -100 1098 360">
           <rect class="sk-d" x="-60" y="-60" width="918" height="240"/>
           <use href="#lockup" width="778" height="120" style="color:var(--ink)"/>
-          <path class="sk-a" d="M-60 150h60M-60 146v8M0 146v8"/>
-          <text class="svg-text cs" x="-38" y="176">½</text>
-          <path class="sk-a" d="M-80 -60v60M-84 -60h8M-84 0h8"/>
-          <text class="svg-text cs" x="-104" y="-22">½</text>
-          <path class="sk-a" d="M778 150h80M778 146v8M858 146v8"/>
-          <text class="svg-text cs" x="808" y="176">⅔</text>
+          <path class="sk-a" d="M-84 -60v60M-96 -60h24M-96 0h24"/>
+          <text class="svg-text cs" x="-104" y="-22" text-anchor="end">½</text>
+          <path class="sk-a" d="M-60 204h60M-60 192v24M0 192v24"/>
+          <text class="svg-text cs" x="-30" y="244" text-anchor="middle">½</text>
+          <path class="sk-a" d="M778 204h80M778 192v24M858 192v24"/>
+          <text class="svg-text cs" x="818" y="244" text-anchor="middle">⅔</text>
         </svg>
       </div>
     </figure>
@@ -263,8 +264,8 @@
           <path class="sk-d" d="M630 30v300M480 180h300"/>
           <use href="#mark" x="502.8" y="120" width="240" height="120" style="color:var(--ink)"/>
           <path class="sk-a" d="M630 18v324"/>
-          <path class="sk-a" d="M622.8 96v-12M630 96v-12M622.8 90h7.2"/>
-          <text class="svg-text cs" x="596" y="78" data-i18n="logo.shift-value">7.2</text>
+          <path class="sk-a" d="M622.8 98v-16M630 98v-16M622.8 90h7.2"/>
+          <text class="svg-text cs" x="616" y="74" text-anchor="end" style="font-size:12px" data-i18n="logo.shift-value">7.2</text>
           <text class="svg-text" x="480" y="362" data-i18n="logo.optical-centre-mass-on">Optical centre · mass on the line</text>
         </svg>
       </div>
@@ -897,9 +898,9 @@
   </div>
 </div>
 
-<script src="strings/en.js?v=34" defer></script>
-<script src="strings/cs.js?v=34" defer></script>
-<script src="js/canvas.js?v=34" defer></script>
-<script src="js/system.js?v=34" defer></script>
+<script src="strings/en.js?v=36" defer></script>
+<script src="strings/cs.js?v=36" defer></script>
+<script src="js/canvas.js?v=36" defer></script>
+<script src="js/system.js?v=36" defer></script>
 </body>
 </html>
