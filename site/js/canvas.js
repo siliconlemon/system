@@ -199,6 +199,7 @@
     if (!cam.classList.contains("fly")) return;
     var m = new DOMMatrix(getComputedStyle(cam).transform);
     crosses(m.e, m.f, m.a * z);
+    hair(m.a * z, true);
     following = requestAnimationFrame(follow);
   }
   function apply(mode) {
@@ -209,11 +210,14 @@
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
     if (mode === "fly") {
+      // on phones the lines take the target weight once: as a zoom in starts, or as a zoom out
+      // ends (settle), so they never draw heavier than the view they're in
+      if (phone() && view.s > z) hair(view.s);
       clearTimeout(settleTimer);
       settleTimer = setTimeout(settle, 750);
       if (!following) following = requestAnimationFrame(follow);
     }
-    else crosses(view.x, view.y, view.s);
+    else { crosses(view.x, view.y, view.s); hair(view.s, true); }
     tell();
   }
   function moving(on) { cam.classList.toggle("moving", on); }
@@ -330,12 +334,22 @@
      Below one a line would land on a whole pixel or on none, so some lines
      vanished and others didn't. */
 
-  // --k is device pixels per sheet pixel, s × dpr. Every change of --k restyles every line on
-  // every sheet, so it updates once when a zoom settles alongside deck.style.zoom, never in steps
-  // mid-flight while the camera is scaling on the compositor.
+  // --k is device pixels per sheet pixel, s × dpr however the zoom splits between CSS zoom and the
+  // camera's transform. Each change of --k restyles every line on every sheet, so a running zoom
+  // only moves it when the floor is in play (k below 1) and the hairlines, scaled by the camera
+  // meanwhile, have drifted more than a fifth of a pixel from one: a handful of steps per zoom,
+  // not one a frame, and the width still changes smoothly. When the zoom settles it lands
+  // exactly. Phones skip the steps: a zoom in takes its target weight as it starts, a zoom out
+  // or a pinch as it settles.
   var lastK = 0;
-  function hair(s) {
+  function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
+    if (live) {
+      if (phone()) return;
+      if (k >= 1 && lastK >= 1) return;
+      var drawn = Math.min(1, lastK) / Math.min(1, k);
+      if (drawn > 0.8 && drawn < 1.25) return;
+    }
     if (k === lastK) return;
     lastK = k;
     deck.style.setProperty("--k", k);

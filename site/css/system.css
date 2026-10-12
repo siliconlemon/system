@@ -203,7 +203,7 @@ body:not(:has(.deck))::after {
   top: 0;
   left: -100vw;
   right: -100vw;
-  border-top: 1px solid var(--rule-2);
+  border-top: var(--line) solid var(--rule-2);
 }
 
 .sheet-head {
@@ -395,7 +395,7 @@ body:not(:has(.deck))::after {
   position: absolute;
   left: -100vw;
   right: -100vw;
-  border-top: 1px solid var(--rule-2);
+  border-top: var(--line) solid var(--rule-2);
 }
 /* the top guide meets the ink, which climbs over the cap height by the S's overshoot (--ink-rise, system.js) */
 .cover-guides::before { top: calc(-1 * var(--ink-rise, 0px)); }
