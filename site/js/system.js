@@ -24,7 +24,7 @@
      cover word also gets --ink-rise, how far its ink climbs over the cap
      height, so the top guide meets the ink. Runs again after the fonts load,
      a resize or a language switch, since those change the glyphs. */
-  var BIG = ".cover-word, .sheet-title, .specimen, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2)";
+  var BIG = ".cover-word, .sheet-title, .specimen, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2), .wordmark, .paper-card p";
   var inkCache = {};
   function inkOf(font, text) {
     var key = font + "|" + text;

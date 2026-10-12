@@ -675,7 +675,7 @@ body:not(:has(.deck))::after {
   .lockups { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: 200px; }
 }
 
-.wordmark { font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
+.wordmark { font-family: var(--display); font-weight: 600; letter-spacing: -0.03em; line-height: 1; text-box: trim-both cap alphabetic; }
 
 /* ---------- Color ---------- */
 
@@ -937,7 +937,12 @@ body:not(:has(.deck))::after {
 }
 .paper-card.ink { --bg: var(--ink); color: var(--paper); border-color: var(--ink); }
 .paper-card .wordmark { font-size: 28px; }
+.paper-card .row, .a4 .row { align-items: flex-start; }
+.paper-card .label, .a4 .label { text-box: trim-both cap alphabetic; }
+.paper-card.ink .label { align-self: flex-end; }
 .paper-card p { font-size: 14px; line-height: 20px; }
+.paper-card p:first-child { text-box: trim-start cap; }
+.paper-card p:last-child { text-box: trim-end alphabetic; }
 .paper-card .small { font-size: 12px; line-height: 16px; }
 .paper-card .label { color: color-mix(in srgb, currentColor 60%, var(--bg)); }
 .a4 {
