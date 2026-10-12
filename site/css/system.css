@@ -972,8 +972,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-name .dot { color: var(--accent); }
 .bar-here { overflow: hidden; text-overflow: ellipsis; }
 .bar-end { display: flex; align-items: stretch; flex: none; }
-.bar-ed { align-self: center; }
-.bar-theme, .bar-pdf { flex: none; border-left: 1px solid var(--rule-2); }
+.bar-lang, .bar-theme, .bar-pdf { flex: none; border-left: 1px solid var(--rule-2); }
 .bar-pdf {
   display: flex;
   align-items: center;
@@ -998,9 +997,6 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-zoom button + button { box-shadow: inset 1px 0 0 var(--rule); }
 .bar-zoom [data-zoom-label] { min-width: 72px; color: var(--ink-2); }
 @media (hover: hover) { .bar-zoom button:hover { background: var(--fill); color: var(--ink); } }
-@media (max-width: 1024px) {
-  .bar-ed { display: none; }
-}
 /* Phones, like the Viewgraft manual: All on the left and a pager whose
    arrows hug the sheet in view and never move. Up top, only the current
    theme shows, a tap moves on to the next one, and PDF keeps just its icon. */
@@ -1037,6 +1033,9 @@ html { -webkit-tap-highlight-color: transparent; }
   :root[data-theme="light"] .bar .bar-theme > [data-theme-set="light"],
   :root[data-theme="dark"] .bar .bar-theme > [data-theme-set="dark"],
   :root:not([data-theme]) .bar .bar-theme > [data-theme-set="auto"] { display: flex; }
+  .bar .bar-lang > button { display: none; }
+  :root[lang="en"] .bar .bar-lang > [data-lang-set="en"],
+  :root[lang="cs"] .bar .bar-lang > [data-lang-set="cs"] { display: flex; }
 }
 
 .seg {
@@ -1094,6 +1093,13 @@ html { -webkit-tap-highlight-color: transparent; }
   mix-blend-mode: difference;
   white-space: nowrap;
 }
+/* A quiet segment, for the language: the accent edge moves the same way,
+   with no ink block under it, and the labels change colour instead of
+   inverting. It sits next to the theme switch without merging into it. */
+.seg.quiet .seg-block { background: transparent; }
+.seg.quiet > button { mix-blend-mode: normal; color: var(--ink-3); transition: color var(--t) var(--ease); }
+.seg.quiet > button[aria-checked="true"] { color: var(--ink); }
+@media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
 /* the sheet number, a step quieter than the name on paper and on ink alike */
 .seg > a b { font-weight: 500; color: #8a8a87; }
 @media (max-width: 720px) {
@@ -1106,7 +1112,6 @@ html { -webkit-tap-highlight-color: transparent; }
    that meets one. */
 
 .sheet-no,
-.bar-ed,
 .cover-dim, .cover-bottom > .label,
 .foot > *,
 figcaption.label, figure > p.label, .stack > p.label, .grid > div > p.label,

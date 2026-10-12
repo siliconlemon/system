@@ -295,7 +295,8 @@
       markColor = null;
       steady();
       layout();
-      apply();
+      // a sheet or the overview in view gets fitted again, a free view just stays put
+      if (current === null) apply(); else go(current, false);
     });
   }
   new MutationObserver(refresh).observe(root, { attributes: true });
@@ -479,6 +480,8 @@
     go: go,
     zoom: zoomStep,
     focus: focus,
+    // after anything that changes the sheets' size, like a language switch
+    relayout: refresh,
     onchange: function (fn) { listeners.push(fn); fn(focus(), Math.round(view.s * 100)); }
   };
 })();

@@ -15,6 +15,40 @@
   }
   function relayout() { segs.forEach(function (g) { g.measure(); }); }
 
+  /* ---------- Strings ----------
+     Every piece of copy has a key, and each language has one resource file,
+     strings/en.js and strings/cs.js. The markup carries the key and the
+     English as a fallback: data-i18n for text, data-i18n-html where the copy
+     holds inline markup, data-i18n-attr="aria-label=key title=key" for
+     attributes. A missing key falls back to English. The head script picks
+     the language before first paint. */
+
+  var STRINGS = window.STRINGS || {};
+  var lang = root.getAttribute("lang") || "en";
+  function t(key) {
+    var l = STRINGS[lang] || {};
+    return key in l ? l[key] : (STRINGS.en || {})[key];
+  }
+  function attrKey(el, attr) {
+    var m = (el.getAttribute("data-i18n-attr") || "").match(new RegExp("(?:^|\\s)" + attr + "=(\\S+)"));
+    return m ? m[1] : null;
+  }
+  function applyStrings() {
+    document.title = t("meta.title") || document.title;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var v = t(el.getAttribute("data-i18n"));
+      if (v == null) return;
+      if (el.hasAttribute("data-i18n-html")) el.innerHTML = v;
+      else el.textContent = v;
+    });
+    document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
+      el.getAttribute("data-i18n-attr").split(/\s+/).forEach(function (pair) {
+        var i = pair.indexOf("="), v = t(pair.slice(i + 1));
+        if (v != null) el.setAttribute(pair.slice(0, i), v);
+      });
+    });
+  }
+
   /* ---------- With / without flags ---------- */
 
   document.querySelectorAll("[data-flag]").forEach(function (sw) {
@@ -200,24 +234,27 @@
       return n ? n.textContent : "00";
     };
     var chapters = [];
-    var cell = function (num, name, go) {
+    var cell = function (num, key, name, go) {
       var a = document.createElement("a");
       var b = document.createElement("b");
+      var label = document.createElement("span");
       a.href = go === "all" ? "#" : "#" + canvas.boards[go].querySelector("section").id;
       if (num) {
         b.textContent = num;
         a.appendChild(b);
       }
-      a.appendChild(document.createTextNode(name));
+      if (key) label.setAttribute("data-i18n", key);
+      label.textContent = name;
+      a.appendChild(label);
       a.addEventListener("click", function (e) { e.preventDefault(); canvas.go(go, true); });
       navBox.appendChild(a);
     };
-    cell("", "All", "all");
+    cell("", "bar.all", t("bar.all"), "all");
     canvas.boards.forEach(function (board, i) {
-      var name = board.querySelector("section").getAttribute("data-nav");
+      var sec = board.querySelector("section"), name = sec.getAttribute("data-nav");
       if (!name) return;
       chapters.push(i);
-      cell(number(board), name, i);
+      cell(number(board), attrKey(sec, "data-nav"), name, i);
     });
     var navSeg = Seg(navBox);
     segs.push(navSeg);
@@ -230,10 +267,10 @@
       el.innerHTML = "";
       var nb = document.createElement("b");
       // the short chapter name where there is one, the sheet title otherwise
-      var name = "All";
+      var name = t("bar.all");
       if (f !== "all") {
-        var sec = canvas.boards[f].querySelector("section"), t = sec.querySelector(".sheet-title");
-        name = sec.getAttribute("data-nav") || (t ? t.textContent : "");
+        var sec = canvas.boards[f].querySelector("section"), title = sec.querySelector(".sheet-title");
+        name = sec.getAttribute("data-nav") || (title ? title.textContent : "");
       }
       // All has no number, a sheet leads with its own
       if (f !== "all") {
@@ -253,7 +290,10 @@
       });
     });
 
-    canvas.onchange(function (f, pct) {
+    var lastF = "all", lastPct = 100;
+    var bars = function (f, pct) {
+      lastF = f;
+      lastPct = pct;
       if (allBtn) allBtn.setAttribute("aria-pressed", String(f === "all"));
       // on phones the zoom cell mirrors All, so it takes the same pressed look
       if (zoomLabel) zoomLabel.setAttribute("aria-pressed", String(f === "all"));
@@ -268,16 +308,55 @@
       if (zoomLabel) zoomLabel.textContent = pct + "%";
       // the crumb chains like the wordmark: System. on its own for all sheets, System.logo on a sheet
       if (here) {
-        var t = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
-        here.textContent = f === "all" ? "" : (t ? t.textContent : "cover").toLowerCase();
+        var title = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
+        here.textContent = f === "all" ? "" : (title ? title.textContent : "cover").toLocaleLowerCase(lang);
       }
-    });
+    };
+    canvas.onchange(bars);
     document.querySelectorAll("[data-zoom]").forEach(function (b) {
       b.addEventListener("click", function () {
         var d = +b.getAttribute("data-zoom");
         if (d) canvas.zoom(d); else canvas.go("all", true);
       });
     });
+  }
+
+  /* ---------- Language: English, Czech ----------
+     A quiet twin of the theme switch: the accent edge marks the language,
+     with no ink block, so the two never read as one control. On phones only
+     the current language shows and a tap moves on to the next. The choice
+     is remembered, ?lang= in the address wins for one visit (the PDF render
+     uses it), and the head script falls back to the browser's languages. */
+
+  var langBox = document.querySelector('[data-seg="lang"]');
+  if (langBox) {
+    var langSeg = Seg(langBox);
+    segs.push(langSeg);
+    var langBtns = Array.prototype.slice.call(langBox.querySelectorAll("[data-lang-set]"));
+    var langs = langBtns.map(function (b) { return b.getAttribute("data-lang-set"); });
+    var phoneLang = window.matchMedia("(max-width: 720px)");
+    var setLang = function (l, jump) {
+      lang = l;
+      root.setAttribute("lang", l);
+      applyStrings();
+      noRunts();
+      langSeg.set(langs.indexOf(l), jump);
+      relayout();
+      if (window.canvas) window.canvas.relayout();
+      if (typeof bars === "function") bars(lastF, lastPct);
+    };
+    setLang(langs.indexOf(lang) < 0 ? "en" : lang, true);
+    langBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var l = phoneLang.matches ? langs[(langs.indexOf(lang) + 1) % langs.length] : b.getAttribute("data-lang-set");
+        if (l === lang) return;
+        setLang(l, phoneLang.matches);
+        try { localStorage.setItem("system:lang", l); } catch (e) {}
+      });
+    });
+  } else {
+    applyStrings();
+    noRunts();
   }
 
   /* ---------- Splash ----------
@@ -293,22 +372,31 @@
   }
 
   /* ---------- No runts ----------
-     Tie the last three words of every paragraph and heading together,
-     so no block ends on a line with one or two lonely words. */
+     Tie the last three words of every paragraph and heading together, so
+     no block ends on a line with one or two lonely words. Czech also never
+     leaves a one-letter word (v, k, s, z, o, u, a, i) at the end of a line,
+     so those tie to the word after them. Runs again after every language
+     switch, since that replaces the text. */
 
-  document.querySelectorAll("main p, main h2, main h3, main h4, main h5, main dd, main figcaption").forEach(function (el) {
-    if (el.textContent.trim().split(/\s+/).length < 5) return;
-    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), node, last = null;
-    while ((node = walker.nextNode())) if (node.nodeValue.trim()) last = node;
-    if (!last) return;
-    var v = last.nodeValue.replace(/\s+$/, ""), trail = last.nodeValue.slice(v.length);
-    for (var n = 0; n < 2; n++) {
-      var i = v.lastIndexOf(" ");
-      if (i < 0) break;
-      v = v.slice(0, i) + " " + v.slice(i + 1);
-    }
-    last.nodeValue = v + trail;
-  });
+  function noRunts() {
+    document.querySelectorAll("main p, main h2, main h3, main h4, main h5, main dd, main li, main figcaption").forEach(function (el) {
+      if (lang === "cs") {
+        var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tn;
+        while ((tn = w.nextNode())) tn.nodeValue = tn.nodeValue.replace(/(^|[\s(„])([kvszouaiKVSZOUAI]) +/g, "$1$2 ");
+      }
+      if (el.textContent.trim().split(/\s+/).length < 5) return;
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), node, last = null;
+      while ((node = walker.nextNode())) if (node.nodeValue.trim()) last = node;
+      if (!last) return;
+      var v = last.nodeValue.replace(/\s+$/, ""), trail = last.nodeValue.slice(v.length);
+      for (var n = 0; n < 2; n++) {
+        var i = v.lastIndexOf(" ");
+        if (i < 0) break;
+        v = v.slice(0, i) + " " + v.slice(i + 1);
+      }
+      last.nodeValue = v + trail;
+    });
+  }
 
   window.addEventListener("resize", relayout);
   if (document.fonts) document.fonts.ready.then(relayout);
