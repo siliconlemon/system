@@ -547,7 +547,7 @@ body::after {
 .svg-text.cs { font-size: 22px; fill: var(--accent); }
 
 /* Lockup panels, after the Viewgraft manual: the primary takes two columns,
-   the rest one each, split by hairlines. Panel colours are fixed, they show
+   the rest one each, split by hairlines. Panel colors are fixed, they show
    the logo on those grounds whatever the theme. */
 .lockups {
   display: grid;
@@ -559,7 +559,7 @@ body::after {
 }
 .lockups .pn { position: relative; display: grid; place-items: center; min-width: 0; }
 .lockups .pn.wide { grid-column: span 2; }
-/* the horizontal lockups centre on their clear space, ⅔ after the name, so they sit a touch left of the ink's middle */
+/* the horizontal lockups center on their clear space, ⅔ after the name, so they sit a touch left of the ink's middle */
 .lockups .pn svg { width: 76%; height: auto; overflow: visible; }
 .lockups .pn.wide svg { width: 68%; }
 .lockups .pn svg.stack { width: auto; height: 46%; }
@@ -595,7 +595,7 @@ body::after {
 
 .wordmark { font-weight: 600; letter-spacing: -0.05em; line-height: 1; }
 
-/* ---------- Colour ---------- */
+/* ---------- Color ---------- */
 
 .swatch { display: grid; gap: calc(var(--u) * 1.5); }
 .swatch-chip { aspect-ratio: 1; border: 1px solid var(--rule-2); }
@@ -718,7 +718,7 @@ body::after {
 .table td { font-size: 14px; }
 .table td.mono { font-size: 12px; }
 .table .r { text-align: right; }
-/* first two columns span three grid columns each, so the third starts on the centre line */
+/* first two columns span three grid columns each, so the third starts on the center line */
 .table.on-grid th:nth-child(-n + 2) { width: calc((100% - 11 * var(--gap)) / 4 + 3 * var(--gap)); }
 
 /* ---------- Icons ---------- */
@@ -941,7 +941,7 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ---------- Splash ----------
-   The mark alone on the page colour, above everything. A 1 px ring draws
+   The mark alone on the page color, above everything. A 1 px ring draws
    around it from twelve o'clock, then the ring gives a small spring zoom,
    in a touch and out past its size, while the splash fades. system.js
    starts the exit and removes it. */
@@ -984,7 +984,7 @@ html { -webkit-tap-highlight-color: transparent; }
    foot of a printed sheet. The top bar holds the crumb (the name, an
    arrow, the sheet in view) and everything about the manual: edition,
    theme and the PDF. The bottom bar only moves you: the sheet cells and
-   zoom, centred in one framed row of cells split by hairlines.
+   zoom, centered in one framed row of cells split by hairlines.
    One ink block marks the current cell, with an accent register mark on
    its top edge. When it moves, the leading edge runs ahead and the
    trailing edge follows, so the block wipes across like a shutter.
@@ -1077,7 +1077,7 @@ html { -webkit-tap-highlight-color: transparent; }
   /* bottom right, the live zoom as a twin of All: same cell, and a tap fits all sheets. Pinch does the rest */
   .bar-zoom { border-inline: 0; border-left: 1px solid var(--rule-2); }
   .bar-zoom [data-zoom="-1"], .bar-zoom [data-zoom="1"] { display: none; }
-  /* All and the zoom cell share one fixed width, wide enough for 400%, so the pager sits dead centre */
+  /* All and the zoom cell share one fixed width, wide enough for 400%, so the pager sits dead center */
   .bar-all, .bar-zoom [data-zoom-label] { width: 64px; min-width: 0; padding-inline: 0; text-align: center; }
   .bar-zoom [data-zoom-label] { color: var(--ink); text-transform: uppercase; }
   .bar-zoom [data-zoom-label][aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
@@ -1148,14 +1148,14 @@ html { -webkit-tap-highlight-color: transparent; }
   min-width: calc(var(--u) * 6);
   color: var(--ink);
   white-space: nowrap;
-  /* plain colours, not a difference blend: blending drops the text to
+  /* plain colors, not a difference blend: blending drops the text to
      grayscale antialiasing and the small mono labels went crunchy. The
      label flips as the ink block lands. */
   transition: color var(--t) var(--ease) 60ms;
 }
 .seg > [aria-checked="true"], .seg > [aria-current="true"] { color: var(--paper); }
 /* A quiet segment, for the language: no block and no accent edge, the
-   labels only change colour, so the one accent in the bar stays on the
+   labels only change color, so the one accent in the bar stays on the
    theme. It sits next to the theme switch without merging into it. */
 .seg.quiet .seg-block { display: none; }
 .seg.quiet > button { min-width: calc(var(--u) * 5); color: var(--ink-3); transition: color var(--t) var(--ease); }

@@ -261,7 +261,7 @@
      are never thinner than a device pixel, so a hairline takes more room
      the further out the zoom is and the text shifts as a zoom settles.
      On screen, solid borders up to the 2 px outlines become padding of the same width with
-     an inset shadow drawing the line. Colours are read here, so this runs
+     an inset shadow drawing the line. Colors are read here, so this runs
      again when the theme or a flag changes. */
 
   var steadySheet = null;

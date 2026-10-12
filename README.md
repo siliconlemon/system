@@ -18,7 +18,7 @@ First template build in `site/`: a static page with no build step, served from `
 ## House rules
 
 - Paper over tech. When a choice could go modern-tech or 90s printed sheet, take the sheet.
-- Ruler lines mark the content edges only: the outer margins, the title column and the centre.
+- Ruler lines mark the content edges only: the outer margins, the title column and the center.
 - Big type, body copy and pictures sit flush on a ruler line. Small legend text keeps `--inset` clear of it.
 - Rectangles everywhere, the bars included. No pills.
 - No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.

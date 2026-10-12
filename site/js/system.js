@@ -138,7 +138,7 @@
       slots = items.map(function (el) { return { x: el.offsetLeft, w: el.offsetWidth }; });
       var last = slots[slots.length - 1];
       layer.style.width = (last ? last.x + last.w : 0) + "px";
-      // a hairline between neighbouring cells, none on the outer edges
+      // a hairline between neighboring cells, none on the outer edges
       layer.innerHTML = "";
       slots.slice(1).forEach(function (s) {
         var i = document.createElement("i");
