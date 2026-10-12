@@ -1246,7 +1246,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-zoom [data-zoom-label] { min-width: 72px; color: var(--ink-2); }
 @media (hover: hover) { .bar-zoom button:hover { background: var(--fill); color: var(--ink); } }
 /* Phones, like the Viewgraft manual: All on the left and a pager whose
-   arrows hug the sheet in view and never move. Up top, only the current
+   arrows sit at its far ends and never move, the full sheet name between them. Up top, only the current
    theme shows, a tap moves on to the next one, and PDF keeps just its icon. */
 .bar-phone { display: none; }
 .bar-all, .bar-pager button, .bar-cur {
@@ -1257,12 +1257,12 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 .bar-all { flex: none; padding-inline: var(--inset); border-right: 1px solid var(--rule-2); position: relative; }
 .bar-all[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
-.bar-pager { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-width: 0; }
+.bar-pager { flex: 1 1 auto; display: flex; align-items: center; justify-content: space-between; min-width: 0; }
 /* square hit areas, as tall as the bar */
-.bar-pager button { display: flex; align-items: center; justify-content: center; height: 100%; aspect-ratio: 1; color: var(--accent); }
+.bar-pager button { flex: none; display: flex; align-items: center; justify-content: center; height: 100%; aspect-ratio: 1; color: var(--accent); }
 .bar-pager button:disabled { color: color-mix(in srgb, var(--ink-3) 40%, var(--paper)); cursor: default; }
 .bar-pager svg { width: 16px; height: 16px; }
-.bar-cur { display: flex; align-items: center; justify-content: center; width: 12ch; white-space: nowrap; overflow: hidden; }
+.bar-cur { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-width: 0; white-space: nowrap; overflow: hidden; }
 .bar-cur b { font-weight: 300; color: var(--ink-3); margin-right: 8px; }
 @media (max-width: 720px) {
   .bar.bottom .wrap { justify-content: stretch; }

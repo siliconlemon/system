@@ -338,17 +338,16 @@
   // camera's transform. Each change of --k restyles every line on every sheet, so a running zoom
   // only moves it when the floor is in play (k below 1) and the hairlines, scaled by the camera
   // meanwhile, have drifted more than a fifth of a pixel from one: a handful of steps per zoom,
-  // not one a frame, and the width still changes smoothly. When the zoom settles it lands
-  // exactly. Phones skip the steps: a zoom in takes its target weight as it starts, a zoom out
-  // or a pinch as it settles.
+  // not one a frame. A zoom in steps early, before a line draws a tenth heavier than it will
+  // settle, so lines never swell and then snap back; a zoom out may thin them to four fifths
+  // first (phones wait for it to settle). When the zoom settles it lands exactly.
   var lastK = 0;
   function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
     if (live) {
-      if (phone()) return;
       if (k >= 1 && lastK >= 1) return;
       var drawn = Math.min(1, lastK) / Math.min(1, k);
-      if (drawn > 0.8 && drawn < 1.25) return;
+      if (drawn > 0.9 && (phone() || drawn < 1.25)) return;
     }
     if (k === lastK) return;
     lastK = k;
