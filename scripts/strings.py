@@ -64,9 +64,11 @@ class Keys(HTMLParser):
 p = Keys()
 p.feed(src)
 used = set(p.used)
-# keys the scripts ask for by name
+# keys the scripts ask for by name, or set on elements they make
 for js in (SITE / "js").glob("*.js"):
-    used |= set(re.findall(r'\bt\("([a-z0-9.-]+)"\)', js.read_text(encoding="utf-8")))
+    code = js.read_text(encoding="utf-8")
+    used |= set(re.findall(r'\bt\("([a-z0-9.-]+)"\)', code))
+    used |= set(re.findall(r'"data-i18n",\s*"([a-z0-9.-]+)"', code))
 
 en = load("en")
 problems = []

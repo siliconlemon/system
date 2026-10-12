@@ -147,17 +147,39 @@ p, li, dd, td, figcaption { text-wrap: pretty; }
 }
 
 
-/* A faint paper grain over everything, so the page reads as a printed sheet. */
-body::after {
+/* ---------- Print ----------
+   The sheets read as if they just came off a press, not out of a renderer. Each effect is
+   one a press really leaves, kept below the point where it reads as an effect:
+
+   - Paper: a texture on each sheet that scales with it, not a film over the window. Dark
+     specks show on the paper, light specks and soft clouds on the ink, which never quite
+     covers the fibers. It is a bitmap tile, so it costs one upload, not a filter per frame.
+   - Ink gain: every letter spreads a hair into the paper, an offset copy of its own color.
+     The glyphs themselves stay plain text, so they keep the screen's own antialiasing.
+   - No filters. An SVG filter on type gave a fine uneven edge but is drawn on the CPU at
+     every repaint, and panning stuttered; nothing here may cost more than the plain page.
+   - Registration: the accent is a second plate. Each sheet's accent sits up to a pixel off
+     the black, as if the sheet went through the press once more.
+   - Crop marks at the corners, outside the sheet, and a print code at its foot.
+
+   None of it blends: a blend mode drops text to grayscale antialiasing and small type goes
+   crunchy. The PDF gets the paper and the print code only and stays clean vector, since
+   the press that prints it adds its own gain and its own registration. */
+
+:root {
+  --bleed: 0.35px;
+  --paper-tex: url("../assets/paper.png");
+}
+
+/* without the canvas (no script) the paper lies over the window instead */
+body:not(:has(.deck))::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 20;
   pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background: var(--paper-tex) 0 0 / 256px 256px;
 }
-:root[data-theme="dark"] body::after { opacity: 0.08; filter: invert(1); }
 
 /* A sheet is one screen of the manual. Its top hairline runs past the
    viewport on both sides. */
@@ -998,6 +1020,49 @@ body::after {
 .board > :not(.rules) { position: relative; z-index: 1; }
 .board .sheet::before { content: none; }
 .board .wrap { max-width: none; }
+
+/* the paper, over everything on the sheet; 512 px drawn at 256, so it stays sharp to 200% */
+.board::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: var(--paper-tex) 0 0 / 256px 256px;
+}
+/* The print code at the foot of every sheet, as on the back of a brochure. canvas.js adds it. */
+.board > .slug {
+  position: absolute;
+  right: calc(var(--gut) + var(--inset));
+  bottom: calc(var(--u) * 2);
+  color: var(--ink-3);
+}
+.board > .slug b { font-weight: 500; color: var(--ink-2); margin-right: 1ch; }
+
+@media screen {
+  /* Crop marks: a 9-slice image outside the sheet, so they cost no element and the sheet's
+     own overflow does not clip them. The marks stop 12 short of the trim, like on a press sheet */
+  .board {
+    border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath d='M31.5 0v20M0 31.5h20M64.5 0v20M76 31.5h20M31.5 96V76M0 64.5h20M64.5 96V76M76 64.5h20' stroke='%23a9a9a3' fill='none'/%3E%3C/svg%3E") 32 / 32px / 32px;
+  }
+  :root[data-theme="dark"] .board {
+    border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath d='M31.5 0v20M0 31.5h20M64.5 0v20M76 31.5h20M31.5 96V76M0 64.5h20M64.5 96V76M76 64.5h20' stroke='%234a4a47' fill='none'/%3E%3C/svg%3E");
+  }
+
+  /* ink gain: the text drawn once more a hair to the side at half strength. No blur: a blurred
+     shadow is drawn glyph by glyph on the CPU at every repaint, an offset copy comes from the
+     glyph cache like the text itself */
+  .board { text-shadow: var(--bleed) 0 0 color-mix(in srgb, currentColor 45%, transparent); }
+  .board :is(input, textarea) { text-shadow: none; }
+
+  /* registration: the accent plate sits off by the sheet's own --rx, --ry (canvas.js), in
+     drawing units inside a drawing so the shift is the same on the sheet at any size */
+  .board :is(.ac, .label.accent, .dot-a, .sk-a, .svg-text.cs, .chip.on) {
+    translate: calc(var(--rx, 0px) * var(--vu, 1)) calc(var(--ry, 0px) * var(--vu, 1));
+  }
+  /* a transform needs a box: the inline accents become inline blocks */
+  .board :is(.ac, .label.accent):is(span, b, em) { display: inline-block; }
+}
 html { -webkit-tap-highlight-color: transparent; }
 .bar { -webkit-touch-callout: none; user-select: none; }
 
@@ -1009,18 +1074,8 @@ html { -webkit-tap-highlight-color: transparent; }
      vector image instead; the PDF is rendered in the light theme, so its colors are written out */
   .frame { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='%239a9a96' stroke-width='1' vector-effect='non-scaling-stroke' fill='none'/%3E%3C/svg%3E") center / 100% 100% no-repeat, var(--ff); }
   .frame.faint { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='%23c1c1be' stroke-width='1' vector-effect='non-scaling-stroke' fill='none'/%3E%3C/svg%3E") center / 100% 100% no-repeat, var(--ff); }
-  /* the paper grain, on each sheet instead of over the window, so every page gets it whole; a small
-     noise tile the PDF embeds once, where the screen's SVG filter was rasterized page by page */
+  /* the paper is a tile the PDF embeds once; the ink effects stay on screen */
   .board { position: relative; }
-  .board::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("../assets/grain.png");
-  }
   .cam, .deck { position: static; transform: none !important; zoom: 1 !important; display: block; }
   .board { box-shadow: none; break-after: page; }
 }

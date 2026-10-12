@@ -18,12 +18,27 @@
 
   deck.classList.add("deck");
   var foot = deck.querySelector(":scope > footer");
-  var boards = Array.prototype.slice.call(deck.querySelectorAll(":scope > section")).map(function (sec) {
+  var boards = Array.prototype.slice.call(deck.querySelectorAll(":scope > section")).map(function (sec, i) {
     var board = document.createElement("div");
     board.className = "board";
     deck.insertBefore(board, sec);
     if (template) board.appendChild(template.cloneNode(true));
     board.appendChild(sec);
+    // Each sheet went through the press on its own, so its accent plate sits off by its own
+    // amount, up to a pixel, the same on every visit (a hash of the index, not a random draw)
+    var a = (i * 2.399963) % (2 * Math.PI), r = 0.45 + 0.5 * ((i * 0.618034) % 1);
+    board.style.setProperty("--rx", (r * Math.cos(a)).toFixed(2) + "px");
+    board.style.setProperty("--ry", (r * Math.sin(a)).toFixed(2) + "px");
+    // the print code: the sheet's number, then the press run (system.js translates it)
+    var no = sec.querySelector(".sheet-no b"), slug = document.createElement("p"), b = document.createElement("b"), run = document.createElement("span");
+    slug.className = "slug label";
+    slug.setAttribute("aria-hidden", "true");
+    b.textContent = no ? no.textContent : "00";
+    run.setAttribute("data-i18n", "common.slug");
+    run.textContent = "System · Edition 1.0 · Offset, black and one spot color, uncoated 120 g/m²";
+    slug.appendChild(b);
+    slug.appendChild(run);
+    board.appendChild(slug);
     return board;
   });
   if (foot && boards.length) boards[boards.length - 1].appendChild(foot);
