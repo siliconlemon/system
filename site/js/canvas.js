@@ -52,12 +52,12 @@
      column (1440 + 160 px), so every sheet's left edge lands on the grid,
      and each row of sheets starts on a grid line too. They are drawn on a
      screen-sized <canvas>, every cross snapped to whole device pixels, so
-     the line is exactly 1 px at any zoom. The arms belong to the canvas:
-     they grow and shrink with it, down to a floor of 2 px. Zoomed far out,
+     the line is exactly 1 px and the cross 13 px across at any zoom, like
+     marks on the glass rather than on the paper. Zoomed far out,
      only every second or fourth cross is drawn, so they never crowd into a
      mesh. Both 800 and 1600 still land on every sheet column's edge. */
 
-  var STEP = 400, ARM = 4;
+  var STEP = 400, ARM = 6;
   var ctx = marks.getContext("2d"), markColor = null;
   function crosses(x, y, s) {
     var dpr = window.devicePixelRatio || 1;
@@ -68,7 +68,7 @@
     ctx.fillStyle = markColor;
     var k = 1;
     while (k < 4 && STEP * k * s < 64) k *= 2;
-    var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(Math.max(2, ARM * s) * dpr), reach = arm + lw;
+    var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(ARM * dpr), reach = arm + lw;
     var x0 = x * dpr, y0 = y * dpr;
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
     for (var i = i0; x0 + i * t < W + reach; i++) {
