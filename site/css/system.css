@@ -806,7 +806,8 @@ body::after {
 
 /* ---------- Motion ---------- */
 
-.curve { background: var(--sheet); border: 2px solid var(--ink-3); aspect-ratio: 1; position: relative; }
+/* the frame steps back, flat, halfway from gray 400 to the sheet, so the gray curve stays the stronger line */
+.curve { background: var(--sheet); border: 2px solid color-mix(in srgb, var(--ink-3) 50%, var(--sheet)); aspect-ratio: 1; position: relative; }
 .curve svg { position: absolute; inset: calc(var(--u) * 3); width: calc(100% - var(--u) * 6); height: calc(100% - var(--u) * 6); overflow: visible; }
 .track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
 /* a small flat square. The run stops short by the curve's overshoot

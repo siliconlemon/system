@@ -54,9 +54,10 @@
      screen-sized <canvas>, every cross snapped to whole device pixels, so
      the line is exactly 1 px and the cross 13 px across at any zoom (9 on
      phones, where the sheets are drawn smaller), like marks on the glass
-     rather than on the paper. Zoomed far out,
-     only every second or fourth cross is drawn, so they never crowd into a
-     mesh. Both 800 and 1600 still land on every sheet column's edge. */
+     rather than on the paper. Every cross is drawn at every zoom; only
+     where neighbors would touch, at the far end of the zoom out, does it
+     fall back to every second one, and 800 still lands on every sheet
+     column's edge. */
 
   var STEP = 400, ARM = 6, ARM_PHONE = 4;
   var ctx = marks.getContext("2d"), markColor = null;
@@ -68,8 +69,11 @@
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = markColor;
     var k = 1;
-    while (k < 4 && STEP * k * s < 64) k *= 2;
-    var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round((phone() ? ARM_PHONE : ARM) * dpr), reach = arm + lw;
+    var armPx = phone() ? ARM_PHONE : ARM;
+    // every cross is drawn, the same density at any zoom, unless neighbors would touch: only at
+    // the far end of the zoom out does it fall back to every second one
+    while (k < 4 && STEP * k * s < 2 * armPx + 9) k *= 2;
+    var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(armPx * dpr), reach = arm + lw;
     var x0 = x * dpr, y0 = y * dpr;
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
     for (var i = i0; x0 + i * t < W + reach; i++) {
