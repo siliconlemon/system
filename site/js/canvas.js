@@ -191,8 +191,9 @@
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
     if (mode === "fly") {
-      // on phones the lines take the target weight once, as the flight starts
-      if (phone()) hair(view.s);
+      // on phones the lines take the target weight once: as a zoom in starts, or as a zoom out
+      // ends (settle), so they never draw heavier than the view they're in
+      if (phone() && view.s > z) hair(view.s);
       if (!following) following = requestAnimationFrame(follow);
     }
     else { crosses(view.x, view.y, view.s); hair(view.s, true); }
@@ -309,7 +310,7 @@
   // the floor is in play (k below 1) and the hairlines, scaled by the camera meanwhile, have
   // drifted more than a fifth of a pixel from one: a handful of steps per zoom, not one a frame,
   // and the width still changes smoothly. When the zoom settles it lands exactly. Phones skip the
-  // steps: a fly takes its target weight once as it starts, and a pinch holds until it settles.
+  // steps: a zoom in takes its target weight as it starts, a zoom out or a pinch as it settles.
   var lastK = 0;
   function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
