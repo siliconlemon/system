@@ -242,7 +242,17 @@
     });
     return best;
   }
-  function focus() { return typeof current === "number" ? current : current === "all" ? "all" : nearest(); }
+  // A free view counts as all sheets once it's zoomed out as far as the overview fits them, or
+  // further, so the bars hold on All instead of following whichever sheet is nearest the middle.
+  function allScale() {
+    var a = area(), p = phone() ? 16 : 40;
+    return Math.min((a.W - 2 * p) / box.w, (a.H - 2 * p) / box.h);
+  }
+  function focus() {
+    if (typeof current === "number") return current;
+    if (current === "all" || view.s <= allScale() * 1.001) return "all";
+    return nearest();
+  }
   function tell() {
     var f = focus(), pct = Math.round(view.s * 100);
     if (f === lastFocus && pct === lastPct) return;
@@ -255,8 +265,7 @@
     current = target;
     var a = area();
     if (target === "all") {
-      var p = phone() ? 16 : 40;
-      view.s = Math.min((a.W - 2 * p) / box.w, (a.H - 2 * p) / box.h);
+      view.s = allScale();
       view.x = a.left + (a.W - box.w * view.s) / 2;
       view.y = a.top + (a.H - box.h * view.s) / 2;
     } else {
