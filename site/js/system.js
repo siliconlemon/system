@@ -196,9 +196,17 @@
       items = Array.prototype.slice.call(box.children).filter(function (el) {
         return el.tagName === "A" || el.tagName === "BUTTON";
       });
-      slots = items.map(function (el) { return { x: el.offsetLeft, w: el.offsetWidth }; });
+      // from the cells' real, fractional edges snapped to device pixels, as their borders are:
+      // offsetLeft and offsetWidth round to whole CSS pixels and left a sliver of paper or a
+      // second line between the block and the next cell's divider
+      var dpr = window.devicePixelRatio || 1, snap = function (v) { return Math.round(v * dpr) / dpr; };
+      var origin = box.getBoundingClientRect().left + box.clientLeft - box.scrollLeft;
+      slots = items.map(function (el) {
+        var r = el.getBoundingClientRect(), l = snap(r.left), x = l - origin;
+        return { x: x, w: snap(r.right) - l, end: el.offsetLeft + el.offsetWidth };
+      });
       var last = slots[slots.length - 1];
-      totalW = last ? last.x + last.w : 0;
+      totalW = last ? last.end : 0;
       boxW = box.clientWidth;
       layer.style.width = totalW + "px";
       place(true);
