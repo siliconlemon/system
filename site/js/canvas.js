@@ -172,6 +172,7 @@
     clearTimeout(settleTimer);
     cam.classList.remove("fly", "moving");
     if (z !== view.s) { z = view.s; deck.style.zoom = z; }
+    hair();
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px)";
     crosses(view.x, view.y, view.s);
     syncHash();
@@ -262,7 +263,14 @@
      the further out the zoom is and the text shifts as a zoom settles.
      On screen, solid borders up to the 2 px outlines become padding of the same width with
      an inset shadow drawing the line. Colors are read here, so this runs
-     again when the theme or a flag changes. */
+     again when the theme or a flag changes.
+     Like an SVG viewer, a line scales with the zoom but never draws thinner
+     than one device pixel: --hair is one device pixel in sheet units, and
+     every line is the larger of its own width and --hair. Below that a line
+     would land on a whole pixel or on none, so some lines vanished and
+     others didn't. */
+
+  function hair() { deck.style.setProperty("--hair", 1 / (z * (window.devicePixelRatio || 1)) + "px"); }
 
   var steadySheet = null;
   function steady() {
@@ -277,7 +285,9 @@
         var w = parseFloat(cs["border" + side + "Width"]);
         if (!w || w > 3 || cs["border" + side + "Style"] !== "solid") return;
         decl.push("border-" + side.toLowerCase() + "-width: 0", "padding-" + side.toLowerCase() + ": " + (parseFloat(cs["padding" + side]) + w) + "px");
-        shadows.push("inset " + sides[side][0] * w + "px " + sides[side][1] * w + "px 0 0 " + cs["border" + side + "Color"]);
+        // never thinner than one device pixel, so no line drops out when zoomed out
+        var t = function (k) { return k ? "calc(" + k + " * max(" + w + "px, var(--hair, 0px)))" : "0"; };
+        shadows.push("inset " + t(sides[side][0]) + " " + t(sides[side][1]) + " 0 0 " + cs["border" + side + "Color"]);
       });
       if (!decl.length) return;
       if (cs.boxShadow !== "none") shadows.push(cs.boxShadow);
