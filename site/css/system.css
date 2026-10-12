@@ -1158,7 +1158,9 @@ html { -webkit-tap-highlight-color: transparent; }
   width: 0;
   background: var(--ink);
   transform-origin: 0 0;
+  transition: transform var(--t) var(--ease), width var(--t) var(--ease);
 }
+.seg-block.still { transition: none; }
 .seg-block::before {
   content: "";
   position: absolute;

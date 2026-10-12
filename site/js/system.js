@@ -104,9 +104,10 @@
   });
 
   /* ---------- Cell controls ----------
-     One ink block under a row of cells. Each edge has its own spring:
-     the edge on the side of travel is stiff, the other one loose, so on
-     a long jump the block stretches into a wipe and closes up behind. */
+     One ink block under a row of cells. It moves to the chosen cell on
+     the standard curve from the motion sheet (--t, --ease), sliding and
+     resizing at once, with no stretch. A first placement or a jump
+     lands without the move. */
 
   function Seg(box) {
     var layer = document.createElement("div");
@@ -114,36 +115,19 @@
     layer.setAttribute("aria-hidden", "true");
     var block = document.createElement("b");
     block.className = "seg-block";
+    layer.appendChild(block);
     box.insertBefore(layer, box.firstChild);
-    var items = [], slots = [];
-    var lo = edge(), hi = edge();
-    var active = -1, raf = 0;
+    var items = [], slots = [], active = -1;
 
-    function edge() { return { x: 0, v: 0, to: 0, k: 0.2 }; }
-    function step(e) {
-      e.v = (e.v + (e.to - e.x) * e.k) * 0.62;
-      e.x += e.v;
-    }
-    function settle() {
-      lo.x = lo.to;
-      hi.x = hi.to;
-      lo.v = hi.v = 0;
-    }
-    function draw() {
-      block.style.transform = "translateX(" + lo.x + "px)";
-      block.style.width = Math.max(hi.x - lo.x, 0) + "px";
-    }
-    function loop() {
-      step(lo);
-      step(hi);
-      draw();
-      if (Math.abs(lo.v) + Math.abs(hi.v) + Math.abs(lo.to - lo.x) + Math.abs(hi.to - hi.x) < 0.3) {
-        settle();
-        draw();
-        raf = 0;
-        return;
+    function place(instant) {
+      if (active < 0 || !slots[active]) return;
+      if (instant) block.classList.add("still");
+      block.style.transform = "translateX(" + slots[active].x + "px)";
+      block.style.width = slots[active].w + "px";
+      if (instant) {
+        block.getBoundingClientRect();
+        block.classList.remove("still");
       }
-      raf = requestAnimationFrame(loop);
     }
     function measure() {
       items = Array.prototype.slice.call(box.children).filter(function (el) {
@@ -152,14 +136,7 @@
       slots = items.map(function (el) { return { x: el.offsetLeft, w: el.offsetWidth }; });
       var last = slots[slots.length - 1];
       layer.style.width = (last ? last.x + last.w : 0) + "px";
-      layer.innerHTML = "";
-      layer.appendChild(block);
-      if (active >= 0) {
-        lo.to = slots[active].x;
-        hi.to = slots[active].x + slots[active].w;
-        settle();
-        draw();
-      }
+      place(true);
       reveal("auto");
     }
     // keep the active cell in view when the cells overflow, and the row at its start when they fit again
@@ -176,19 +153,8 @@
       items.forEach(function (el, j) {
         el.setAttribute(el.tagName === "A" ? "aria-current" : "aria-checked", String(j === i));
       });
-      var to = slots[i].x;
-      var right = to > lo.to;
-      lo.to = to;
-      hi.to = to + slots[i].w;
-      (right ? hi : lo).k = 0.22;
-      (right ? lo : hi).k = 0.09;
       reveal(firstTime || jump ? "auto" : "smooth");
-      if (firstTime || jump || reduce.matches) {
-        settle();
-        draw();
-        return;
-      }
-      if (!raf) raf = requestAnimationFrame(loop);
+      place(firstTime || jump);
     }
     measure();
     return { measure: measure, set: set };
