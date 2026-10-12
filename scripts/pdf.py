@@ -1,4 +1,5 @@
-"""Render site/system.pdf, the file the PDF button in the top bar links to. Rerun it after changing a sheet.
+"""Render site/system.pdf and site/system.cs.pdf, the files the PDF button links to, one per language.
+Rerun it after changing a sheet or a string.
 
 One page per sheet, each page cut to its sheet's real size (canvas.js writes the @page sizes), rendered with
 headless Chrome or Edge, like the Viewgraft manual. Set CHROME to use another browser.
@@ -12,7 +13,8 @@ import tempfile
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent / "site"
-PDF = SITE / "system.pdf"
+# language -> file, ?lang= picks the language for the render
+PDFS = {"en": SITE / "system.pdf", "cs": SITE / "system.cs.pdf"}
 
 CANDIDATES = [
     os.environ.get("CHROME"),
@@ -35,16 +37,16 @@ if not chrome:
 # the page may then run before the capture, so they are in before it. The PDF is checked for them after
 FONT_WAIT_MS = 30000
 FONTS = ("InterTight", "IBMPlexMono")
-with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
-    subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
-                    f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={PDF}",
-                    (SITE / "index.html").as_uri()], check=True, capture_output=True)
-
-data = PDF.read_bytes()
-# Embedded font names drop the spaces and may add hyphens, AAAAAA+InterTight-Medium
-embedded = re.sub(rb"[^a-z]", b"", b" ".join(re.findall(rb"/FontName\s*/([^\s/<>\[\]]+)", data)).lower())
-missing = [f for f in FONTS if f.lower().encode() not in embedded]
-if missing:
-    sys.exit(f"system.pdf has no {', '.join(missing)}, the fonts did not load in time. Check the connection and rerun")
-pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
-print(f"rendered system.pdf, {pages} pages")
+for lang, pdf in PDFS.items():
+    with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
+        subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
+                        f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
+                        (SITE / "index.html").as_uri() + f"?lang={lang}"], check=True, capture_output=True)
+    data = pdf.read_bytes()
+    # Embedded font names drop the spaces and may add hyphens, AAAAAA+InterTight-Medium
+    embedded = re.sub(rb"[^a-z]", b"", b" ".join(re.findall(rb"/FontName\s*/([^\s/<>\[\]]+)", data)).lower())
+    missing = [f for f in FONTS if f.lower().encode() not in embedded]
+    if missing:
+        sys.exit(f"{pdf.name} has no {', '.join(missing)}, the fonts did not load in time. Check the connection and rerun")
+    pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
+    print(f"rendered {pdf.name}, {pages} pages")
