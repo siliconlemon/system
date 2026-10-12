@@ -351,7 +351,8 @@ body::after {
   /* clear the descender of the y, which hangs about 0.22 em below the baseline */
   margin-top: 6cqw;
 }
-.cover-bottom { align-items: baseline; }
+/* the labels sit on the copy's last line, not its first */
+.cover-bottom { align-items: last baseline; }
 .cover-bottom > * { grid-column: span 3; }
 .cover-bottom > .wide { grid-column: span 6; }
 .cover-bottom p { font-size: 20px; line-height: 32px; padding-left: var(--inset); }
@@ -707,7 +708,7 @@ body::after {
 /* ---------- Grid & spacing ---------- */
 
 .colmap { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); height: calc(var(--u) * 20); }
-.colmap i { background: color-mix(in srgb, var(--accent) 10%, transparent); border-inline: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.colmap i { background: color-mix(in srgb, var(--accent) 10%, transparent); border-inline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); }
 .spacing li { display: grid; grid-template-columns: calc(var(--u) * 8) 1fr calc(var(--u) * 8); align-items: center; gap: calc(var(--u) * 2); height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
 .spacing li i { display: block; height: 8px; background: var(--ink); }
 .spacing li > :last-child { text-align: right; }
@@ -751,7 +752,7 @@ body::after {
 
 .phones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
 .phone {
-  border: 1px solid var(--ink);
+  border: 2px solid var(--ink);
   border-radius: 32px;
   aspect-ratio: 9 / 19.5;
   padding: calc(var(--u) * 3) calc(var(--u) * 2) calc(var(--u) * 2);
@@ -820,12 +821,11 @@ body::after {
 .paper-card {
   aspect-ratio: 85 / 55;
   background: var(--sheet);
-  border: 1px solid var(--rule-2);
+  border: 2px solid var(--ink-2);
   padding: calc(var(--u) * 3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 1px 0 var(--rule-2);
 }
 .paper-card.ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .paper-card .wordmark { font-size: 28px; }
@@ -835,7 +835,7 @@ body::after {
 .a4 {
   aspect-ratio: 210 / 297;
   background: var(--sheet);
-  border: 1px solid var(--rule-2);
+  border: 2px solid var(--ink-2);
   padding: 9% 9% 7%;
   display: flex;
   flex-direction: column;

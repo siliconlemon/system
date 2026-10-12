@@ -52,7 +52,10 @@
      column (1440 + 160 px), so every sheet's left edge lands on the grid,
      and each row of sheets starts on a grid line too. They are drawn on a
      screen-sized <canvas>, every cross snapped to whole device pixels, so
-     the lines are exactly 1 px and the arms 9 px at any zoom. */
+     the line is exactly 1 px at any zoom. The arms belong to the canvas:
+     they grow and shrink with it, down to a floor of 2 px. Zoomed far out,
+     only every second or fourth cross is drawn, so they never crowd into a
+     mesh. Both 800 and 1600 still land on every sheet column's edge. */
 
   var STEP = 400, ARM = 4;
   var ctx = marks.getContext("2d"), markColor = null;
@@ -63,7 +66,9 @@
     if (!markColor) markColor = getComputedStyle(root).getPropertyValue("--canvas-mark").trim();
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = markColor;
-    var t = STEP * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(ARM * dpr), reach = arm + lw;
+    var k = 1;
+    while (k < 4 && STEP * k * s < 64) k *= 2;
+    var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(Math.max(2, ARM * s) * dpr), reach = arm + lw;
     var x0 = x * dpr, y0 = y * dpr;
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
     for (var i = i0; x0 + i * t < W + reach; i++) {
@@ -255,7 +260,7 @@
      At rest the zoom is CSS zoom, which lays the sheets out again. Borders
      are never thinner than a device pixel, so a hairline takes more room
      the further out the zoom is and the text shifts as a zoom settles.
-     On screen, thin solid borders become padding of the same width with
+     On screen, solid borders up to the 2 px outlines become padding of the same width with
      an inset shadow drawing the line. Colours are read here, so this runs
      again when the theme or a flag changes. */
 
@@ -270,7 +275,7 @@
       var cs = getComputedStyle(el), decl = [], shadows = [];
       Object.keys(sides).forEach(function (side) {
         var w = parseFloat(cs["border" + side + "Width"]);
-        if (!w || w >= 2 || cs["border" + side + "Style"] !== "solid") return;
+        if (!w || w > 3 || cs["border" + side + "Style"] !== "solid") return;
         decl.push("border-" + side.toLowerCase() + "-width: 0", "padding-" + side.toLowerCase() + ": " + (parseFloat(cs["padding" + side]) + w) + "px");
         shadows.push("inset " + sides[side][0] * w + "px " + sides[side][1] * w + "px 0 0 " + cs["border" + side + "Color"]);
       });
@@ -416,6 +421,30 @@
     drag = press = null;
     if (!space) document.body.classList.remove("panning");
   });
+  /* Zoomed in past a sheet's fit, a double click on its paper, not on a
+     control or on text (that still selects a word), flies back to the
+     fitted sheet, as the sheet nav would. Touch gets the same as a double tap. */
+  function refit(e) {
+    var board = e.target.closest(".board"), i = boards.indexOf(board);
+    if (i < 0 || e.target.closest(CONTROLS) || overText(e.clientX, e.clientY)) return;
+    var fit = Math.min((area().W - 2 * (phone() ? 8 : 48)) / rects[i].w, 1);
+    if (current === i || view.s <= fit * 1.02) return;
+    e.preventDefault();
+    getSelection().removeAllRanges();
+    go(i, true);
+  }
+  deck.addEventListener("dblclick", refit);
+  var lastTap = null;
+  addEventListener("pointerup", function (e) {
+    if (e.pointerType !== "touch" || dragged || pinch) return;
+    if (lastTap && e.timeStamp - lastTap.t < 300 && Math.abs(e.clientX - lastTap.x) + Math.abs(e.clientY - lastTap.y) < 24) {
+      lastTap = null;
+      refit(e);
+      return;
+    }
+    lastTap = { t: e.timeStamp, x: e.clientX, y: e.clientY };
+  });
+
   // Links to a sheet fly to it. A click that ended a drag does nothing.
   deck.addEventListener("click", function (e) {
     var a = e.target.closest("a[href^='#']");
