@@ -181,7 +181,7 @@ window.STRINGS.en = {
   "landing.tokens-live-in-one": "Tokens live in one file. Change the accent there and every sheet updates.",
   "landing.type-grid-and-color": "Type, grid and color set up as one system, so the website, the app and the posters come out looking related.",
   "landing.works-without-assets": "Works without assets",
-  "logo.and-of-the-mark": "½ and ⅔ of the mark height",
+  "logo.and-of-the-mark": "1/2 and 2/3 of the mark height",
   "logo.baseline": "Baseline",
   "logo.cap-height": "Cap height",
   "logo.clear-space": "Clear space",

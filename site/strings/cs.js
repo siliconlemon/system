@@ -181,7 +181,7 @@ window.STRINGS.cs = {
   "landing.tokens-live-in-one": "Tokeny žijí v jednom souboru. Změna akcentu tam mění všechny listy.",
   "landing.type-grid-and-color": "Písmo, mřížka a barva tvoří jeden systém, takže web, aplikace i plakáty vypadají příbuzně.",
   "landing.works-without-assets": "Funguje bez podkladů",
-  "logo.and-of-the-mark": "½ a ⅔ výšky značky",
+  "logo.and-of-the-mark": "1/2 a 2/3 výšky značky",
   "logo.baseline": "Účaří",
   "logo.cap-height": "Verzálková výška",
   "logo.clear-space": "Ochranná zóna",

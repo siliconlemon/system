@@ -434,8 +434,9 @@ body::after {
 
 /* ---------- Landing (screen 01) ---------- */
 
+/* the window is an object on the sheet, like the phones: 2 px outline, 1 px detail inside */
 .browser {
-  border: 1px solid var(--ink);
+  border: 2px solid var(--ink);
   background: var(--sheet);
 }
 .browser-bar {
@@ -539,7 +540,7 @@ body::after {
 
 /* ---------- Logo ---------- */
 
-.logo-stage { background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; aspect-ratio: 16 / 9; }
+.logo-stage { background: var(--sheet); border: 2px solid var(--ink-2); display: grid; place-items: center; aspect-ratio: 16 / 9; }
 .logo-stage svg { width: 72%; height: auto; overflow: visible; }
 .logo-stage.wide-lockup svg { width: 92%; }
 .logo-stage.optical { aspect-ratio: 840 / 380; }
@@ -557,7 +558,7 @@ body::after {
   grid-template-rows: 240px 176px;
   gap: 1px;
   background: var(--rule-2);
-  border: 1px solid var(--rule-2);
+  border: 2px solid var(--ink-2);
 }
 .lockups .pn { position: relative; display: grid; place-items: center; min-width: 0; }
 .lockups .pn.wide { grid-column: span 2; }
@@ -600,17 +601,18 @@ body::after {
 /* ---------- Color ---------- */
 
 .swatch { display: grid; gap: calc(var(--u) * 1.5); }
-.swatch-chip { aspect-ratio: 1; border: 1px solid var(--rule-2); }
+/* swatches, the proportion bar and the contrast cards are objects on the sheet: 2 px outline, which a dark fill takes over in its own color */
+.swatch-chip { aspect-ratio: 1; border: 2px solid var(--ink-2); }
 .swatch dl { display: grid; grid-template-columns: auto 1fr; column-gap: calc(var(--u) * 2); }
 .swatch dt { font: 500 12px/24px var(--mono); color: var(--ink-3); text-transform: uppercase; }
 .swatch dd { font: 400 12px/24px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
 .swatch h4 { font-size: 20px; line-height: 24px; letter-spacing: -0.01em; }
-.prop { display: flex; height: calc(var(--u) * 8); border: 1px solid var(--rule-2); }
+.prop { display: flex; height: calc(var(--u) * 8); border: 2px solid var(--ink-2); }
 .prop > i { display: block; }
 .prop-legend { display: flex; margin-top: var(--u); }
 .prop-legend > span { display: block; }
 .pairs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.pair { aspect-ratio: 3 / 2; padding: calc(var(--u) * 2); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--rule-2); }
+.pair { aspect-ratio: 3 / 2; padding: calc(var(--u) * 2); display: flex; flex-direction: column; justify-content: space-between; border: 2px solid var(--ink-2); }
 .pair b { font-size: 40px; line-height: 40px; font-weight: 500; letter-spacing: -0.03em; }
 @container board (max-width: 1024px) { .pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--gap); } }
 
@@ -783,7 +785,7 @@ body::after {
 
 /* ---------- Motion ---------- */
 
-.curve { background: var(--sheet); border: 1px solid var(--rule-2); aspect-ratio: 1; position: relative; }
+.curve { background: var(--sheet); border: 2px solid var(--ink-2); aspect-ratio: 1; position: relative; }
 .curve svg { position: absolute; inset: calc(var(--u) * 3); width: calc(100% - var(--u) * 6); height: calc(100% - var(--u) * 6); overflow: visible; }
 .track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
 /* a small drawn circle, not a filled dot. The run stops short by the
