@@ -418,7 +418,11 @@ body::after {
   letter-spacing: 0.02em;
   isolation: isolate;
 }
-.switch span { padding-inline: 12px; text-align: center; color: #fff; mix-blend-mode: difference; position: relative; z-index: 1; }
+/* plain colors, not a difference blend: on the canvas the blend lost its backdrop and the
+   unselected label went white on paper. The label on the block is paper, the other one ink. */
+.switch span { padding-inline: 12px; text-align: center; color: var(--ink); position: relative; z-index: 1; transition: color var(--t) var(--ease); }
+.switch[aria-checked="true"] span:first-child,
+.switch[aria-checked="false"] span:last-child { color: var(--paper); }
 .switch::before {
   content: "";
   position: absolute;
@@ -428,8 +432,6 @@ body::after {
   transition: transform var(--t) var(--ease);
 }
 .switch[aria-checked="false"]::before { transform: translateX(100%); }
-:root[data-theme="dark"] .switch span,
-.dark-aware .switch span { color: #fff; }
 
 /* data flags hide/show content */
 [data-when] { display: none; }
