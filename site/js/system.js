@@ -74,6 +74,7 @@
     tester.style.fontSize = px + "px";
     tester.style.lineHeight = Math.ceil((px * 1.12) / 8) * 8 + "px";
     tester.style.fontWeight = weight.value;
+    [size, weight].forEach(function (r) { r.style.setProperty("--p", (r.value - r.min) / (r.max - r.min) * 100); });
     out.textContent = px + " px · " + weight.value;
   }
   if (tester && size && weight) {
@@ -325,8 +326,9 @@
      A quiet twin of the theme switch: the accent edge marks the language,
      with no ink block, so the two never read as one control. On phones only
      the current language shows and a tap moves on to the next. The choice
-     is remembered, ?lang= in the address wins for one visit (the PDF render
-     uses it), and the head script falls back to the browser's languages. */
+     is remembered and kept in the address as ?lang=, which wins over the
+     saved choice (the PDF render uses it too), and the head script falls
+     back to the browser's languages. */
 
   var langBox = document.querySelector('[data-seg="lang"]');
   if (langBox) {
@@ -341,6 +343,12 @@
       applyStrings();
       noRunts();
       langSeg.set(langs.indexOf(l), jump);
+      // the address carries the language, so a shared link opens in it
+      var q = new URLSearchParams(location.search);
+      if (q.get("lang") !== l) {
+        q.set("lang", l);
+        history.replaceState(history.state, "", location.pathname + "?" + q + location.hash);
+      }
       relayout();
       if (window.canvas) window.canvas.relayout();
       if (typeof bars === "function") bars(lastF, lastPct);

@@ -26,6 +26,10 @@
 
   --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  /* Small mono comes in two templates and one size, like the lettering on
+     a drawing: the label (500, 12 px, capitals, +0.02em) and the value
+     (400, 12 px, as written). Big mono, the specimen and the glyph cells,
+     is a picture of the font, not lettering. */
 
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --t: 240ms;
@@ -165,7 +169,7 @@ body::after {
 }
 .sheet-no {
   grid-column: span 3;
-  font: 500 14px/24px var(--mono);
+  font: 500 12px/24px var(--mono);
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -207,7 +211,7 @@ body::after {
 }
 .label.ink { color: var(--ink); }
 .label.accent { color: var(--accent); }
-.mono { font-family: var(--mono); font-size: 13px; line-height: 24px; }
+.mono { font-family: var(--mono); font-size: 12px; line-height: 24px; }
 .muted { color: var(--ink-2); }
 .small { font-size: 14px; line-height: 24px; }
 
@@ -254,8 +258,8 @@ body::after {
 .frame {
   position: relative;
   background:
-    linear-gradient(to top right, transparent calc(50% - 0.5px), var(--rule-2) calc(50% - 0.5px), var(--rule-2) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--rule-2) calc(50% - 0.5px), var(--rule-2) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to top right, transparent calc(50% - 0.5px), var(--ink-3) calc(50% - 0.5px), var(--ink-3) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--ink-3) calc(50% - 0.5px), var(--ink-3) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
     var(--fill);
   aspect-ratio: var(--ar, 4 / 3);
 }
@@ -266,6 +270,9 @@ body::after {
 }
 .frame::before { inset: 0 calc(var(--u) * -1.5); border-block: 1px solid var(--ink-3); }
 .frame::after { inset: calc(var(--u) * -1.5) 0; border-inline: 1px solid var(--ink-3); }
+/* like a technical drawing: the picture's own edge is the heavy outline,
+   the overshoot and the cross stay thin construction lines */
+.frame { box-shadow: inset 0 0 0 2px var(--ink-2); }
 .frame > .label {
   position: absolute;
   left: calc(var(--u) * 1.5);
@@ -276,6 +283,7 @@ body::after {
 }
 .frame.dark { --fill: var(--ink); }
 .frame.dark > .label { color: var(--paper); }
+.frame.dark { box-shadow: inset 0 0 0 2px var(--ink-3); }
 
 /* ---------- Gray flat illustration ---------- */
 
@@ -289,13 +297,13 @@ body::after {
 
 /* ---------- Sketch strokes ---------- */
 
-.sk { fill: none; stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.sk { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .sk-2 { fill: none; stroke: var(--ink-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .sk-d { fill: none; stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
-.sk-a { fill: none; stroke: var(--accent); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.sk-a { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .dot { fill: var(--ink); }
 .dot-a { fill: var(--accent); }
-.svg-text { font: 500 11px var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
+.svg-text { font: 500 12px var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
 
 /* ---------- Cover ---------- */
 
@@ -592,7 +600,7 @@ body::after {
 .swatch-chip { aspect-ratio: 1; border: 1px solid var(--rule-2); }
 .swatch dl { display: grid; grid-template-columns: auto 1fr; column-gap: calc(var(--u) * 2); }
 .swatch dt { font: 500 12px/24px var(--mono); color: var(--ink-3); text-transform: uppercase; }
-.swatch dd { font: 400 13px/24px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.swatch dd { font: 400 12px/24px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
 .swatch h4 { font-size: 20px; line-height: 24px; letter-spacing: -0.01em; }
 .prop { display: flex; height: calc(var(--u) * 8); border: 1px solid var(--rule-2); }
 .prop > i { display: block; }
@@ -612,6 +620,13 @@ body::after {
   font-weight: 500;
   text-box: trim-both cap alphabetic;
 }
+/* the proof that the mono is mono: narrow and wide letters fill identical cells */
+.c-6:has(> .mono-cells) { display: flex; flex-direction: column; }
+/* both rows sit on one line under specimens of different heights */
+.mono-cells { display: flex; margin-top: auto; padding-top: calc(var(--u) * 3); }
+.mono-cells span:first-child { border-left: 1px solid var(--rule-2); }
+.mono-cells span { width: 1ch; padding-inline: 0.25ch; box-sizing: content-box; border-right: 1px solid var(--rule-2); font: 400 40px/56px var(--mono); text-align: center; }
+.mono-cells.sans span { width: auto; font-family: var(--sans); }
 .specimen-guides { position: relative; padding-block: 0; }
 .specimen-guides > i {
   position: absolute;
@@ -644,7 +659,42 @@ body::after {
   field-sizing: content;
 }
 .tester-ctrl { display: flex; gap: calc(var(--u) * 3); align-items: center; margin-top: calc(var(--u) * 2); }
-.tester-ctrl input[type="range"] { accent-color: var(--accent); width: calc(var(--u) * 20); }
+/* Sliders as drafting scales: a hairline track, the run so far in ink, a
+   flat accent block for the handle and a tick at either end. No rounding,
+   no shadow. --p (0 to 100) is the value, set by the tester script. */
+.tester-ctrl input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: calc(var(--u) * 20);
+  height: calc(var(--u) * 3);
+  margin: 0;
+  background:
+    linear-gradient(var(--ink-3), var(--ink-3)) left center / 1px 9px no-repeat,
+    linear-gradient(var(--ink-3), var(--ink-3)) right center / 1px 9px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left center / calc(var(--p, 50) * 1%) 2px no-repeat,
+    linear-gradient(var(--rule-2), var(--rule-2)) left center / 100% 1px no-repeat;
+  cursor: pointer;
+}
+.tester-ctrl input[type="range"]::-webkit-slider-runnable-track { height: calc(var(--u) * 3); background: transparent; }
+.tester-ctrl input[type="range"]::-moz-range-track { height: calc(var(--u) * 3); background: transparent; }
+.tester-ctrl input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 8px;
+  height: calc(var(--u) * 2);
+  margin-top: 4px;
+  border: 0;
+  border-radius: 0;
+  background: var(--accent);
+}
+.tester-ctrl input[type="range"]::-moz-range-thumb {
+  width: 8px;
+  height: calc(var(--u) * 2);
+  border: 0;
+  border-radius: 0;
+  background: var(--accent);
+}
+.tester-ctrl input[type="range"]:focus { outline: none; }
+.tester-ctrl input[type="range"]:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 .weights { display: grid; grid-template-columns: repeat(4, 1fr); }
 .weights div { padding-block: calc(var(--u) * 2); border-bottom: 1px solid var(--rule-2); font-size: 32px; line-height: 40px; letter-spacing: -0.02em; }
 @container board (max-width: 720px) {
@@ -665,7 +715,7 @@ body::after {
 .table th, .table td { text-align: left; padding: 0; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); vertical-align: middle; }
 .table th { font: 500 12px/16px var(--mono); text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3); border-bottom-color: var(--ink); }
 .table td { font-size: 14px; }
-.table td.mono { font-size: 13px; }
+.table td.mono { font-size: 12px; }
 .table .r { text-align: right; }
 /* first two columns span three grid columns each, so the third starts on the centre line */
 .table.on-grid th:nth-child(-n + 2) { width: calc((100% - 11 * var(--gap)) / 4 + 3 * var(--gap)); }
@@ -675,12 +725,12 @@ body::after {
 .icons { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-top: 1px solid var(--rule-2); border-left: 1px solid var(--rule-2); }
 .icons > div { aspect-ratio: 1; display: grid; place-items: center; border-right: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); position: relative; }
 .icons svg { width: 40%; height: 40%; overflow: visible; }
-.icons .label { position: absolute; left: var(--u); bottom: 4px; font-size: 10px; }
+.icons .label { position: absolute; left: var(--u); bottom: 4px; font-size: 12px; }
 .icon-anat { aspect-ratio: 1; background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; }
 .icon-anat svg { width: 80%; height: 80%; overflow: visible; }
 .glyphs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-top: 1px solid var(--rule-2); border-left: 1px solid var(--rule-2); }
 .glyphs > div { aspect-ratio: 1; display: grid; place-items: center; border-right: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); font: 500 28px/1 var(--mono); position: relative; }
-.glyphs .label { position: absolute; left: var(--u); bottom: 4px; font-size: 10px; }
+.glyphs .label { position: absolute; left: var(--u); bottom: 4px; font-size: 12px; }
 .shapes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
 .shapes > figure { aspect-ratio: 1; background: var(--sheet); border: 1px solid var(--rule-2); }
 .shapes svg { width: 100%; height: 100%; }
@@ -730,8 +780,11 @@ body::after {
 .curve { background: var(--sheet); border: 1px solid var(--rule-2); aspect-ratio: 1; position: relative; }
 .curve svg { position: absolute; inset: calc(var(--u) * 3); width: calc(100% - var(--u) * 6); height: calc(100% - var(--u) * 6); overflow: visible; }
 .track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
-.track i { position: absolute; left: 0; top: 12px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink); }
-.motion-demo:hover .track i, .motion-demo.play .track i { left: calc(100% - 16px); }
+/* a small drawn circle, not a filled dot. The run stops short by the
+   curve's overshoot (--over, the peak of the easing), so at the top of the
+   bounce the circle's edge just touches the right ruler */
+.track i { position: absolute; left: 0; top: 15px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink); }
+.motion-demo:hover .track i, .motion-demo.play .track i { left: calc((100% - 10px) / var(--over, 1)); }
 .track i { transition-property: left; }
 
 /* ---------- Voice ---------- */
@@ -956,7 +1009,7 @@ html { -webkit-tap-highlight-color: transparent; }
 /* the bars span the window, not the 1440 sheet column, so their content runs edge to edge too */
 .bar .wrap { display: flex; align-items: stretch; height: 100%; max-width: none; padding-inline: 0; }
 .bar.top .wrap { justify-content: space-between; padding-left: var(--u); }
-.bar.bottom .wrap { justify-content: center; }
+.bar.bottom .wrap { justify-content: space-between; }
 .bar-path {
   display: flex;
   align-items: center;
@@ -975,6 +1028,8 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-lang, .bar-theme, .bar-pdf { flex: none; border-left: 1px solid var(--rule-2); }
 .bar-pdf {
   display: flex;
+  justify-content: center;
+  min-width: calc(var(--u) * 9);
   align-items: center;
   gap: 8px;
   padding-inline: var(--inset);
@@ -983,9 +1038,9 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 .bar-pdf svg { width: 16px; height: 16px; color: var(--accent); }
 @media (hover: hover) { .bar-pdf:hover { background: var(--fill); } }
-/* bottom bar: one framed row in the middle, the sheet cells scroll if the window gets narrow */
-.bar.bottom [data-seg="nav"] { flex: 0 1 auto; min-width: 0; border-left: 1px solid var(--rule-2); }
-.bar-zoom { flex: none; display: flex; border-inline: 1px solid var(--rule-2); }
+/* bottom bar: the sheet cells snap to the left edge and scroll if the window gets narrow, zoom snaps to the right */
+.bar.bottom [data-seg="nav"] { flex: 0 1 auto; min-width: 0; border-right: 1px solid var(--rule-2); }
+.bar-zoom { flex: none; display: flex; border-left: 1px solid var(--rule-2); }
 .bar-zoom button {
   height: 100%;
   min-width: 40px;
@@ -1055,8 +1110,8 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 .seg-layer > i {
   position: absolute;
-  top: 30%;
-  bottom: 30%;
+  top: 0;
+  bottom: 0;
   width: 1px;
   background: var(--rule-2);
 }
@@ -1089,19 +1144,25 @@ html { -webkit-tap-highlight-color: transparent; }
   font: 500 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #fff;
-  mix-blend-mode: difference;
+  justify-content: center;
+  min-width: calc(var(--u) * 6);
+  color: var(--ink);
   white-space: nowrap;
+  /* plain colours, not a difference blend: blending drops the text to
+     grayscale antialiasing and the small mono labels went crunchy. The
+     label flips as the ink block lands. */
+  transition: color var(--t) var(--ease) 60ms;
 }
-/* A quiet segment, for the language: the accent edge moves the same way,
-   with no ink block under it, and the labels change colour instead of
-   inverting. It sits next to the theme switch without merging into it. */
-.seg.quiet .seg-block { background: transparent; }
-.seg.quiet > button { mix-blend-mode: normal; color: var(--ink-3); transition: color var(--t) var(--ease); }
+.seg > [aria-checked="true"], .seg > [aria-current="true"] { color: var(--paper); }
+/* A quiet segment, for the language: no block and no accent edge, the
+   labels only change colour, so the one accent in the bar stays on the
+   theme. It sits next to the theme switch without merging into it. */
+.seg.quiet .seg-block { display: none; }
+.seg.quiet > button { min-width: calc(var(--u) * 5); color: var(--ink-3); transition: color var(--t) var(--ease); }
 .seg.quiet > button[aria-checked="true"] { color: var(--ink); }
 @media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
 /* the sheet number, a step quieter than the name on paper and on ink alike */
-.seg > a b { font-weight: 500; color: #8a8a87; }
+.seg > a b { font-weight: 500; color: var(--ink-3); }
 @media (max-width: 720px) {
   .seg > a b { display: none; }
 }

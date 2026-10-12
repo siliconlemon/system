@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=33">
+<link rel="stylesheet" href="css/system.css?v=34">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -371,10 +371,12 @@
     <div class="c-6">
       <div class="block-head"><span class="label ink">Inter Tight</span><span class="label">300 – 600</span></div>
       <div class="specimen">Aa</div>
+      <p class="mono-cells sans" aria-hidden="true"><span>i</span><span>l</span><span>m</span><span>W</span><span>0</span><span>1</span><span>{</span><span>}</span></p>
     </div>
     <div class="c-6">
       <div class="block-head"><span class="label ink">IBM Plex Mono</span><span class="label">400 – 500</span></div>
-      <div class="specimen" style="font-family:var(--mono);letter-spacing:-0.08em;font-weight:400">Aa</div>
+      <div class="specimen" style="font-family:var(--mono);letter-spacing:0;font-weight:400">Aa</div>
+      <p class="mono-cells" aria-hidden="true"><span>i</span><span>l</span><span>m</span><span>W</span><span>0</span><span>1</span><span>{</span><span>}</span></p>
     </div>
 
     <div class="c-12">
@@ -570,7 +572,7 @@
     <figure class="c-3"><div class="frame" style="--ar: 1"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small" data-i18n="imagery.crop-on-the-grid">Crop on the grid</span></p></figure>
     <figure class="c-3"><div class="frame" style="--ar: 1;transform:rotate(-4deg)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.dont-tilt-or-skew">Don’t tilt or skew</span></p></figure>
     <figure class="c-3"><div class="frame" style="--ar: 1;--fill: var(--fill-2)"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small" data-i18n="imagery.gray-one-accent-at">Gray, one accent at most</span></p></figure>
-    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: #ffd2c4;box-shadow:0 16px 32px -12px rgba(0,0,0,.3)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.no-tints-or-drop">No tints or drop shadows</span></p></figure>
+    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: #ffd2c4;box-shadow:inset 0 0 0 2px var(--ink-2), 0 16px 32px -12px rgba(0,0,0,.3)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.no-tints-or-drop">No tints or drop shadows</span></p></figure>
   </div>
 </section>
 
@@ -711,7 +713,7 @@
     <div class="c-4 motion-demo">
       <div class="block-head"><span class="label ink" data-i18n="motion.spring">Spring</span><span class="label">≈ 560 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100M0 20h100"/><path class="sk-a" d="M0 100C10 -20 22 -12 34 12S56 26 68 18 88 20 100 20"/></svg></div>
-      <div class="track"><i style="transition-duration:560ms;transition-timing-function:linear(0, .35 8%, .86 18%, 1.08 28%, 1.12 34%, 1.04 48%, .99 62%, 1)"></i></div>
+      <div class="track"><i style="--over:1.12;transition-duration:560ms;transition-timing-function:linear(0, .35 8%, .86 18%, 1.08 28%, 1.12 34%, 1.04 48%, .99 62%, 1)"></i></div>
       <p class="mono muted" data-i18n="motion.stiffness-320-damping-22">stiffness 320 · damping 22</p>
     </div>
   </div>
@@ -895,9 +897,9 @@
   </div>
 </div>
 
-<script src="strings/en.js?v=33" defer></script>
-<script src="strings/cs.js?v=33" defer></script>
-<script src="js/canvas.js?v=33" defer></script>
-<script src="js/system.js?v=33" defer></script>
+<script src="strings/en.js?v=34" defer></script>
+<script src="strings/cs.js?v=34" defer></script>
+<script src="js/canvas.js?v=34" defer></script>
+<script src="js/system.js?v=34" defer></script>
 </body>
 </html>
