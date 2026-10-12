@@ -2,6 +2,14 @@
    Every length snaps to --u (8px). Columns in .grid and .rules share one
    template, so the ruler lines always sit on the content edges. */
 
+@font-face {
+  font-family: "Overused Grotesk";
+  src: url("../assets/OverusedGrotesk-VF.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --u: 8px;
   --inset: 12px;
@@ -25,10 +33,10 @@
   --canvas: #e3e3de;
   --canvas-mark: #a9a9a3;
 
-  /* Four faces, three jobs: a geometric display face for headings and the name, a grotesk for
-     everything you read, a mono for everything you measure, and a typewriter mono kept for the odd
-     highlight, the way a brochure set one line in a special face. */
-  --display: "Jost", "Futura", "Century Gothic", sans-serif;
+  /* Four faces, three jobs: a neo-grotesk display face for headings and the name, a plain grotesk
+     for everything you read, a mono for everything you measure, and a typewriter mono kept for the
+     odd highlight, the way a brochure set one line in a special face. */
+  --display: "Overused Grotesk", "Helvetica Neue", Arial, sans-serif;
   --sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --mono: "Azeret Mono", ui-monospace, Menlo, monospace;
   --feature: "Courier Prime", "Courier New", monospace;
@@ -38,8 +46,8 @@
   --line: 1px;
   --line-2: 2px;
   /* Small mono comes in two templates and one size, like the lettering on
-     a drawing: the label (500, 12 px, capitals, +0.02em) and the value
-     (400, 12 px, as written). Big mono, the specimen and the glyph cells,
+     a drawing: the label (300, 12 px, capitals, +0.02em) and the value
+     (300, 12 px, as written). Big mono, the specimen and the glyph cells,
      is a picture of the font, not lettering. */
 
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
@@ -205,11 +213,11 @@ body:not(:has(.deck))::after {
 }
 .sheet-no {
   grid-column: span 3;
-  font: 500 12px/24px var(--mono);
+  font: 300 12px/24px var(--mono);
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
-.sheet-no b { color: var(--ink); font-weight: 500; }
+.sheet-no b { color: var(--ink); font-weight: 300; }
 .sheet-title {
   grid-column: span 6;
   font-size: clamp(40px, 5cqw, 72px);
@@ -240,14 +248,14 @@ body:not(:has(.deck))::after {
 /* ---------- Small type ---------- */
 
 .label {
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
 .label.ink { color: var(--ink); }
 .label.accent { color: var(--accent); }
-.mono { font-family: var(--mono); font-size: 12px; line-height: 24px; }
+.mono { font-family: var(--mono); font-weight: 300; font-size: 12px; line-height: 24px; }
 .muted { color: var(--ink-2); }
 .small { font-size: 14px; line-height: 24px; }
 
@@ -349,7 +357,7 @@ body:not(:has(.deck))::after {
 .dot-a { fill: var(--accent); }
 /* lettering in a drawing is set in drawing units, so --vu (from system.js)
    scales it back to 12 px on the sheet whatever size the drawing is shown at */
-.svg-text { font: 500 calc(12px * var(--vu, 1)) var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
+.svg-text { font: 300 calc(12px * var(--vu, 1)) var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
 
 /* ---------- Cover ---------- */
 
@@ -445,7 +453,7 @@ body:not(:has(.deck))::after {
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
   border: 1px solid var(--ink);
-  font: 500 12px/22px var(--mono);
+  font: 300 12px/22px var(--mono);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   isolation: isolate;
@@ -588,7 +596,7 @@ body:not(:has(.deck))::after {
   height: calc(var(--u) * 3);
   padding-inline: var(--u);
   border: 1px solid var(--rule-2);
-  font: 500 12px/1 var(--mono);
+  font: 300 12px/1 var(--mono);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -640,7 +648,7 @@ body:not(:has(.deck))::after {
   position: absolute;
   left: var(--inset);
   bottom: 8px;
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   font-style: normal;
   color: color-mix(in srgb, currentColor 60%, var(--bg));
 }
@@ -675,8 +683,8 @@ body:not(:has(.deck))::after {
 /* swatches, the proportion bar and the contrast cards are objects on the sheet: 2 px outline, which a dark fill takes over in its own color */
 .swatch-chip { aspect-ratio: 1; border: 2px solid var(--ink-2); }
 .swatch dl { display: grid; grid-template-columns: auto 1fr; column-gap: calc(var(--u) * 2); }
-.swatch dt { font: 500 12px/24px var(--mono); color: var(--ink-3); text-transform: uppercase; }
-.swatch dd { font: 400 12px/24px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.swatch dt { font: 300 12px/24px var(--mono); color: var(--ink-3); text-transform: uppercase; }
+.swatch dd { font: 300 12px/24px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
 .swatch h4 { font-size: 20px; line-height: 24px; letter-spacing: -0.01em; }
 .prop { display: flex; height: calc(var(--u) * 8); border: 2px solid var(--ink-2); }
 .prop > i { display: block; }
@@ -701,9 +709,9 @@ body:not(:has(.deck))::after {
 /* both rows sit on one line under specimens of different heights */
 .mono-cells { display: flex; margin-top: auto; padding-top: calc(var(--u) * 3); }
 .mono-cells span:first-child { border-left: 1px solid var(--rule-2); }
-.mono-cells span { width: 1ch; padding-inline: 0.25ch; box-sizing: content-box; border-right: 1px solid var(--rule-2); font: 400 40px/56px var(--mono); text-align: center; }
-.mono-cells.sans span { width: auto; font-family: var(--sans); }
-.mono-cells.feature-cells span { font-family: var(--feature); font-style: italic; }
+.mono-cells span { width: 1ch; padding-inline: 0.25ch; box-sizing: content-box; border-right: 1px solid var(--rule-2); font: 300 40px/56px var(--mono); text-align: center; }
+.mono-cells.sans span { width: auto; font-family: var(--sans); font-weight: 400; }
+.mono-cells.feature-cells span { font-family: var(--feature); font-weight: 400; font-style: italic; }
 /* the display face, wherever a sheet shows it outside a heading */
 .display, .scale.display li > :nth-child(2) { font-family: var(--display); font-weight: 500; }
 .setting { max-width: 36em; }
@@ -797,7 +805,7 @@ body:not(:has(.deck))::after {
 .spacing li > :last-child { text-align: right; }
 .table { width: 100%; border-collapse: collapse; }
 .table th, .table td { text-align: left; padding: 0; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); vertical-align: middle; }
-.table th { font: 500 12px/16px var(--mono); text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3); border-bottom-color: var(--ink); }
+.table th { font: 300 12px/16px var(--mono); text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3); border-bottom-color: var(--ink); }
 .table td { font-size: 14px; }
 .table td.mono { font-size: 12px; }
 /* a flat swatch ahead of each value, outlined so paper on paper still shows */
@@ -815,7 +823,7 @@ body:not(:has(.deck))::after {
 .icon-anat { aspect-ratio: 1; background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; }
 .icon-anat svg { width: 80%; height: 80%; overflow: visible; }
 .glyphs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); border-top: 1px solid var(--rule-2); border-left: 1px solid var(--rule-2); }
-.glyphs > div { aspect-ratio: 1; display: grid; place-items: center; border-right: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); font: 500 28px/1 var(--mono); position: relative; }
+.glyphs > div { aspect-ratio: 1; display: grid; place-items: center; border-right: 1px solid var(--rule-2); border-bottom: 1px solid var(--rule-2); font: 400 28px/1 var(--mono); position: relative; }
 .glyphs .label { position: absolute; left: var(--u); bottom: 4px; font-size: 12px; }
 .shapes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
 .shapes > figure { aspect-ratio: 1; background: var(--sheet); border: 1px solid var(--rule-2); }
@@ -1058,7 +1066,7 @@ body:not(:has(.deck))::after {
   bottom: calc(var(--u) * 2);
   color: var(--ink-3);
 }
-.board > .slug b { font-weight: 500; color: var(--ink-2); margin-right: 1ch; }
+.board > .slug b { font-weight: 300; color: var(--ink-2); margin-right: 1ch; }
 
 @media screen {
   /* Crop marks: a 9-slice image outside the sheet, so they cost no element and the sheet's
@@ -1171,7 +1179,7 @@ html { -webkit-tap-highlight-color: transparent; }
   align-items: center;
   min-width: 0;
   padding-inline: var(--inset);
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--ink);
@@ -1190,7 +1198,7 @@ html { -webkit-tap-highlight-color: transparent; }
   gap: 8px;
   /* a touch more on the right, so the label balances the icon on its left */
   padding-inline: var(--inset) calc(var(--inset) + 4px);
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
 }
 .bar-pdf svg { width: 16px; height: 16px; color: var(--accent); }
@@ -1202,7 +1210,7 @@ html { -webkit-tap-highlight-color: transparent; }
   height: 100%;
   min-width: 40px;
   padding-inline: var(--inset);
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
 }
@@ -1215,7 +1223,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-phone { display: none; }
 .bar-all, .bar-pager button, .bar-cur {
   height: 100%;
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -1227,7 +1235,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-pager button:disabled { color: color-mix(in srgb, var(--ink-3) 40%, var(--paper)); cursor: default; }
 .bar-pager svg { width: 16px; height: 16px; }
 .bar-cur { display: flex; align-items: center; justify-content: center; width: 12ch; white-space: nowrap; overflow: hidden; }
-.bar-cur b { font-weight: 500; color: var(--ink-3); margin-right: 8px; }
+.bar-cur b { font-weight: 300; color: var(--ink-3); margin-right: 8px; }
 @media (max-width: 720px) {
   .bar.bottom .wrap { justify-content: stretch; }
   .bar.bottom [data-seg="nav"] { display: none; }
@@ -1294,7 +1302,7 @@ html { -webkit-tap-highlight-color: transparent; }
   gap: 8px;
   height: 100%;
   padding-inline: var(--inset);
-  font: 500 12px/16px var(--mono);
+  font: 300 12px/16px var(--mono);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   justify-content: center;
@@ -1321,7 +1329,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .seg.quiet > button[aria-checked="true"] { color: var(--ink); }
 @media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
 /* the sheet number, a step quieter than the name on paper and on ink alike */
-.seg > a b { font-weight: 500; color: var(--ink-3); }
+.seg > a b { font-weight: 300; color: var(--ink-3); }
 @media (max-width: 720px) {
   .seg > a b { display: none; }
 }

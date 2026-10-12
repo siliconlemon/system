@@ -19,7 +19,7 @@ First template build in `site/`: a static page with no build step, served from `
 ## House rules
 
 - Paper over tech. When a choice could go modern-tech or 90s printed sheet, take the sheet.
-- Four faces: Jost for display, Hanken Grotesk for text, Azeret Mono for measuring, Courier Prime italic for one highlighted line a sheet. All OFL.
+- Four faces: Overused Grotesk for display, Hanken Grotesk for text, Azeret Mono for measuring, Courier Prime italic for one highlighted line a sheet. All OFL.
 - Big type sits on the rulers by its ink, not its box: system.js measures the first glyph and pulls it onto the line.
 - Print effects never filter or blend, and motion only moves transform and opacity. Panning has to stay smooth.
 - Ruler lines mark the content edges only: the outer margins, the title column and the center.
