@@ -152,6 +152,7 @@
     if (!cam.classList.contains("fly")) return;
     var m = new DOMMatrix(getComputedStyle(cam).transform);
     crosses(m.e, m.f, m.a * z);
+    hair(m.a * z);
     following = requestAnimationFrame(follow);
   }
   function apply(mode) {
@@ -162,7 +163,7 @@
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
     if (mode === "fly") { if (!following) following = requestAnimationFrame(follow); }
-    else crosses(view.x, view.y, view.s);
+    else { crosses(view.x, view.y, view.s); hair(view.s); }
     tell();
   }
   function moving(on) { cam.classList.toggle("moving", on); }
@@ -172,7 +173,7 @@
     clearTimeout(settleTimer);
     cam.classList.remove("fly", "moving");
     if (z !== view.s) { z = view.s; deck.style.zoom = z; }
-    hair();
+    hair(z);
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px)";
     crosses(view.x, view.y, view.s);
     syncHash();
@@ -270,7 +271,17 @@
      would land on a whole pixel or on none, so some lines vanished and
      others didn't. */
 
-  function hair() { deck.style.setProperty("--hair", 1 / (z * (window.devicePixelRatio || 1)) + "px"); }
+  // On screen a sheet pixel is s px however the zoom splits between CSS zoom and the camera's
+  // transform, so --hair follows the live scale every frame and lines thin and thicken smoothly
+  // instead of jumping when a zoom settles. At 1 px or less it changes nothing, every line is at
+  // least 1 px, so close up nothing restyles while zooming.
+  var lastHair = 0;
+  function hair(s) {
+    var h = Math.max(1, 1 / (s * (window.devicePixelRatio || 1)));
+    if (Math.abs(h - lastHair) < lastHair * 0.02) return;
+    lastHair = h;
+    deck.style.setProperty("--hair", h + "px");
+  }
 
   var steadySheet = null;
   function steady() {
