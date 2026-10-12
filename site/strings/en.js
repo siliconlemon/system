@@ -71,7 +71,7 @@ window.STRINGS.en = {
   "common.motion": "Motion",
   "common.print": "Print",
   "common.product": "Product",
-  "common.slug": "System · Edition 1.0 · Offset, black and one spot color, uncoated 120 g/m²",
+  "common.slug": "System, edition 1.0 · Offset CMYK on uncoated 120 g/m²",
   "common.story": "Story",
   "common.tablet": "Tablet",
   "common.token": "Token",

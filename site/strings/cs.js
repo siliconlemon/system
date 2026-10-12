@@ -71,7 +71,7 @@ window.STRINGS.cs = {
   "common.motion": "Pohyb",
   "common.print": "Tisk",
   "common.product": "Produkt",
-  "common.slug": "System · vydání 1.0 · ofset, černá a jedna přímá barva, nenatíraný papír 120 g/m²",
+  "common.slug": "System, vydání 1.0 · ofset CMYK na nenatíraný papír 120 g/m²",
   "common.story": "Story",
   "common.tablet": "Tablet",
   "common.token": "Token",

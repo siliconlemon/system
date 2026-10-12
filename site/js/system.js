@@ -297,6 +297,13 @@
     });
     var navSeg = Seg(navBox);
     segs.push(navSeg);
+    // more cells to the right than fit: the zoom's fade shows (CSS)
+    var more = function () { navBox.classList.toggle("more", navBox.scrollLeft + navBox.clientWidth < navBox.scrollWidth - 1); };
+    navBox.addEventListener("scroll", more, { passive: true });
+    addEventListener("resize", more);
+    // a language switch or a late font changes the cells' widths
+    if (window.ResizeObserver) Array.prototype.forEach.call(navBox.children, function (c) { new ResizeObserver(more).observe(c); });
+    more();
 
     var allBtn = document.querySelector("[data-all]");
     var cur = document.querySelector("[data-cur]");

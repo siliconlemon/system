@@ -29,13 +29,16 @@
     var a = (i * 2.399963) % (2 * Math.PI), r = 0.45 + 0.5 * ((i * 0.618034) % 1);
     board.style.setProperty("--rx", (r * Math.cos(a)).toFixed(2) + "px");
     board.style.setProperty("--ry", (r * Math.sin(a)).toFixed(2) + "px");
-    // the print code: the sheet's number, then the press run (system.js translates it)
-    var no = sec.querySelector(".sheet-no b"), slug = document.createElement("p"), b = document.createElement("b"), run = document.createElement("span");
+    // the print code: the sheet's number, then the press run (system.js translates it).
+    // The cover has no number and its foot is full already, so it goes without
+    var no = sec.querySelector(".sheet-no b");
+    if (!no) return board;
+    var slug = document.createElement("p"), b = document.createElement("b"), run = document.createElement("span");
     slug.className = "slug label";
     slug.setAttribute("aria-hidden", "true");
-    b.textContent = no ? no.textContent : "00";
+    b.textContent = no.textContent;
     run.setAttribute("data-i18n", "common.slug");
-    run.textContent = "System · Edition 1.0 · Offset, black and one spot color, uncoated 120 g/m²";
+    run.textContent = "System, edition 1.0 · Offset CMYK on uncoated 120 g/m²";
     slug.appendChild(b);
     slug.appendChild(run);
     board.appendChild(slug);
