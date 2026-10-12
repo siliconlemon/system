@@ -190,7 +190,11 @@
     cam.classList.toggle("fly", mode === "fly");
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
-    if (mode === "fly") { if (!following) following = requestAnimationFrame(follow); }
+    if (mode === "fly") {
+      // on phones the lines take the target weight once, as the flight starts
+      if (phone()) hair(view.s);
+      if (!following) following = requestAnimationFrame(follow);
+    }
     else { crosses(view.x, view.y, view.s); hair(view.s, true); }
     tell();
   }
@@ -304,11 +308,14 @@
   // Each change of --k restyles every line on every sheet, so a running zoom only moves it when
   // the floor is in play (k below 1) and the hairlines, scaled by the camera meanwhile, have
   // drifted more than a fifth of a pixel from one: a handful of steps per zoom, not one a frame,
-  // and the width still changes smoothly. When the zoom settles it lands exactly.
+  // and the width still changes smoothly. When the zoom settles it lands exactly. Phones skip the
+  // steps: a fly takes its target weight once as it starts, and a pinch holds until it settles.
   var lastK = 0;
   function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
     if (live) {
+      // phones restyle once, at the start of a fly (see apply), never in between: every step jolted
+      if (phone()) return;
       if (k >= 1 && lastK >= 1) return;
       var drawn = Math.min(1, lastK) / Math.min(1, k);
       if (drawn > 0.8 && drawn < 1.25) return;
