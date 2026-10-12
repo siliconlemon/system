@@ -14,9 +14,9 @@
 <link rel="icon" href="assets/favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500&family=Hanken+Grotesk:wght@300;400;500;600&family=Jost:wght@300;400;500;600&family=Syne+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500&family=Hanken+Grotesk:wght@300;400;500;600&family=Jost:wght@300;400;500;600&family=Courier+Prime:ital@0;1&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=76">
+<link rel="stylesheet" href="css/system.css?v=78">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -63,8 +63,12 @@
   </defs>
 </svg>
 
-<!-- Splash: the mark on paper (or ink, in dark). The mark sits on its optical center, 7.2 units left of the geometric one. A 2 px ring, the weight of every drawn object, draws around it, then the ring springs and hands over to the canvas, which lays itself out underneath meanwhile. -->
-<div class="splash" aria-hidden="true"><svg viewBox="-110 -170 460 460"><circle cx="120" cy="60" r="220" pathLength="1"/><use href="#mark" x="-7.2" width="240" height="120"/></svg></div>
+<!-- Splash: the mark printed in one pass, on paper (or ink, in dark). Register crosses, then the ink plate, then the accent plate pulled into register. The mark sits on its optical center, 7.2 units left of the geometric one. Each plate is its own svg, so each animates on the compositor. -->
+<div class="splash" aria-hidden="true"><div class="splash-art">
+  <svg class="splash-reg" viewBox="-110 -170 460 460"><path d="M-50 -40h20M-40 -50v20M270 -40h20M280 -50v20M-50 160h20M-40 150v20M270 160h20M280 150v20"/></svg>
+  <svg class="splash-ink" viewBox="-110 -170 460 460"><use href="#mark" x="-7.2" width="240" height="120" style="--dot: currentColor"/></svg>
+  <svg class="splash-spot" viewBox="-110 -170 460 460"><circle cx="52.8" cy="60" r="60"/></svg>
+</div></div>
 
 <header class="bar top">
   <div class="wrap">
@@ -465,7 +469,7 @@
     <span class="sheet-no"><b>07</b> / 18</span>
     <h2 class="sheet-title" data-i18n="mono.title">Mono</h2>
     <span class="sheet-tag label" data-i18n="type.tag">2 families</span>
-    <p class="sheet-lede" data-i18n="mono.lede">Azeret Mono for everything you measure: labels, values and code, like the lettering on a drawing. Syne Mono for the one line on a sheet that should stand apart.</p>
+    <p class="sheet-lede" data-i18n="mono.lede">Azeret Mono for everything you measure: labels, values and code, like the lettering on a drawing. Courier Prime, set in italic like a typed note, for the one line on a sheet that should stand apart.</p>
   </div>
 
   <div class="grid row-gap">
@@ -475,8 +479,8 @@
       <p class="mono-cells" aria-hidden="true"><span>i</span><span>l</span><span>m</span><span>W</span><span>0</span><span>1</span><span>{</span><span>}</span></p>
     </div>
     <div class="c-6">
-      <div class="block-head"><span class="label ink">Syne Mono</span><span class="label">400</span></div>
-      <div class="specimen" style="font-family:var(--feature);letter-spacing:0;font-weight:400">Aa</div>
+      <div class="block-head"><span class="label ink">Courier Prime</span><span class="label">400 · Italic</span></div>
+      <div class="specimen" style="font-family:var(--feature);letter-spacing:0;font-weight:400;font-style:italic">Aa</div>
       <p class="mono-cells feature-cells" aria-hidden="true"><span>i</span><span>l</span><span>m</span><span>W</span><span>0</span><span>1</span><span>{</span><span>}</span></p>
     </div>
 
@@ -779,23 +783,29 @@
     <span class="sheet-no"><b>13</b> / 18</span>
     <h2 class="sheet-title" data-i18n="motion.title">Motion</h2>
     <span class="sheet-tag label" data-i18n="motion.tag">Hover to play</span>
-    <p class="sheet-lede" data-i18n="motion.lede">Things arrive fast and settle slowly. Three durations, one curve for most of it, and a spring for anything you drag.</p>
+    <p class="sheet-lede" data-i18n="motion.lede">Things arrive fast and settle with a click, like a good switch. One curve for most of it, a detent for anything that toggles, and a spring for anything you drag.</p>
   </div>
 
   <div class="grid row-gap">
-    <div class="c-4 motion-demo" style="--tone: var(--ink-3)">
+    <div class="c-3 motion-demo" style="--tone: var(--ink-3)">
       <div class="block-head"><span class="label ink" data-i18n="motion.standard">Standard</span><span class="label">240 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C20 30 10 0 100 0"/></svg></div>
       <div class="track"><i style="transition-duration:240ms;transition-timing-function:cubic-bezier(.2,.7,.1,1)"></i></div>
       <p class="mono muted">cubic-bezier(.2, .7, .1, 1)</p>
     </div>
-    <div class="c-4 motion-demo" style="--tone: var(--ink)">
+    <div class="c-3 motion-demo" style="--tone: var(--ink)">
       <div class="block-head"><span class="label ink" data-i18n="motion.enter">Enter</span><span class="label">400 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C0 0 40 0 100 0"/></svg></div>
       <div class="track"><i style="transition-duration:400ms;transition-timing-function:cubic-bezier(0,0,.2,1)"></i></div>
       <p class="mono muted">cubic-bezier(0, 0, .2, 1)</p>
     </div>
-    <div class="c-4 motion-demo" style="--tone: var(--accent)">
+    <div class="c-3 motion-demo" style="--tone: var(--ink-2)">
+      <div class="block-head"><span class="label ink" data-i18n="motion.detent">Detent</span><span class="label">320 ms</span></div>
+      <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C8 52 22 10 44 -3S64 .5 76 .2 100 0"/></svg></div>
+      <div class="track"><i style="--over:1.03;transition-duration:320ms;transition-timing-function:linear(0, .42 12%, .78 24%, .96 36%, 1.03 46%, 1.012 60%, .997 74%, 1)"></i></div>
+      <p class="mono muted" data-i18n="motion.3-past-the-stop">3% past the stop, then back</p>
+    </div>
+    <div class="c-3 motion-demo" style="--tone: var(--accent)">
       <div class="block-head"><span class="label ink" data-i18n="motion.spring">Spring</span><span class="label">≈ 560 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100M0 20h100"/><path class="sk-a" d="M0 100C10 -20 22 -12 34 12S56 26 68 18 88 20 100 20"/></svg></div>
       <div class="track"><i style="--over:1.12;transition-duration:560ms;transition-timing-function:linear(0, .35 8%, .86 18%, 1.08 28%, 1.12 34%, 1.04 48%, .99 62%, 1)"></i></div>
@@ -922,7 +932,7 @@
   <ul class="files">
     <li><div><h4 data-i18n="downloads.logo-package">Logo package</h4><p class="small muted" data-i18n="downloads.svg-png-and-pdf">SVG, PNG and PDF, every lockup, clear space built in</p></div><span class="label">ZIP</span><span class="label" data-i18n="downloads.2-4-mb">2.4 MB</span><a class="btn sm" href="#downloads" data-i18n="downloads.download">Download</a></li>
     <li><div><h4 data-i18n="downloads.design-tokens">Design tokens</h4><p class="small muted" data-i18n="downloads.color-type-and-spacing">Color, type and spacing as CSS variables and JSON</p></div><span class="label">CSS · JSON</span><span class="label">8 KB</span><a class="btn sm" href="#downloads" data-i18n="downloads.download">Download</a></li>
-    <li><div><h4 data-i18n="downloads.fonts">Fonts</h4><p class="small muted" data-i18n="downloads.jost-hanken-grotesk-azeret">Jost, Hanken Grotesk, Azeret Mono and Syne Mono, all under the OFL</p></div><span class="label">TTF · WOFF2</span><span class="label" data-i18n="downloads.1-1-mb">1.1 MB</span><a class="btn sm" href="#downloads" data-i18n="downloads.download">Download</a></li>
+    <li><div><h4 data-i18n="downloads.fonts">Fonts</h4><p class="small muted" data-i18n="downloads.jost-hanken-grotesk-azeret">Jost, Hanken Grotesk, Azeret Mono and Courier Prime, all under the OFL</p></div><span class="label">TTF · WOFF2</span><span class="label" data-i18n="downloads.1-1-mb">1.1 MB</span><a class="btn sm" href="#downloads" data-i18n="downloads.download">Download</a></li>
     <li><div><h4 data-i18n="downloads.this-manual">This manual</h4><p class="small muted" data-i18n="downloads.the-whole-manual-as">The whole manual as one file, fonts embedded</p></div><span class="label">PDF · HTML</span><span class="label" data-i18n="downloads.8-5-mb">8.5 MB</span><a class="btn sm accent" href="#downloads" data-i18n="downloads.download">Download</a></li>
   </ul>
 </section>
@@ -994,9 +1004,9 @@
   </div>
 </div>
 
-<script src="strings/en.js?v=76" defer></script>
-<script src="strings/cs.js?v=76" defer></script>
-<script src="js/canvas.js?v=76" defer></script>
-<script src="js/system.js?v=76" defer></script>
+<script src="strings/en.js?v=78" defer></script>
+<script src="strings/cs.js?v=78" defer></script>
+<script src="js/canvas.js?v=78" defer></script>
+<script src="js/system.js?v=78" defer></script>
 </body>
 </html>

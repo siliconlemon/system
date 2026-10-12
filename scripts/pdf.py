@@ -36,7 +36,7 @@ if not chrome:
 # The fonts come from Google Fonts. Virtual time stands still while they download, and the budget is how long
 # the page may then run before the capture, so they are in before it. The PDF is checked for them after
 FONT_WAIT_MS = 30000
-FONTS = ("Jost", "HankenGrotesk", "AzeretMono", "SyneMono")
+FONTS = ("Jost", "HankenGrotesk", "AzeretMono", "CourierPrime")
 for lang, pdf in PDFS.items():
     with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
         subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",

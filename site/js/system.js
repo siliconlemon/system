@@ -13,7 +13,57 @@
       localStorage.setItem(key, JSON.stringify(all));
     } catch (e) {}
   }
-  function relayout() { segs.forEach(function (g) { g.measure(); }); letter(); }
+  function relayout() { segs.forEach(function (g) { g.measure(); }); letter(); onRulers(); }
+
+  /* Big type sits on the ruler lines by its ink, not by its box. A glyph's
+     outline starts a side bearing in from its origin, so a 352 px S stood
+     several pixels off the line, and round letters overshoot the cap height.
+     Each big line's first glyph is drawn once on a canvas and scanned for
+     where its ink starts, to a fraction of a pixel, and the line is pulled
+     back by exactly that (text-indent, so margins stay the layout's). The
+     cover word also gets --ink-rise, how far its ink climbs over the cap
+     height, so the top guide meets the ink. Runs again after the fonts load,
+     a resize or a language switch, since those change the glyphs. */
+  var BIG = ".cover-word, .sheet-title, .specimen, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2)";
+  var inkCache = {};
+  function inkOf(font, text) {
+    var key = font + "|" + text;
+    if (inkCache[key]) return inkCache[key];
+    var S = 400, W = Math.ceil(S * (0.5 + 0.8 * text.length)), H = Math.ceil(S * 1.6), ox = S / 2, oy = Math.round(S * 1.15);
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var x = c.getContext("2d", { willReadFrequently: true });
+    x.font = font.replace("{size}", S + "px");
+    x.fillStyle = "#000";
+    x.textBaseline = "alphabetic";
+    x.fillText(text, ox, oy);
+    var d = x.getImageData(0, 0, W, H).data, colMax = new Uint8Array(W), rowMax = new Uint8Array(H);
+    for (var y = 0; y < H; y++) for (var i = 0; i < W; i++) {
+      var a = d[(y * W + i) * 4 + 3];
+      if (a > colMax[i]) colMax[i] = a;
+      if (a > rowMax[y]) rowMax[y] = a;
+    }
+    // the first column or row with ink, refined by its coverage: a half-covered edge pixel is half a pixel of ink
+    var left = 0, top = 0, bottom = 0;
+    for (i = 0; i < W; i++) if (colMax[i]) { left = i + 1 - colMax[i] / 255; break; }
+    for (y = 0; y < H; y++) if (rowMax[y]) { top = y + 1 - rowMax[y] / 255; break; }
+    for (y = H - 1; y >= 0; y--) if (rowMax[y]) { bottom = y + rowMax[y] / 255; break; }
+    return (inkCache[key] = { left: (left - ox) / S, top: (oy - top) / S, bottom: (bottom - oy) / S });
+  }
+  function onRulers() {
+    document.querySelectorAll(BIG).forEach(function (el) {
+      var text = el.textContent.trim();
+      if (!text) return;
+      var cs = getComputedStyle(el);
+      var font = cs.fontStyle + " " + cs.fontWeight + " {size} " + cs.fontFamily;
+      el.style.textIndent = (-inkOf(font, text.charAt(0)).left).toFixed(4) + "em";
+      if (el.classList.contains("cover-word")) {
+        // the cap height is the top of a flat capital; the word's ink climbs over it by the overshoot
+        var rise = inkOf(font, text).top - inkOf(font, "H").top;
+        el.parentNode.style.setProperty("--ink-rise", (Math.max(0, rise) * parseFloat(cs.fontSize)).toFixed(2) + "px");
+      }
+    });
+  }
 
   /* Drawings are in their own units, so lettering and strokes grew and
      shrank with every figure. Each drawing gets --vu, drawing units per
@@ -342,8 +392,8 @@
   }
 
   /* ---------- Splash ----------
-     The ring takes the first second from the start of the load, then the
-     spring zoom and fade hand over to the canvas. */
+     The press run takes the first second from the start of the load, then
+     the sheet lifts off and fades into the canvas. */
 
   var splash = document.querySelector(".splash");
   if (splash) {
@@ -381,5 +431,6 @@
   }
 
   window.addEventListener("resize", relayout);
-  if (document.fonts) document.fonts.ready.then(relayout);
+  // glyphs measured before the fonts arrived were the fallback's
+  if (document.fonts) document.fonts.ready.then(function () { inkCache = {}; relayout(); });
 })();

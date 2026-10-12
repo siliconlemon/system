@@ -26,12 +26,12 @@
   --canvas-mark: #a9a9a3;
 
   /* Four faces, three jobs: a geometric display face for headings and the name, a grotesk for
-     everything you read, a mono for everything you measure, and a second mono kept for the odd
+     everything you read, a mono for everything you measure, and a typewriter mono kept for the odd
      highlight, the way a brochure set one line in a special face. */
   --display: "Jost", "Futura", "Century Gothic", sans-serif;
   --sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --mono: "Azeret Mono", ui-monospace, Menlo, monospace;
-  --feature: "Syne Mono", "Courier New", monospace;
+  --feature: "Courier Prime", "Courier New", monospace;
   /* The two line weights: hairlines (grid, rules, construction) and the
      outlines of drawn objects. On the canvas they are redefined from the
      zoom (see main.deck), so every line on every sheet comes from here. */
@@ -43,6 +43,8 @@
      is a picture of the font, not lettering. */
 
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  /* the detent: quick travel, a hair past the stop, and back into it, like a good slide switch */
+  --detent: linear(0, 0.42 12%, 0.78 24%, 0.96 36%, 1.03 46%, 1.012 60%, 0.997 74%, 1);
   --t: 240ms;
 
   color-scheme: light;
@@ -109,7 +111,7 @@ svg { display: block; }
 ::selection { background: var(--accent); color: var(--on-accent); }
 
 h1, h2, h3, h4 { text-wrap: balance; font-weight: 500; font-family: var(--display); }
-.feature { font-family: var(--feature); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.feature { font-family: var(--feature); font-weight: 400; font-style: italic; letter-spacing: 0; text-transform: none; }
 p, li, dd, td, figcaption { text-wrap: pretty; }
 
 :focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
@@ -373,8 +375,7 @@ body:not(:has(.deck))::after {
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.03em;
-  /* the S's ink starts 0.031 em right of its origin (Jost 600), so pull it back onto the line */
-  margin-left: -0.031em;
+  /* system.js pulls the S's ink onto the ruler with text-indent, measured from the glyph itself */
   text-box: trim-both cap alphabetic;
   white-space: nowrap;
 }
@@ -389,7 +390,8 @@ body:not(:has(.deck))::after {
   right: -100vw;
   border-top: 1px solid var(--rule-2);
 }
-.cover-guides::before { top: 0; }
+/* the top guide meets the ink, which climbs over the cap height by the S's overshoot (--ink-rise, system.js) */
+.cover-guides::before { top: calc(-1 * var(--ink-rise, 0px)); }
 .cover-guides::after { bottom: 0; }
 .cover-dim {
   display: flex;
@@ -459,7 +461,7 @@ body:not(:has(.deck))::after {
   inset: 2px;
   width: calc(50% - 2px);
   background: var(--ink);
-  transition: transform var(--t) var(--ease);
+  transition: transform 0.32s var(--detent);
 }
 .switch[aria-checked="false"]::before { transform: translateX(100%); }
 
@@ -521,6 +523,9 @@ body:not(:has(.deck))::after {
 /* ---------- Buttons and controls ---------- */
 
 .btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -531,14 +536,29 @@ body:not(:has(.deck))::after {
   font-size: 16px;
   font-weight: 500;
   line-height: 1;
-  transition: background var(--t) var(--ease), color var(--t) var(--ease), border-color var(--t) var(--ease);
+  transition: color 0.2s var(--ease) 0.08s, border-color var(--t) var(--ease);
   white-space: nowrap;
 }
 .btn.solid { background: var(--ink); color: var(--paper); }
 .btn.accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.btn:hover { background: var(--ink); color: var(--paper); }
-.btn.solid:hover { background: transparent; color: var(--ink); }
-.btn.accent:hover { background: transparent; color: var(--accent); }
+/* Hover rolls the new color across like an ink roller, left to right, and rolls it off to
+   the right when the pointer leaves. Only the roller's transform animates. */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.36s var(--detent);
+}
+.btn.solid::before, .btn.accent::before { background: var(--paper); }
+.btn:hover::before { transform: none; transform-origin: left; }
+.btn:hover { color: var(--paper); }
+.btn.solid:hover { color: var(--ink); }
+.btn.accent:hover { color: var(--accent); }
+.btn[disabled]::before { content: none; }
 .btn.sm { height: calc(var(--u) * 4); padding-inline: calc(var(--u) * 2); font-size: 14px; }
 .btn[disabled] { border-color: var(--ink-3); color: var(--ink-3); background: transparent; cursor: not-allowed; }
 
@@ -683,7 +703,7 @@ body:not(:has(.deck))::after {
 .mono-cells span:first-child { border-left: 1px solid var(--rule-2); }
 .mono-cells span { width: 1ch; padding-inline: 0.25ch; box-sizing: content-box; border-right: 1px solid var(--rule-2); font: 400 40px/56px var(--mono); text-align: center; }
 .mono-cells.sans span { width: auto; font-family: var(--sans); }
-.mono-cells.feature-cells span { font-family: var(--feature); }
+.mono-cells.feature-cells span { font-family: var(--feature); font-style: italic; }
 /* the display face, wherever a sheet shows it outside a heading */
 .display, .scale.display li > :nth-child(2) { font-family: var(--display); font-weight: 500; }
 .setting { max-width: 36em; }
@@ -847,15 +867,16 @@ body:not(:has(.deck))::after {
 /* the frame steps back, flat, halfway from gray 400 to the sheet, so the gray curve stays the stronger line */
 .curve { background: var(--sheet); border: 2px solid color-mix(in srgb, var(--ink-3) 50%, var(--sheet)); aspect-ratio: 1; position: relative; }
 .curve svg { position: absolute; inset: calc(var(--u) * 3); width: calc(100% - var(--u) * 6); height: calc(100% - var(--u) * 6); overflow: visible; }
-.track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
+.track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); container-type: inline-size; }
 /* a small flat square. The run stops short by the curve's overshoot
    (--over, the peak of the easing), so at the top of the bounce the
    square's edge just touches the right ruler */
 /* each curve has its own tone, gray, ink or accent, shared by its graph line and its square */
 .motion-demo .curve :is(.sk, .sk-a) { stroke: var(--tone, var(--ink)); }
 .track i { position: absolute; left: 0; top: 15px; width: 10px; height: 10px; background: var(--tone, var(--ink)); }
-.motion-demo:hover .track i, .motion-demo.play .track i { left: calc((100% - 10px) / var(--over, 1)); }
-.track i { transition-property: left; }
+/* the run is a transform, measured in the track's own width (cqw), so it plays on the compositor */
+.motion-demo:hover .track i, .motion-demo.play .track i { transform: translateX(calc((100cqw - 10px) / var(--over, 1))); }
+.track i { transition-property: transform; }
 
 /* ---------- Favicon ---------- */
 
@@ -1081,10 +1102,12 @@ html { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ---------- Splash ----------
-   The mark alone on the page color, above everything. A 2 px ring draws
-   around it from twelve o'clock, then the ring gives a small spring zoom,
-   in a touch and out past its size, while the splash fades. system.js
-   starts the exit and removes it. */
+   The mark printed in one pass of the press, on the page color, above everything. The
+   register crosses land first, then the ink plate comes down on the paper, a touch large
+   and pressed flat, then the accent plate arrives off register and is pulled in with a
+   detent: past the mark by a hair, and back. Each plate is its own element animated with
+   transform and opacity only, so the compositor plays it while the canvas lays itself out
+   underneath. system.js starts the exit, the sheet lifting off, and removes it. */
 
 .splash {
   position: fixed;
@@ -1094,29 +1117,22 @@ html { -webkit-tap-highlight-color: transparent; }
   place-items: center;
   background: var(--paper);
   color: var(--ink);
-  transition: opacity 0.34s ease-in 0.24s;
+  transition: opacity 0.3s ease-in 0.2s;
 }
-.splash svg { width: min(280px, 56vw); height: auto; overflow: visible; }
-.splash circle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transform: rotate(-90deg);
-  transform-origin: 120px 60px;
-  animation: splash-ring 0.9s var(--ease) 0.1s forwards;
-}
+.splash-art { display: grid; width: min(280px, 56vw); transition: transform 0.4s cubic-bezier(0.5, 0, 0.8, 0.4), opacity 0.3s ease-in 0.1s; }
+.splash-art > svg { grid-area: 1 / 1; width: 100%; height: auto; overflow: visible; }
+.splash-reg path { fill: none; stroke: currentColor; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.splash-spot circle { fill: var(--accent); }
+.splash-reg { opacity: 0; animation: splash-reg 0.3s var(--ease) 0.08s both; }
+.splash-ink { opacity: 0; animation: splash-ink 0.2s cubic-bezier(0.6, 0, 1, 0.5) 0.3s both; }
+.splash-spot { opacity: 0; animation: splash-spot 0.5s var(--detent) 0.52s both; }
 .splash.out { opacity: 0; pointer-events: none; }
-/* only the ring bobs, the mark holds still; the ring keeps its quarter turn so it stays closed at twelve */
-.splash.out circle { stroke-dashoffset: 0; animation: splash-bob 0.55s cubic-bezier(0.3, 0, 0.2, 1) forwards; }
-@keyframes splash-ring { to { stroke-dashoffset: 0; } }
-@keyframes splash-bob {
-  0% { transform: rotate(-90deg) scale(1); }
-  35% { transform: rotate(-90deg) scale(0.94); }
-  100% { transform: rotate(-90deg) scale(1.12); }
-}
+.splash.out .splash-art { transform: translateY(-16px); opacity: 0; }
+@keyframes splash-reg { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+/* the plate comes down onto the paper: a touch large, then flat */
+@keyframes splash-ink { from { opacity: 0; transform: scale(1.06); } 40% { opacity: 1; } to { opacity: 1; transform: none; } }
+/* off register by a few units, pulled in on the detent */
+@keyframes splash-spot { from { opacity: 0; transform: translate(4%, -3%); } 12% { opacity: 1; } to { opacity: 1; transform: none; } }
 @media print { .splash { display: none; } }
 
 /* ---------- Top and bottom bars ----------
