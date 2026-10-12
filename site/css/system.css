@@ -1086,7 +1086,8 @@ html { -webkit-tap-highlight-color: transparent; }
   min-width: calc(var(--u) * 9);
   align-items: center;
   gap: 8px;
-  padding-inline: var(--inset);
+  /* a touch more on the right, so the label balances the icon on its left */
+  padding-inline: var(--inset) calc(var(--inset) + 4px);
   font: 500 12px/16px var(--mono);
   letter-spacing: 0.02em;
 }
