@@ -320,7 +320,7 @@ window.STRINGS.cs = {
   "utility.the-mark-in-a": "Značka v černém kruhu",
   "utility.circle-in-white-square": "Kruh bílý, čtverec v akcentu, na kotouči v inkoustu. Kotouč ji nese na světlých i tmavých záložkách, takže se ikona nikdy neřídí motivem systému.",
   "utility.optically-centered": "Opticky na středu",
-  "utility.the-mark-is-9": "Značka je v mřížce 32 vysoká 9 jednotek a široká 18 a sedí o 3 % své šířky vlevo od středu, stejně jako samotná značka všude jinde.",
+  "utility.the-mark-is-9": "Značka je v mřížce 32 vysoká 12 jednotek a široká 24, tak velká, jak kotouč s rovnoměrným okrajem dovolí, a sedí o 3 % své šířky vlevo od středu, stejně jako samotná značka všude jinde.",
   "utility.tokens-the-8-px": "Tokeny, 8px mřížka a nekonečné linky.",
   "voice.a-button-says-what": "Tlačítko říká, co dělá: „Stáhnout soubory“, nikdy „OK“ ani „Klikněte sem“.",
   "voice.after": "Po",
