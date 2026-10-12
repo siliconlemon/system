@@ -54,8 +54,9 @@
     --rule-2: #343433;
     --fill: #222220;
     --fill-2: #33332f;
-    --canvas: #080808;
-    --canvas-mark: #3a3a37;
+    /* a step lighter than the sheets, as light mode is a step darker, so the sheets stand off it */
+    --canvas: #222220;
+    --canvas-mark: #4a4a47;
     color-scheme: dark;
   }
 }
@@ -69,8 +70,8 @@
   --rule-2: #343433;
   --fill: #222220;
   --fill-2: #33332f;
-  --canvas: #080808;
-  --canvas-mark: #3a3a37;
+  --canvas: #222220;
+  --canvas-mark: #4a4a47;
   color-scheme: dark;
 }
 
