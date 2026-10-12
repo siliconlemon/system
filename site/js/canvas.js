@@ -50,7 +50,7 @@
      A uniform grid of crosses fixed to the canvas, not the screen, every
      400 px from the first sheet's top-left corner. 400 divides a sheet
      column (1440 + 160 px), so every sheet's left edge lands on the grid,
-     and each row of sheets starts on a grid line too. They are drawn on a
+     while rows follow their sheets. They are drawn on a
      screen-sized <canvas>, every cross snapped to whole device pixels, so
      the line is exactly 1 px and the cross 13 px across at any zoom, like
      marks on the glass rather than on the paper. Zoomed far out,
@@ -84,13 +84,13 @@
   /* ---------- Layout ----------
      Columns follow the screen: the count whose overview comes out largest. */
 
-  // Each row starts on the cross grid: the next row's top is the first grid line at least a gap below
-  // the tallest sheet of the row above. The last row is just as tall as its tallest sheet.
+  // A row is as tall as its tallest sheet, and the next one starts the same 160 gap below it as the
+  // columns keep between them, so rows grow with their sheets and never pad out to a grid line.
   function rows(hs, n) {
     var out = [];
     for (var i = 0; i < hs.length; i += n) {
       var tall = Math.max.apply(null, hs.slice(i, i + n));
-      out.push(i + n < hs.length ? Math.ceil((tall + GAP) / STEP) * STEP : tall);
+      out.push(i + n < hs.length ? tall + GAP : tall);
     }
     return out;
   }
