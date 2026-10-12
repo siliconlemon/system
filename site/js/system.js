@@ -23,11 +23,13 @@
      back by exactly that (text-indent, so margins stay the layout's). The
      cover word also gets --ink-rise, how far its ink climbs over the cap
      height, so the top guide meets the ink. Runs again after the fonts load,
-     a resize or a language switch, since those change the glyphs. */
+     a resize or a language switch, since those change the glyphs. The Aa
+     specimens are also sized so their ink ends on the next ruler line. */
   var BIG = ".cover-word, .sheet-title, .specimen, .tester, .e404, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2), .wordmark, .paper-card p";
   var inkCache = {};
-  function inkOf(font, text) {
-    var key = font + "|" + text;
+  function inkOf(font, text, spacing) {
+    spacing = spacing || 0;
+    var key = font + "|" + spacing + "|" + text;
     if (inkCache[key]) return inkCache[key];
     var S = 400, W = Math.ceil(S * (0.5 + 0.8 * text.length)), H = Math.ceil(S * 1.6), ox = S / 2, oy = Math.round(S * 1.15);
     var c = document.createElement("canvas");
@@ -36,6 +38,7 @@
     x.font = font.replace("{size}", S + "px");
     x.fillStyle = "#000";
     x.textBaseline = "alphabetic";
+    x.letterSpacing = (spacing * S) + "px";
     x.fillText(text, ox, oy);
     var d = x.getImageData(0, 0, W, H).data, colMax = new Uint8Array(W), rowMax = new Uint8Array(H);
     for (var y = 0; y < H; y++) for (var i = 0; i < W; i++) {
@@ -44,11 +47,12 @@
       if (a > rowMax[y]) rowMax[y] = a;
     }
     // the first column or row with ink, refined by its coverage: a half-covered edge pixel is half a pixel of ink
-    var left = 0, top = 0, bottom = 0;
+    var left = 0, right = 0, top = 0, bottom = 0;
     for (i = 0; i < W; i++) if (colMax[i]) { left = i + 1 - colMax[i] / 255; break; }
+    for (i = W - 1; i >= 0; i--) if (colMax[i]) { right = i + colMax[i] / 255; break; }
     for (y = 0; y < H; y++) if (rowMax[y]) { top = y + 1 - rowMax[y] / 255; break; }
     for (y = H - 1; y >= 0; y--) if (rowMax[y]) { bottom = y + rowMax[y] / 255; break; }
-    return (inkCache[key] = { left: (left - ox) / S, top: (oy - top) / S, bottom: (bottom - oy) / S });
+    return (inkCache[key] = { left: (left - ox) / S, right: (right - ox) / S, top: (oy - top) / S, bottom: (bottom - oy) / S });
   }
   function onRulers() {
     document.querySelectorAll(BIG).forEach(function (el) {
@@ -58,6 +62,12 @@
       var cs = getComputedStyle(el);
       var font = cs.fontStyle + " " + cs.fontWeight + " {size} " + cs.fontFamily;
       el.style.textIndent = (-inkOf(font, text.charAt(0)).left).toFixed(4) + "em";
+      if (el.classList.contains("specimen")) {
+        // the Aa's ink runs from the sheet's first ruler to the next one, three columns and three gaps over
+        var g = getComputedStyle(el.closest(".grid")), track = 3 * (parseFloat(g.gridTemplateColumns) + parseFloat(g.columnGap));
+        var ink = inkOf(font, text, (parseFloat(cs.letterSpacing) || 0) / parseFloat(cs.fontSize));
+        el.style.fontSize = (track / (ink.right - ink.left)).toFixed(3) + "px";
+      }
       if (el.classList.contains("cover-word")) {
         // the cap height is the top of a flat capital; the word's ink climbs over it by the overshoot
         var rise = inkOf(font, text).top - inkOf(font, "H").top;
