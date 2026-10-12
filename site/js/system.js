@@ -15,17 +15,17 @@
   }
   function relayout() { segs.forEach(function (g) { g.measure(); }); letter(); }
 
-  /* Lettering in a drawing is in the drawing's own units, so it grew and
-     shrank with every figure. Each drawing gets --k, drawing units per
-     sheet pixel, and .svg-text is 12 px times --k. Widths are read as a
-     share of the sheet, so the canvas zoom and pan don't enter into it. */
+  /* Drawings are in their own units, so lettering and strokes grew and
+     shrank with every figure. Each drawing gets --vu, drawing units per
+     sheet pixel: lettering is 12 px times --vu, strokes are the shared
+     --line or --line-2 times --vu. Widths are read as a share of the
+     sheet, so the canvas zoom and pan don't enter into it. */
   function letter() {
-    document.querySelectorAll("svg[viewBox]").forEach(function (svg) {
-      if (!svg.querySelector(".svg-text")) return;
+    document.querySelectorAll("main svg[viewBox]").forEach(function (svg) {
       var vb = svg.viewBox.baseVal, w = svg.getBoundingClientRect().width;
       var board = svg.closest(".board");
       if (board) w = w / board.getBoundingClientRect().width * board.offsetWidth;
-      if (vb && vb.width && w) svg.style.setProperty("--k", (vb.width / w).toFixed(4));
+      if (vb && vb.width && w) svg.style.setProperty("--vu", (vb.width / w).toFixed(4));
     });
   }
 

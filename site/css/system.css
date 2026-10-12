@@ -15,8 +15,9 @@
   --ink: #111111;
   --ink-2: #5c5c5a;
   --ink-3: #9a9a96;
-  --rule: rgba(17, 17, 17, 0.07);
-  --rule-2: rgba(17, 17, 17, 0.16);
+  /* flat, picked as 7% and 16% ink over paper, so crossing lines don't darken where they meet */
+  --rule: #e4e4e1;
+  --rule-2: #d0d0cd;
   --fill: #e6e6e2;
   --fill-2: #d4d4cf;
   --accent: #ff4a1c;
@@ -26,6 +27,11 @@
 
   --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  /* The two line weights: hairlines (grid, rules, construction) and the
+     outlines of drawn objects. On the canvas they are redefined from the
+     zoom (see main.deck), so every line on every sheet comes from here. */
+  --line: 1px;
+  --line-2: 2px;
   /* Small mono comes in two templates and one size, like the lettering on
      a drawing: the label (500, 12 px, capitals, +0.02em) and the value
      (400, 12 px, as written). Big mono, the specimen and the glyph cells,
@@ -44,8 +50,8 @@
     --ink: #eeeeea;
     --ink-2: #a3a39e;
     --ink-3: #6b6b67;
-    --rule: rgba(238, 238, 234, 0.06);
-    --rule-2: rgba(238, 238, 234, 0.16);
+    --rule: #1e1e1d;
+    --rule-2: #343433;
     --fill: #222220;
     --fill-2: #33332f;
     --canvas: #080808;
@@ -59,8 +65,8 @@
   --ink: #eeeeea;
   --ink-2: #a3a39e;
   --ink-3: #6b6b67;
-  --rule: rgba(238, 238, 234, 0.06);
-  --rule-2: rgba(238, 238, 234, 0.16);
+  --rule: #1e1e1d;
+  --rule-2: #343433;
   --fill: #222220;
   --fill-2: #33332f;
   --canvas: #080808;
@@ -256,34 +262,39 @@ body::after {
    corners like pencil construction lines. */
 
 .frame {
+  /* the frame's three colors: ground, thin construction lines, heavy outline */
+  --ff: var(--fill);
+  --fl: var(--ink-3);
+  --fo: var(--ink-2);
   position: relative;
   background:
-    linear-gradient(to top right, transparent calc(50% - 0.5px), var(--ink-3) calc(50% - 0.5px), var(--ink-3) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--ink-3) calc(50% - 0.5px), var(--ink-3) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    var(--fill);
+    linear-gradient(to top right, transparent calc(50% - var(--line) / 2), var(--fl) calc(50% - var(--line) / 2), var(--fl) calc(50% + var(--line) / 2), transparent calc(50% + var(--line) / 2)),
+    linear-gradient(to bottom right, transparent calc(50% - var(--line) / 2), var(--fl) calc(50% - var(--line) / 2), var(--fl) calc(50% + var(--line) / 2), transparent calc(50% + var(--line) / 2)),
+    var(--ff);
   aspect-ratio: var(--ar, 4 / 3);
+  /* like a technical drawing: the picture's own edge is the heavy outline,
+     the overshoot and the cross stay thin construction lines */
+  box-shadow: inset 0 0 0 var(--line-2) var(--fo);
 }
 .frame::before, .frame::after {
   content: "";
   position: absolute;
   pointer-events: none;
 }
-.frame::before { inset: 0 calc(var(--u) * -1.5); border-block: 1px solid var(--ink-3); }
-.frame::after { inset: calc(var(--u) * -1.5) 0; border-inline: 1px solid var(--ink-3); }
-/* like a technical drawing: the picture's own edge is the heavy outline,
-   the overshoot and the cross stay thin construction lines */
-.frame { box-shadow: inset 0 0 0 2px var(--ink-2); }
+.frame::before { inset: 0 calc(var(--u) * -1.5); border-block: var(--line) solid var(--fl); }
+.frame::after { inset: calc(var(--u) * -1.5) 0; border-inline: var(--line) solid var(--fl); }
 .frame > .label {
   position: absolute;
   left: calc(var(--u) * 1.5);
   bottom: calc(var(--u) * 1);
-  background: var(--fill);
+  background: var(--ff);
   padding-inline: 4px;
   margin-left: -4px;
 }
-.frame.dark { --fill: var(--ink); }
+.frame.dark { --ff: var(--ink); --fo: var(--ink-3); }
 .frame.dark > .label { color: var(--paper); }
-.frame.dark { box-shadow: inset 0 0 0 2px var(--ink-3); }
+/* a quieter frame, mixed flat toward the sheet instead of faded */
+.frame.faint { --ff: color-mix(in srgb, var(--fill) 60%, var(--sheet)); --fl: color-mix(in srgb, var(--ink-3) 60%, var(--sheet)); --fo: color-mix(in srgb, var(--ink-2) 60%, var(--sheet)); }
 
 /* ---------- Gray flat illustration ---------- */
 
@@ -297,15 +308,18 @@ body::after {
 
 /* ---------- Sketch strokes ---------- */
 
-.sk { fill: none; stroke: var(--ink); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.sk-2 { fill: none; stroke: var(--ink-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.sk-d { fill: none; stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
-.sk-a { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
+/* strokes are the shared weights in drawing units (--vu), so they match the sheet's lines at any size and zoom */
+.sk { fill: none; stroke: var(--ink); stroke-width: calc(var(--line-2) * var(--vu, 1)); }
+.sk-2 { fill: none; stroke: var(--ink-3); stroke-width: calc(var(--line) * var(--vu, 1)); }
+.sk-d { fill: none; stroke: var(--ink-3); stroke-width: calc(var(--line) * var(--vu, 1)); stroke-dasharray: calc(3px * var(--vu, 1)) calc(3px * var(--vu, 1)); }
+.sk-a { fill: none; stroke: var(--accent); stroke-width: calc(var(--line-2) * var(--vu, 1)); }
+/* the icon set is drawn with the 1 px hairline its label promises */
+.icons .sk { stroke-width: calc(var(--line) * var(--vu, 1)); }
 .dot { fill: var(--ink); }
 .dot-a { fill: var(--accent); }
-/* lettering in a drawing is set in drawing units, so --k (from system.js)
+/* lettering in a drawing is set in drawing units, so --vu (from system.js)
    scales it back to 12 px on the sheet whatever size the drawing is shown at */
-.svg-text { font: 500 calc(12px * var(--k, 1)) var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
+.svg-text { font: 500 calc(12px * var(--vu, 1)) var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
 
 /* ---------- Cover ---------- */
 
@@ -576,12 +590,12 @@ body::after {
   bottom: 8px;
   font: 500 12px/16px var(--mono);
   font-style: normal;
-  opacity: 0.6;
+  color: color-mix(in srgb, currentColor 60%, var(--bg));
 }
-.lockups .paper { background: #f4f4f1; color: #111; }
-.lockups .stone { background: #e6e6e2; color: #111; }
-.lockups .ink { background: #111; color: #f4f4f1; }
-.lockups .accent { background: var(--accent); color: #fff; }
+.lockups .paper { --bg: #f4f4f1; background: var(--bg); color: #111; }
+.lockups .stone { --bg: #e6e6e2; background: var(--bg); color: #111; }
+.lockups .ink { --bg: #111; background: var(--bg); color: #f4f4f1; }
+.lockups .accent { --bg: var(--accent); background: var(--bg); color: #fff; }
 .lockup-notes ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-2); }
 .lockup-notes li {
   display: grid;
@@ -715,7 +729,7 @@ body::after {
 /* ---------- Grid & spacing ---------- */
 
 .colmap { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); height: calc(var(--u) * 20); }
-.colmap i { background: color-mix(in srgb, var(--accent) 10%, transparent); border-inline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.colmap i { background: color-mix(in srgb, var(--accent) 10%, var(--paper)); border-inline: 2px solid color-mix(in srgb, var(--accent) 45%, var(--paper)); }
 .spacing li { display: grid; grid-template-columns: calc(var(--u) * 8) 1fr calc(var(--u) * 8); align-items: center; gap: calc(var(--u) * 2); height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
 .spacing li i { display: block; height: 8px; background: var(--ink); }
 .spacing li > :last-child { text-align: right; }
@@ -725,7 +739,7 @@ body::after {
 .table td { font-size: 14px; }
 .table td.mono { font-size: 12px; }
 /* a flat swatch ahead of each value, outlined so paper on paper still shows */
-.tone { display: inline-block; width: 16px; height: 12px; margin-right: 8px; vertical-align: -1px; box-shadow: inset 0 0 0 1px var(--rule-2); }
+.tone { display: inline-block; width: 16px; height: 12px; margin-right: 8px; vertical-align: -1px; box-shadow: inset 0 0 0 var(--line) var(--rule-2); }
 .table .r { text-align: right; }
 /* first two columns span three grid columns each, so the third starts on the center line */
 .table.on-grid th:nth-child(-n + 2) { width: calc((100% - 11 * var(--gap)) / 4 + 3 * var(--gap)); }
@@ -811,8 +825,9 @@ body::after {
 /* ---------- Marketing ---------- */
 
 .post {
+  --bg: var(--ink);
   aspect-ratio: var(--ar, 1);
-  background: var(--ink);
+  background: var(--bg);
   color: var(--paper);
   padding: calc(var(--u) * 3);
   display: flex;
@@ -821,29 +836,31 @@ body::after {
   overflow: hidden;
   position: relative;
 }
-.post.paper { background: var(--sheet); color: var(--ink); border: 1px solid var(--rule-2); }
-.post.accent { background: var(--accent); color: var(--on-accent); }
+.post.paper { --bg: var(--sheet); color: var(--ink); border: 1px solid var(--rule-2); }
+.post.accent { --bg: var(--accent); color: var(--on-accent); }
 .post h4 { font-size: clamp(28px, 3.2cqw, 48px); line-height: 1; letter-spacing: -0.04em; font-weight: 600; }
-.post .label { color: inherit; opacity: 0.7; }
+/* quieter labels are mixed flat against their own ground, never faded with opacity */
+.post .label { color: color-mix(in srgb, currentColor 70%, var(--bg)); }
 .post .row { justify-content: space-between; }
 .mkt { align-items: end; row-gap: calc(var(--u) * 5); }
 
 /* ---------- Print ---------- */
 
 .paper-card {
+  --bg: var(--sheet);
   aspect-ratio: 85 / 55;
-  background: var(--sheet);
+  background: var(--bg);
   border: 2px solid var(--ink-2);
   padding: calc(var(--u) * 3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.paper-card.ink { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.paper-card.ink { --bg: var(--ink); color: var(--paper); border-color: var(--ink); }
 .paper-card .wordmark { font-size: 28px; }
 .paper-card p { font-size: 14px; line-height: 20px; }
 .paper-card .small { font-size: 12px; line-height: 16px; }
-.paper-card .label { color: inherit; opacity: 0.6; }
+.paper-card .label { color: color-mix(in srgb, currentColor 60%, var(--bg)); }
 .a4 {
   aspect-ratio: 210 / 297;
   background: var(--sheet);
@@ -916,7 +933,12 @@ body::after {
     height: 100%;
     pointer-events: none;
   }
+  /* On the canvas a sheet pixel is --k device pixels (set by canvas.js from the live zoom). A
+     line is drawn as a whole number of device pixels, never fewer than one, like a hairline in
+     an SVG viewer: below one it would land on a pixel or on none, and lines dropped out. */
   main.deck {
+    --line: calc(max(1px, round(nearest, 1px * var(--k, 1), 1px)) / var(--k, 1));
+    --line-2: calc(max(1px, round(nearest, 2px * var(--k, 1), 1px)) / var(--k, 1));
     position: absolute;
     left: 0;
     top: 0;
@@ -924,6 +946,12 @@ body::after {
     gap: 160px;
     align-items: start;
     transform-origin: 0 0;
+  }
+  @supports not (width: round(nearest, 1px, 1px)) {
+    main.deck {
+      --line: calc(max(1px, 1px * var(--k, 1)) / var(--k, 1));
+      --line-2: calc(max(1px, 2px * var(--k, 1)) / var(--k, 1));
+    }
   }
   .cam { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
   .cam.moving { will-change: transform; }
@@ -934,7 +962,7 @@ body::after {
   width: 1440px;
   container: board / inline-size;
   background: var(--paper);
-  box-shadow: 0 0 0 max(1px, var(--hair, 0px)) var(--rule-2);
+  box-shadow: 0 0 0 var(--line) var(--rule-2);
   overflow: hidden;
 }
 .board > .rules { position: absolute; z-index: 0; }
@@ -1079,7 +1107,7 @@ html { -webkit-tap-highlight-color: transparent; }
 .bar-pager { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; min-width: 0; }
 /* square hit areas, as tall as the bar */
 .bar-pager button { display: flex; align-items: center; justify-content: center; height: 100%; aspect-ratio: 1; color: var(--accent); }
-.bar-pager button:disabled { color: var(--ink-3); opacity: 0.4; cursor: default; }
+.bar-pager button:disabled { color: color-mix(in srgb, var(--ink-3) 40%, var(--paper)); cursor: default; }
 .bar-pager svg { width: 16px; height: 16px; }
 .bar-cur { display: flex; align-items: center; justify-content: center; width: 12ch; white-space: nowrap; overflow: hidden; }
 .bar-cur b { font-weight: 500; color: var(--ink-3); margin-right: 8px; }

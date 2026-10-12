@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=55">
+<link rel="stylesheet" href="css/system.css?v=58">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -189,12 +189,12 @@
       </div>
       <div class="grid landing-feat">
         <div class="c-4">
-          <svg viewBox="0 0 40 40"><circle class="sk" cx="20" cy="20" r="19"/><path class="sk-2" d="M1 20h38M20 1v38"/><circle class="dot-a" cx="20" cy="20" r="3"/></svg>
+          <svg viewBox="0 0 40 40"><path class="sk-2" d="M1 20h38M20 1v38"/><circle class="sk" cx="20" cy="20" r="19"/><circle class="dot-a" cx="20" cy="20" r="3"/></svg>
           <h4 data-i18n="landing.one-source">One source</h4>
           <p data-i18n="landing.tokens-live-in-one">Tokens live in one file. Change the accent there and every sheet updates.</p>
         </div>
         <div class="c-4">
-          <svg viewBox="0 0 40 40"><rect class="sk" x="1" y="1" width="38" height="38"/><path class="sk-2" d="M1 39 39 1M14 1v38M27 1v38"/></svg>
+          <svg viewBox="0 0 40 40"><path class="sk-2" d="M1 39 39 1M14 1v38M27 1v38"/><rect class="sk" x="1" y="1" width="38" height="38"/></svg>
           <h4 data-i18n="landing.works-without-assets">Works without assets</h4>
           <p data-i18n="landing.no-logo-or-icon">No logo or icon set yet? Type and grid carry the identity until they arrive.</p>
         </div>
@@ -502,23 +502,23 @@
       <div class="block-head"><span class="label ink" data-i18n="icons.sketch-shapes">Sketch shapes</span><span class="label" data-i18n="icons.always-available">Always available</span></div>
       <div class="shapes">
         <figure><svg viewBox="0 0 200 200">
-          <circle class="sk" cx="100" cy="100" r="64"/><path class="sk-2" d="M0 100h200M100 0v200"/>
-          <path class="sk-a" d="M100 100 145.3 54.7"/><path class="sk-d" d="M132 100a32 32 0 0 0-9.4-22.6"/>
+          <path class="sk-2" d="M0 100h200M100 0v200"/><path class="sk-d" d="M132 100a32 32 0 0 0-9.4-22.6"/><circle class="sk" cx="100" cy="100" r="64"/>
+          <path class="sk-a" d="M100 100 145.3 54.7"/>
           <text class="svg-text" x="118" y="74" text-anchor="end">r</text><text class="svg-text" x="140" y="96">45°</text>
         </svg></figure>
         <figure><svg viewBox="0 0 200 200">
-          <path class="sk" d="M100 36a64 64 0 1 1-64 64"/><path class="sk-d" d="M36 100a64 64 0 0 1 64-64"/>
-          <circle class="dot-a" cx="36" cy="100" r="3"/><circle class="dot" cx="100" cy="36" r="3"/><path class="sk-2" d="M100 100h64"/>
+          <path class="sk-d" d="M36 100a64 64 0 0 1 64-64"/><path class="sk-2" d="M100 100h64"/><path class="sk" d="M100 36a64 64 0 1 1-64 64"/>
+          <circle class="dot-a" cx="36" cy="100" r="3"/><circle class="dot" cx="100" cy="36" r="3"/>
           <text class="svg-text" x="112" y="94">3/4</text>
         </svg></figure>
         <figure><svg viewBox="0 0 200 200">
-          <path class="sk" d="M100 40l52 30v60l-52 30-52-30V70z"/><path class="sk" d="M48 70l52 30 52-30M100 100v60"/>
-          <path class="sk-d" d="M48 130l52-30 52 30M100 40v60"/>
+          <path class="sk-d" d="M48 130l52-30 52 30M100 40v60"/><path class="sk" d="M100 40l52 30v60l-52 30-52-30V70z"/><path class="sk" d="M48 70l52 30 52-30M100 100v60"/>
+          
         </svg></figure>
         <figure><svg viewBox="0 0 200 200">
-          <circle class="sk" cx="68" cy="100" r="36"/><circle class="sk" cx="148" cy="100" r="20"/>
+          <path class="sk-2" d="M20 100h160"/><circle class="sk" cx="68" cy="100" r="36"/><circle class="sk" cx="148" cy="100" r="20"/>
           <path class="sk-a" d="M78.6 65.6C105 78 120 82 136 84.3M78.6 134.4C105 122 120 118 136 115.7"/>
-          <path class="sk-2" d="M20 100h160"/><text class="svg-text" x="107" y="66" text-anchor="middle" data-i18n="icons.bridge">bridge</text>
+          <text class="svg-text" x="107" y="66" text-anchor="middle" data-i18n="icons.bridge">bridge</text>
         </svg></figure>
       </div>
     </div>
@@ -573,7 +573,7 @@
     <figure class="c-3"><div class="frame" style="--ar: 1"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small" data-i18n="imagery.crop-on-the-grid">Crop on the grid</span></p></figure>
     <figure class="c-3"><div class="frame" style="--ar: 1;transform:rotate(-4deg)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.dont-tilt-or-skew">Don’t tilt or skew</span></p></figure>
     <figure class="c-3"><div class="frame" style="--ar: 1;--fill: var(--fill-2)"><span class="label">1:1</span></div><p class="verdict yes"><i></i><span class="small" data-i18n="imagery.gray-one-accent-at">Gray, one accent at most</span></p></figure>
-    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: #ffd2c4;box-shadow:inset 0 0 0 2px var(--ink-2), 0 16px 32px -12px rgba(0,0,0,.3)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.no-tints-or-drop">No tints or drop shadows</span></p></figure>
+    <figure class="c-3"><div class="frame" style="--ar: 1;--fill: #ffd2c4;box-shadow:inset 0 0 0 var(--line-2) var(--ink-2), 0 16px 32px -12px rgba(0,0,0,.3)"><span class="label">1:1</span></div><p class="verdict no"><i></i><span class="small" data-i18n="imagery.no-tints-or-drop">No tints or drop shadows</span></p></figure>
   </div>
 </section>
 
@@ -657,7 +657,7 @@
       <div class="phone">
         <span class="label" style="margin-top:8px" data-i18n="app.02-empty">02 · Empty</span>
         <span class="grow"></span>
-        <svg viewBox="0 0 120 80" style="width:60%;margin-inline:auto"><rect class="sk" x="10" y="10" width="100" height="60"/><path class="sk-2" d="M10 10l100 60M110 10 10 70"/><path class="sk-a" d="M0 10h10M110 70h10"/></svg>
+        <svg viewBox="0 0 120 80" style="width:60%;margin-inline:auto"><path class="sk-2" d="M10 10l100 60M110 10 10 70"/><rect class="sk" x="10" y="10" width="100" height="60"/><path class="sk-a" d="M0 10h10M110 70h10"/></svg>
         <h5 style="text-align:center" data-i18n="app.nothing-here-yet">Nothing here yet</h5>
         <p style="text-align:center" data-i18n="app.add-your-first-project">Add your first project and it will show up on this page.</p>
         <span class="grow"></span>
@@ -668,7 +668,7 @@
       <div class="phone">
         <span class="label" style="margin-top:8px" data-i18n="app.03-loading">03 · Loading</span>
         <div class="skel"><i></i><i></i><i></i></div>
-        <div class="frame" style="--ar: 16 / 9;opacity:.6"></div>
+        <div class="frame faint" style="--ar: 16 / 9"></div>
         <div class="skel"><i></i><i></i><i></i></div>
         <span class="grow"></span>
         <svg class="spinner" viewBox="0 0 40 40"><circle class="sk-2" cx="20" cy="20" r="18"/><path class="sk-a" d="M20 2a18 18 0 0 1 18 18"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1.2s" repeatCount="indefinite"/></path></svg>
@@ -898,9 +898,9 @@
   </div>
 </div>
 
-<script src="strings/en.js?v=55" defer></script>
-<script src="strings/cs.js?v=55" defer></script>
-<script src="js/canvas.js?v=55" defer></script>
-<script src="js/system.js?v=55" defer></script>
+<script src="strings/en.js?v=58" defer></script>
+<script src="strings/cs.js?v=58" defer></script>
+<script src="js/canvas.js?v=58" defer></script>
+<script src="js/system.js?v=58" defer></script>
 </body>
 </html>

@@ -152,7 +152,7 @@
     if (!cam.classList.contains("fly")) return;
     var m = new DOMMatrix(getComputedStyle(cam).transform);
     crosses(m.e, m.f, m.a * z);
-    hair(m.a * z);
+    hair(m.a * z, true);
     following = requestAnimationFrame(follow);
   }
   function apply(mode) {
@@ -163,7 +163,7 @@
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s / z + ")";
     if (mode !== "fly" && mode !== "live") settle();
     if (mode === "fly") { if (!following) following = requestAnimationFrame(follow); }
-    else { crosses(view.x, view.y, view.s); hair(view.s); }
+    else { crosses(view.x, view.y, view.s); hair(view.s, true); }
     tell();
   }
   function moving(on) { cam.classList.toggle("moving", on); }
@@ -266,21 +266,21 @@
      an inset shadow drawing the line. Colors are read here, so this runs
      again when the theme or a flag changes.
      Like an SVG viewer, a line scales with the zoom but never draws thinner
-     than one device pixel: --hair is one device pixel in sheet units, and
-     every line is the larger of its own width and --hair. Below that a line
-     would land on a whole pixel or on none, so some lines vanished and
-     others didn't. */
+     than one device pixel, and always as a whole number of them (see --k).
+     Below one a line would land on a whole pixel or on none, so some lines
+     vanished and others didn't. */
 
-  // On screen a sheet pixel is s px however the zoom splits between CSS zoom and the camera's
-  // transform, so --hair follows the live scale every frame and lines thin and thicken smoothly
-  // instead of jumping when a zoom settles. At 1 px or less it changes nothing, every line is at
-  // least 1 px, so close up nothing restyles while zooming.
-  var lastHair = 0;
-  function hair(s) {
-    var h = Math.max(1, 1 / (s * (window.devicePixelRatio || 1)));
-    if (Math.abs(h - lastHair) < lastHair * 0.02) return;
-    lastHair = h;
-    deck.style.setProperty("--hair", h + "px");
+  // --k is device pixels per sheet pixel, s × dpr however the zoom splits between CSS zoom and the
+  // camera's transform. Every line is drawn as a whole number of device pixels, at least one:
+  // a 1 px line at 1.1 device pixels smeared over two columns on one side and not the other.
+  // While a zoom runs, --k follows it every frame only where the one-pixel floor is in play
+  // (k below 1), so lines thin and thicken smoothly; close up it settles once at the end.
+  var lastK = 0;
+  function hair(s, live) {
+    var k = s * (window.devicePixelRatio || 1);
+    if (live && ((k >= 1 && lastK >= 1) || Math.abs(k - lastK) < lastK * 0.02)) return;
+    lastK = k;
+    deck.style.setProperty("--k", k);
   }
 
   var steadySheet = null;
@@ -297,7 +297,9 @@
         if (!w || w > 3 || cs["border" + side + "Style"] !== "solid") return;
         decl.push("border-" + side.toLowerCase() + "-width: 0", "padding-" + side.toLowerCase() + ": " + (parseFloat(cs["padding" + side]) + w) + "px");
         // never thinner than one device pixel, so no line drops out when zoomed out
-        var t = function (k) { return k ? "calc(" + k + " * max(" + w + "px, var(--hair, 0px)))" : "0"; };
+        // the shared line widths from system.css: 1 px borders draw as --line, 2 px ones as --line-2
+        var v = w < 1.5 ? "var(--line)" : "var(--line-2)";
+        var t = function (d) { return d ? "calc(" + d + " * " + v + ")" : "0"; };
         shadows.push("inset " + t(sides[side][0]) + " " + t(sides[side][1]) + " 0 0 " + cs["border" + side + "Color"]);
       });
       if (!decl.length) return;
