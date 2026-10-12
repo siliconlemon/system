@@ -785,13 +785,15 @@ body::after {
 
 /* ---------- Motion ---------- */
 
-.curve { background: var(--sheet); border: 2px solid var(--ink-2); aspect-ratio: 1; position: relative; }
+.curve { background: var(--sheet); border: 2px solid var(--ink-3); aspect-ratio: 1; position: relative; }
 .curve svg { position: absolute; inset: calc(var(--u) * 3); width: calc(100% - var(--u) * 6); height: calc(100% - var(--u) * 6); overflow: visible; }
 .track { position: relative; height: calc(var(--u) * 5); border-bottom: 1px solid var(--rule-2); }
-/* a small drawn circle, not a filled dot. The run stops short by the
-   curve's overshoot (--over, the peak of the easing), so at the top of the
-   bounce the circle's edge just touches the right ruler */
-.track i { position: absolute; left: 0; top: 15px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink); }
+/* a small flat square. The run stops short by the curve's overshoot
+   (--over, the peak of the easing), so at the top of the bounce the
+   square's edge just touches the right ruler */
+/* each curve has its own tone, gray, ink or accent, shared by its graph line and its square */
+.motion-demo .curve :is(.sk, .sk-a) { stroke: var(--tone, var(--ink)); }
+.track i { position: absolute; left: 0; top: 15px; width: 10px; height: 10px; background: var(--tone, var(--ink)); }
 .motion-demo:hover .track i, .motion-demo.play .track i { left: calc((100% - 10px) / var(--over, 1)); }
 .track i { transition-property: left; }
 

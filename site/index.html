@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@300;400;500;600&display=swap">
 <!-- Bump ?v= on every release, so no browser pairs this page with an older stylesheet or script. -->
-<link rel="stylesheet" href="css/system.css?v=51">
+<link rel="stylesheet" href="css/system.css?v=52">
 <script>
   /* Flags first, so the page never paints the wrong variant. */
   try {
@@ -699,19 +699,19 @@
   </div>
 
   <div class="grid row-gap">
-    <div class="c-4 motion-demo">
+    <div class="c-4 motion-demo" style="--tone: var(--ink-3)">
       <div class="block-head"><span class="label ink" data-i18n="motion.standard">Standard</span><span class="label">240 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C20 30 10 0 100 0"/></svg></div>
       <div class="track"><i style="transition-duration:240ms;transition-timing-function:cubic-bezier(.2,.7,.1,1)"></i></div>
       <p class="mono muted">cubic-bezier(.2, .7, .1, 1)</p>
     </div>
-    <div class="c-4 motion-demo">
+    <div class="c-4 motion-demo" style="--tone: var(--ink)">
       <div class="block-head"><span class="label ink" data-i18n="motion.enter">Enter</span><span class="label">400 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100"/><path class="sk-d" d="M0 100 100 0"/><path class="sk" d="M0 100C0 0 40 0 100 0"/></svg></div>
       <div class="track"><i style="transition-duration:400ms;transition-timing-function:cubic-bezier(0,0,.2,1)"></i></div>
       <p class="mono muted">cubic-bezier(0, 0, .2, 1)</p>
     </div>
-    <div class="c-4 motion-demo">
+    <div class="c-4 motion-demo" style="--tone: var(--accent)">
       <div class="block-head"><span class="label ink" data-i18n="motion.spring">Spring</span><span class="label">≈ 560 ms</span></div>
       <div class="curve"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="sk-2" d="M0 100h100M0 0v100M0 20h100"/><path class="sk-a" d="M0 100C10 -20 22 -12 34 12S56 26 68 18 88 20 100 20"/></svg></div>
       <div class="track"><i style="--over:1.12;transition-duration:560ms;transition-timing-function:linear(0, .35 8%, .86 18%, 1.08 28%, 1.12 34%, 1.04 48%, .99 62%, 1)"></i></div>
@@ -898,9 +898,9 @@
   </div>
 </div>
 
-<script src="strings/en.js?v=51" defer></script>
-<script src="strings/cs.js?v=51" defer></script>
-<script src="js/canvas.js?v=51" defer></script>
-<script src="js/system.js?v=51" defer></script>
+<script src="strings/en.js?v=52" defer></script>
+<script src="strings/cs.js?v=52" defer></script>
+<script src="js/canvas.js?v=52" defer></script>
+<script src="js/system.js?v=52" defer></script>
 </body>
 </html>
