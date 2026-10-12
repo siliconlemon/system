@@ -434,7 +434,7 @@ body::after {
 
 /* ---------- Landing (screen 01) ---------- */
 
-/* the window is an object on the sheet, like the phones: 2 px outline, 1 px detail inside */
+/* the window is an object on the sheet, like the phones: one 2 px line for the frame and the bar */
 .browser {
   border: 2px solid var(--ink);
   background: var(--sheet);
@@ -445,9 +445,12 @@ body::after {
   gap: var(--u);
   height: calc(var(--u) * 5);
   padding-inline: calc(var(--u) * 2);
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
 }
-.browser-bar i { width: 8px; height: 8px; border: 1px solid var(--ink); border-radius: 50%; }
+/* traffic lights in the brand colors, flat, no outline */
+.browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+.browser-bar i:nth-of-type(1) { background: var(--accent); }
+.browser-bar i:nth-of-type(2) { background: var(--ink-3); }
 .browser-bar .label { margin-left: auto; margin-right: auto; }
 .landing { padding: calc(var(--u) * 8) calc(var(--u) * 6); }
 .landing-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: calc(var(--u) * 12); }
