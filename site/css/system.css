@@ -537,7 +537,7 @@ body::after {
 
 /* ---------- Logo ---------- */
 
-.logo-stage { background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; aspect-ratio: 4 / 3; }
+.logo-stage { background: var(--sheet); border: 1px solid var(--rule-2); display: grid; place-items: center; aspect-ratio: 16 / 9; }
 .logo-stage svg { width: 72%; height: auto; overflow: visible; }
 .logo-stage.wide-lockup svg { width: 92%; }
 .logo-stage.optical { aspect-ratio: 840 / 380; }
@@ -552,7 +552,7 @@ body::after {
 .lockups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: 320px 220px;
+  grid-template-rows: 240px 176px;
   gap: 1px;
   background: var(--rule-2);
   border: 1px solid var(--rule-2);
