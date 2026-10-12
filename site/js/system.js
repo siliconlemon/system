@@ -13,7 +13,21 @@
       localStorage.setItem(key, JSON.stringify(all));
     } catch (e) {}
   }
-  function relayout() { segs.forEach(function (g) { g.measure(); }); }
+  function relayout() { segs.forEach(function (g) { g.measure(); }); letter(); }
+
+  /* Lettering in a drawing is in the drawing's own units, so it grew and
+     shrank with every figure. Each drawing gets --k, drawing units per
+     sheet pixel, and .svg-text is 12 px times --k. Widths are read as a
+     share of the sheet, so the canvas zoom and pan don't enter into it. */
+  function letter() {
+    document.querySelectorAll("svg[viewBox]").forEach(function (svg) {
+      if (!svg.querySelector(".svg-text")) return;
+      var vb = svg.viewBox.baseVal, w = svg.getBoundingClientRect().width;
+      var board = svg.closest(".board");
+      if (board) w = w / board.getBoundingClientRect().width * board.offsetWidth;
+      if (vb && vb.width && w) svg.style.setProperty("--k", (vb.width / w).toFixed(4));
+    });
+  }
 
   /* ---------- Strings ----------
      Every piece of copy has a key, and each language has one resource file,

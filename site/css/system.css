@@ -303,7 +303,9 @@ body::after {
 .sk-a { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .dot { fill: var(--ink); }
 .dot-a { fill: var(--accent); }
-.svg-text { font: 500 12px var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
+/* lettering in a drawing is set in drawing units, so --k (from system.js)
+   scales it back to 12 px on the sheet whatever size the drawing is shown at */
+.svg-text { font: 500 calc(12px * var(--k, 1)) var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
 
 /* ---------- Cover ---------- */
 
@@ -544,7 +546,7 @@ body::after {
 .logo-stage.optical svg { width: 92%; }
 .logo-stage.ink { background: var(--ink); border-color: var(--ink); }
 .logo-stage.accent { background: var(--accent); border-color: var(--accent); }
-.svg-text.cs { font-size: 22px; fill: var(--accent); }
+.svg-text.cs { fill: var(--accent); }
 
 /* Lockup panels, after the Viewgraft manual: the primary takes two columns,
    the rest one each, split by hairlines. Panel colors are fixed, they show
