@@ -339,6 +339,8 @@ body::after {
 }
 .cover-word {
   position: relative;
+  /* the cap-height and baseline guides run behind the letters, not across them */
+  z-index: 1;
   font-size: clamp(120px, 23.5cqw, 352px);
   font-weight: 600;
   line-height: 1;
@@ -1130,7 +1132,8 @@ html { -webkit-tap-highlight-color: transparent; }
   .bar-all, .bar-zoom [data-zoom-label] { width: 64px; min-width: 0; padding-inline: 0; text-align: center; }
   .bar-zoom [data-zoom-label] { color: var(--ink); text-transform: uppercase; }
   .bar-zoom [data-zoom-label][aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
-  .bar-pdf { font-size: 0; gap: 0; }
+  /* icon only: a square cell as tall as the bar */
+  .bar-pdf { font-size: 0; gap: 0; min-width: 0; width: var(--bar); padding-inline: 0; }
   .bar-phone { display: flex; flex: 1 1 auto; min-width: 0; }
   /* read the theme off the root, which the head script sets before first paint, not off the buttons, which wait for system.js */
   .bar .bar-theme > button { display: none; }
