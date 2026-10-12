@@ -939,12 +939,13 @@ body::after {
   html { scroll-behavior: auto; }
   body { position: fixed; inset: 0; background: var(--canvas); }
   body.panning, body.panning * { cursor: move !important; user-select: none; }
+  /* sized and slid by canvas.js; it can run a tile past the screen while the crosses are close */
   .marks {
     position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    left: 0;
+    top: 0;
     pointer-events: none;
+    will-change: transform;
   }
   /* On the canvas a sheet pixel is --k device pixels (set by canvas.js from the live zoom). A
      line is drawn as a whole number of device pixels, never fewer than one, like a hairline in

@@ -60,14 +60,16 @@
      column's edge. */
 
   var STEP = 400, ARM = 6, ARM_PHONE = 4;
-  var ctx = marks.getContext("2d"), markColor = null;
+  var ctx = marks.getContext("2d"), markColor = null, drawn = "";
+  /* While crosses sit close together, as in the overview, the canvas is drawn once a tile larger
+     than the screen and panning only slides it, modulo one spacing, with a GPU transform: no
+     redraw and no re-upload per frame, which stuttered on phones. It is redrawn only when the
+     spacing, size or color changes, that is while zooming. Far apart, as close up, the canvas is
+     the screen and redraws, since the few crosses are cheap and a tile would be huge. */
   function crosses(x, y, s) {
     var dpr = window.devicePixelRatio || 1;
     var W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
-    if (marks.width !== W || marks.height !== H) { marks.width = W; marks.height = H; }
     if (!markColor) markColor = getComputedStyle(root).getPropertyValue("--canvas-mark").trim();
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = markColor;
     var k = 1;
     var armPx = phone() ? ARM_PHONE : ARM;
     // every cross is drawn, the same density at any zoom, unless neighbors would touch: only at
@@ -75,10 +77,31 @@
     while (k < 4 && STEP * k * s < 2 * armPx + 9) k *= 2;
     var t = STEP * k * s * dpr, lw = Math.max(1, Math.round(dpr)), arm = Math.round(armPx * dpr), reach = arm + lw;
     var x0 = x * dpr, y0 = y * dpr;
+    var tiled = t <= Math.min(W, H) / 2;
+    var cw = tiled ? W + Math.ceil(t) + reach + 1 : W, ch = tiled ? H + Math.ceil(t) + reach + 1 : H;
+    if (tiled) {
+      var key = [t, arm, lw, markColor, cw, ch].join();
+      var ox = Math.round(((x0 % t) + t) % t), oy = Math.round(((y0 % t) + t) % t);
+      if (key !== drawn) { draw(cw, ch, 0, 0, t, arm, lw, reach); drawn = key; }
+      marks.style.transform = "translate(" + (ox - Math.round(t)) / dpr + "px," + (oy - Math.round(t)) / dpr + "px)";
+    } else {
+      drawn = "";
+      marks.style.transform = "";
+      draw(cw, ch, x0, y0, t, arm, lw, reach);
+    }
+  }
+  function draw(cw, ch, x0, y0, t, arm, lw, reach) {
+    var dpr = window.devicePixelRatio || 1;
+    if (marks.width !== cw || marks.height !== ch) {
+      marks.width = cw; marks.height = ch;
+      marks.style.width = cw / dpr + "px"; marks.style.height = ch / dpr + "px";
+    }
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.fillStyle = markColor;
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
-    for (var i = i0; x0 + i * t < W + reach; i++) {
+    for (var i = i0; x0 + i * t < cw + reach; i++) {
       var px = Math.round(x0 + i * t);
-      for (var j = j0; y0 + j * t < H + reach; j++) {
+      for (var j = j0; y0 + j * t < ch + reach; j++) {
         var py = Math.round(y0 + j * t);
         ctx.fillRect(px - arm, py, 2 * arm + lw, lw);
         ctx.fillRect(px, py - arm, lw, 2 * arm + lw);
@@ -332,7 +355,7 @@
     if (restyle) return;
     restyle = requestAnimationFrame(function () {
       restyle = 0;
-      markColor = null;
+      markColor = null; drawn = "";
       steady();
       layout();
       // a sheet or the overview in view gets fitted again, a free view just stays put
