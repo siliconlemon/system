@@ -23,7 +23,7 @@ window.STRINGS.en = {
   "bar.fit-all-sheets": "Fit all sheets",
   "bar.language": "Language",
   "bar.next-sheet": "Next sheet",
-  "bar.pdf-href": "system.pdf?v=85",
+  "bar.pdf-href": "system.pdf?v=86",
   "bar.pdf-title": "The manual as one PDF, a page per sheet at its real size",
   "bar.previous-sheet": "Previous sheet",
   "bar.sheets": "Sheets",

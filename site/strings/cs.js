@@ -23,7 +23,7 @@ window.STRINGS.cs = {
   "bar.fit-all-sheets": "Zobrazit všechny listy",
   "bar.language": "Jazyk",
   "bar.next-sheet": "Další list",
-  "bar.pdf-href": "system.cs.pdf?v=85",
+  "bar.pdf-href": "system.cs.pdf?v=86",
   "bar.pdf-title": "Manuál jako jedno PDF, list na stránku ve skutečné velikosti",
   "bar.previous-sheet": "Předchozí list",
   "bar.sheets": "Listy",
