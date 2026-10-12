@@ -990,6 +990,22 @@ html { -webkit-tap-highlight-color: transparent; }
   html { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   body { margin: 0; }
   body::after, .bar, .marks { display: none; }
+  /* Chrome's PDF drops the frames' diagonal gradient bands, so print draws the cross as a
+     vector image instead; the PDF is rendered in the light theme, so its colors are written out */
+  .frame { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='%239a9a96' stroke-width='1' vector-effect='non-scaling-stroke' fill='none'/%3E%3C/svg%3E") center / 100% 100% no-repeat, var(--ff); }
+  .frame.faint { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='%23c1c1be' stroke-width='1' vector-effect='non-scaling-stroke' fill='none'/%3E%3C/svg%3E") center / 100% 100% no-repeat, var(--ff); }
+  /* the paper grain, on each sheet instead of over the window, so every page gets it whole; a small
+     noise tile the PDF embeds once, where the screen's SVG filter was rasterized page by page */
+  .board { position: relative; }
+  .board::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("../assets/grain.png");
+  }
   .cam, .deck { position: static; transform: none !important; zoom: 1 !important; display: block; }
   .board { box-shadow: none; break-after: page; }
 }
