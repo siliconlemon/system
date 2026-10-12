@@ -36,14 +36,14 @@ if not chrome:
 # The fonts come from Google Fonts. Virtual time stands still while they download, and the budget is how long
 # the page may then run before the capture, so they are in before it. The PDF is checked for them after
 FONT_WAIT_MS = 30000
-FONTS = ("InterTight", "IBMPlexMono")
+FONTS = ("Jost", "HankenGrotesk", "AzeretMono", "SyneMono")
 for lang, pdf in PDFS.items():
     with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
         subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
                         f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
                         (SITE / "index.html").as_uri() + f"?lang={lang}"], check=True, capture_output=True)
     data = pdf.read_bytes()
-    # Embedded font names drop the spaces and may add hyphens, AAAAAA+InterTight-Medium
+    # Embedded font names drop the spaces and may add hyphens, AAAAAA+HankenGrotesk-Medium
     embedded = re.sub(rb"[^a-z]", b"", b" ".join(re.findall(rb"/FontName\s*/([^\s/<>\[\]]+)", data)).lower())
     missing = [f for f in FONTS if f.lower().encode() not in embedded]
     if missing:

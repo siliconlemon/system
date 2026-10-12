@@ -25,8 +25,13 @@
   --canvas: #e3e3de;
   --canvas-mark: #a9a9a3;
 
-  --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  /* Four faces, three jobs: a geometric display face for headings and the name, a grotesk for
+     everything you read, a mono for everything you measure, and a second mono kept for the odd
+     highlight, the way a brochure set one line in a special face. */
+  --display: "Jost", "Futura", "Century Gothic", sans-serif;
+  --sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Azeret Mono", ui-monospace, Menlo, monospace;
+  --feature: "Syne Mono", "Courier New", monospace;
   /* The two line weights: hairlines (grid, rules, construction) and the
      outlines of drawn objects. On the canvas they are redefined from the
      zoom (see main.deck), so every line on every sheet comes from here. */
@@ -93,7 +98,6 @@ body {
   background: var(--paper);
   color: var(--ink);
   font: 400 16px/24px var(--sans);
-  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
@@ -104,7 +108,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 svg { display: block; }
 ::selection { background: var(--accent); color: var(--on-accent); }
 
-h1, h2, h3, h4 { text-wrap: balance; font-weight: 500; }
+h1, h2, h3, h4 { text-wrap: balance; font-weight: 500; font-family: var(--display); }
+.feature { font-family: var(--feature); font-weight: 400; letter-spacing: 0; text-transform: none; }
 p, li, dd, td, figcaption { text-wrap: pretty; }
 
 :focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; }
@@ -185,7 +190,7 @@ body::after {
   grid-column: span 6;
   font-size: clamp(40px, 5cqw, 72px);
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
 }
 .sheet-lede {
   grid-column: 4 / span 6;
@@ -345,9 +350,9 @@ body::after {
   font-size: clamp(120px, 23.5cqw, 352px);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -0.065em;
-  /* the S's ink starts 0.0156 em right of its origin (Inter Tight 600), so pull it back onto the line */
-  margin-left: -0.0156em;
+  letter-spacing: -0.03em;
+  /* the S's ink starts 0.031 em right of its origin (Jost 600), so pull it back onto the line */
+  margin-left: -0.031em;
   text-box: trim-both cap alphabetic;
   white-space: nowrap;
 }
@@ -477,7 +482,7 @@ body::after {
 .landing-hero h3 {
   font-size: clamp(40px, 5.6cqw, 80px);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   max-width: 11em;
 }
 .landing-hero p { margin-top: calc(var(--u) * 3); font-size: 20px; line-height: 32px; color: var(--ink-2); max-width: 28em; }
@@ -601,6 +606,8 @@ body::after {
 .lockups .stone { --bg: #e6e6e2; background: var(--bg); color: #111; }
 .lockups .ink { --bg: #111; background: var(--bg); color: #f4f4f1; }
 .lockups .accent { --bg: var(--accent); background: var(--bg); color: #fff; }
+/* on the light grounds the circle takes the accent */
+.lockups .paper, .lockups .stone { --dot: var(--accent); }
 .lockup-notes ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-2); }
 .lockup-notes li {
   display: grid;
@@ -654,6 +661,14 @@ body::after {
 .mono-cells span:first-child { border-left: 1px solid var(--rule-2); }
 .mono-cells span { width: 1ch; padding-inline: 0.25ch; box-sizing: content-box; border-right: 1px solid var(--rule-2); font: 400 40px/56px var(--mono); text-align: center; }
 .mono-cells.sans span { width: auto; font-family: var(--sans); }
+.mono-cells.feature-cells span { font-family: var(--feature); }
+/* the display face, wherever a sheet shows it outside a heading */
+.display, .scale.display li > :nth-child(2) { font-family: var(--display); font-weight: 500; }
+.setting { max-width: 36em; }
+.setting + .setting { margin-top: calc(var(--u) * 2); }
+.ink-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+.ink-sample { font-size: 72px; line-height: 80px; letter-spacing: -0.03em; margin-bottom: calc(var(--u) * 2); }
+.feature-sample { font-size: 40px; line-height: 48px; }
 .specimen-guides { position: relative; padding-block: 0; }
 .specimen-guides > i {
   position: absolute;
@@ -678,7 +693,7 @@ body::after {
   border-bottom: 1px solid var(--ink);
   background: transparent;
   color: var(--ink);
-  font: 500 56px/64px var(--sans);
+  font: 500 56px/64px var(--display);
   letter-spacing: -0.03em;
   resize: none;
   padding: 0 0 calc(var(--u) * 2);
