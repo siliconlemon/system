@@ -300,11 +300,12 @@
     // more cells to the right than fit: the zoom's fade shows (CSS)
     var more = function () { navBox.classList.toggle("more", navBox.scrollLeft + navBox.clientWidth < navBox.scrollWidth - 1); };
     navBox.addEventListener("scroll", more, { passive: true });
-    // an ordinary mouse wheel over the cells runs them sideways; a trackpad's own sideways swipe passes
+    // a plain mouse wheel over the cells runs them sideways; a trackpad's own sideways swipe stays as it is
     navBox.addEventListener("wheel", function (e) {
-      if (e.ctrlKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY) || navBox.scrollWidth <= navBox.clientWidth) return;
+      if (e.ctrlKey || e.metaKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+      if (navBox.scrollWidth <= navBox.clientWidth) return;
       e.preventDefault();
-      navBox.scrollLeft += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      navBox.scrollLeft += e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? navBox.clientWidth : 1);
     }, { passive: false });
     addEventListener("resize", more);
     // a language switch or a late font changes the cells' widths
