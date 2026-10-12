@@ -1321,8 +1321,10 @@ html { -webkit-tap-highlight-color: transparent; }
    on the cell itself snaps to device pixels; a separate 1 px line at a
    fractional offset smeared over two on scaled screens */
 .seg > :is(a, button) + :is(a, button) { border-left: 1px solid var(--rule-2); }
-/* the sheet cells lead with a gray number, so a touch more room on the right balances them */
+/* the sheet cells lead with a gray number, so a touch more room on the right balances them;
+   All has no number and sits on the window edge, so it takes the same on the left */
 .seg > a { padding-right: calc(var(--inset) + 4px); }
+.seg > a:first-of-type { padding-left: calc(var(--inset) + 4px); }
 /* A quiet segment, for the language: no block and no accent edge, the
    labels only change color, so the one accent in the bar stays on the
    theme. It sits next to the theme switch without merging into it. */
