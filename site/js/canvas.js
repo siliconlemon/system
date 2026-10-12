@@ -273,12 +273,19 @@
   // --k is device pixels per sheet pixel, s × dpr however the zoom splits between CSS zoom and the
   // camera's transform. Every line is drawn as a whole number of device pixels, at least one:
   // a 1 px line at 1.1 device pixels smeared over two columns on one side and not the other.
-  // While a zoom runs, --k follows it every frame only where the one-pixel floor is in play
-  // (k below 1), so lines thin and thicken smoothly; close up it settles once at the end.
+  // Each change of --k restyles every line on every sheet, so a running zoom only moves it when
+  // the floor is in play (k below 1) and the hairlines, scaled by the camera meanwhile, have
+  // drifted more than a fifth of a pixel from one: a handful of steps per zoom, not one a frame,
+  // and the width still changes smoothly. When the zoom settles it lands exactly.
   var lastK = 0;
   function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
-    if (live && ((k >= 1 && lastK >= 1) || Math.abs(k - lastK) < lastK * 0.02)) return;
+    if (live) {
+      if (k >= 1 && lastK >= 1) return;
+      var drawn = Math.min(1, lastK) / Math.min(1, k);
+      if (drawn > 0.8 && drawn < 1.25) return;
+    }
+    if (k === lastK) return;
     lastK = k;
     deck.style.setProperty("--k", k);
   }
