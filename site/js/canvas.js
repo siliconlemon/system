@@ -444,14 +444,14 @@
     drag = press = null;
     if (!space) document.body.classList.remove("panning");
   });
-  /* Zoomed in past a sheet's fit, a double click on its paper, not on a
-     control or on text (that still selects a word), flies back to the
-     fitted sheet, as the sheet nav would. Touch gets the same as a double tap. */
+  /* Whenever the view isn't the fitted sheet (zoomed in, zoomed out or
+     panned), a double click on a sheet's paper, not on a control or on
+     text (that still selects a word), flies to that sheet fitted, as the
+     sheet nav would. Touch gets the same as a double tap. */
   function refit(e) {
     var board = e.target.closest(".board"), i = boards.indexOf(board);
     if (i < 0 || e.target.closest(CONTROLS) || overText(e.clientX, e.clientY)) return;
-    var fit = Math.min((area().W - 2 * (phone() ? 8 : 48)) / rects[i].w, 1);
-    if (current === i || view.s <= fit * 1.02) return;
+    if (current === i) return;
     e.preventDefault();
     getSelection().removeAllRanges();
     go(i, true);
