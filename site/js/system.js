@@ -24,7 +24,7 @@
      cover word also gets --ink-rise, how far its ink climbs over the cap
      height, so the top guide meets the ink. Runs again after the fonts load,
      a resize or a language switch, since those change the glyphs. */
-  var BIG = ".cover-word, .sheet-title, .specimen, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2), .wordmark, .paper-card p";
+  var BIG = ".cover-word, .sheet-title, .specimen, .tester, .e404, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2), .wordmark, .paper-card p";
   var inkCache = {};
   function inkOf(font, text) {
     var key = font + "|" + text;
@@ -52,7 +52,8 @@
   }
   function onRulers() {
     document.querySelectorAll(BIG).forEach(function (el) {
-      var text = el.textContent.trim();
+      // a field's text is its value, which the reader may retype
+      var text = (el.tagName === "TEXTAREA" ? el.value : el.textContent).trim();
       if (!text) return;
       var cs = getComputedStyle(el);
       var font = cs.fontStyle + " " + cs.fontWeight + " {size} " + cs.fontFamily;
@@ -140,10 +141,13 @@
     tester.style.fontWeight = weight.value;
     [size, weight].forEach(function (r) { r.style.setProperty("--p", (r.value - r.min) / (r.max - r.min) * 100); });
     out.textContent = px + " px · " + weight.value;
+    // the weight changes the first letter's side bearing, so the line is pulled onto the ruler again
+    onRulers();
   }
   if (tester && size && weight) {
     size.addEventListener("input", setType);
     weight.addEventListener("input", setType);
+    tester.addEventListener("input", onRulers);
     setType();
   }
 
@@ -246,9 +250,10 @@
   }
 
   /* ---------- Sheet nav ----------
-     An All cell, then one cell per sheet with a data-nav name. The canvas
-     says which sheet is in view, and the cell of that sheet's chapter
-     lights up. The crumb in the top bar names the sheet itself. */
+     An All cell, then one cell for every sheet, named by the sheet's own
+     title, the one word the crumb chains onto System. too, so tab, title
+     and crumb always agree. The cover has no title and names itself with
+     data-nav. The canvas says which sheet is in view and its cell lights up. */
 
   var navBox = document.querySelector('[data-seg="nav"]');
   var here = document.querySelector("[data-here]");
@@ -259,28 +264,26 @@
       var n = board.querySelector(".sheet-no b");
       return n ? n.textContent : "00";
     };
-    var chapters = [];
-    var cell = function (num, key, name, go) {
+    // the sheet's one word and its string key: the title, or data-nav on the cover
+    var sheetName = function (board) {
+      var sec = board.querySelector("section"), title = sec.querySelector(".sheet-title");
+      return title ? { key: title.getAttribute("data-i18n"), name: title.textContent }
+        : { key: attrKey(sec, "data-nav"), name: sec.getAttribute("data-nav") || "" };
+    };
+    var cell = function (key, name, go) {
       var a = document.createElement("a");
-      var b = document.createElement("b");
       var label = document.createElement("span");
       a.href = go === "all" ? "#" : "#" + canvas.boards[go].querySelector("section").id;
-      if (num) {
-        b.textContent = num;
-        a.appendChild(b);
-      }
       if (key) label.setAttribute("data-i18n", key);
       label.textContent = name;
       a.appendChild(label);
       a.addEventListener("click", function (e) { e.preventDefault(); canvas.go(go, true); });
       navBox.appendChild(a);
     };
-    cell("", "bar.all", t("bar.all"), "all");
+    cell("bar.all", t("bar.all"), "all");
     canvas.boards.forEach(function (board, i) {
-      var sec = board.querySelector("section"), name = sec.getAttribute("data-nav");
-      if (!name) return;
-      chapters.push(i);
-      cell(number(board), attrKey(sec, "data-nav"), name, i);
+      var n = sheetName(board);
+      cell(n.key, n.name, i);
     });
     var navSeg = Seg(navBox);
     segs.push(navSeg);
@@ -292,12 +295,7 @@
     var crumb = function (el, f) {
       el.innerHTML = "";
       var nb = document.createElement("b");
-      // the short chapter name where there is one, the sheet title otherwise
-      var name = t("bar.all");
-      if (f !== "all") {
-        var sec = canvas.boards[f].querySelector("section"), title = sec.querySelector(".sheet-title");
-        name = sec.getAttribute("data-nav") || (title ? title.textContent : "");
-      }
+      var name = f === "all" ? t("bar.all") : sheetName(canvas.boards[f]).name;
       // All has no number, a sheet leads with its own
       if (f !== "all") {
         nb.textContent = number(canvas.boards[f]);
@@ -328,13 +326,10 @@
           steps[0].disabled = f === "all";
           steps[1].disabled = f === last;
         }
-        var idx = 0;
-        if (f !== "all") chapters.forEach(function (c, j) { if (c <= f) idx = j + 1; });
-        navSeg.set(idx);
+        navSeg.set(f === "all" ? 0 : f + 1);
         // the crumb chains like the wordmark: System. on its own for all sheets, System.logo on a sheet
         if (here) {
-          var title = f === "all" ? null : canvas.boards[f].querySelector(".sheet-title");
-          here.textContent = f === "all" ? "" : (title ? title.textContent : "cover").toLocaleLowerCase(lang);
+          here.textContent = f === "all" ? "" : sheetName(canvas.boards[f]).name.toLocaleLowerCase(lang);
         }
       }
       if (pct !== lastPct || force) {

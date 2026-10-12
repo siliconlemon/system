@@ -99,7 +99,7 @@
 <section class="cover wrap" id="cover" data-nav="Cover" data-i18n-attr="data-nav=nav.cover">
   <div class="cover-word-wrap">
     <div class="cover-guides">
-      <h1 class="cover-word">System<span class="ac">.</span></h1>
+      <h1 class="cover-word">System<span class="pt">.</span></h1>
     </div>
     <div class="cover-dim">
       <span class="label" data-i18n="cover.cap-height-to-baseline">Cap height to baseline</span>
@@ -116,7 +116,7 @@
 </section>
 
 <!-- ============ 01 Contents + flags ============ -->
-<section class="sheet wrap" id="contents" data-nav="Index" data-i18n-attr="data-nav=nav.index">
+<section class="sheet wrap" id="contents">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>01</b> / 18</span>
     <h2 class="sheet-title" data-i18n="contents.title">Contents</h2>
@@ -164,7 +164,7 @@
 </section>
 
 <!-- ============ 02 Landing ============ -->
-<section class="sheet wrap" id="landing" data-nav="Web" data-i18n-attr="data-nav=nav.web">
+<section class="sheet wrap" id="landing">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>02</b> / 18</span>
     <h2 class="sheet-title" data-i18n="landing.title">Landing</h2>
@@ -176,7 +176,7 @@
     <div class="browser-bar"><i></i><i></i><i></i><span class="label">system.example</span></div>
     <div class="landing">
       <div class="landing-nav">
-        <span class="wordmark" style="font-size:24px">System<span style="color:var(--accent)">.</span></span>
+        <span class="wordmark" style="font-size:24px">System<span class="pt">.</span></span>
         <ul class="label ink"><li data-i18n="common.product">Product</li><li data-i18n="landing.pricing">Pricing</li><li data-i18n="landing.docs">Docs</li></ul>
         <a class="btn sm" href="#ui" data-i18n="landing.sign-in">Sign in</a>
       </div>
@@ -215,7 +215,7 @@
 </section>
 
 <!-- ============ 03 Logo ============ -->
-<section class="sheet wrap" id="logo" data-nav="Brand" data-i18n-attr="data-nav=nav.brand">
+<section class="sheet wrap" id="logo">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>03</b> / 18</span>
     <h2 class="sheet-title" data-i18n="common.logo">Logo</h2>
@@ -307,7 +307,9 @@
       <div class="logo-stage" style="aspect-ratio: 2 / 1">
         <svg viewBox="0 0 640 220">
           <path class="sk-2" d="M0 58h640M0 160h640"/>
-          <text x="32" y="160" style="font:600 154px var(--display);letter-spacing:-4.62px;fill:var(--ink)">System<tspan style="fill:var(--accent)">.</tspan></text>
+          <text x="32" y="160" style="font:600 154px var(--display);letter-spacing:-4.62px;fill:var(--ink)">System</text>
+          <!-- the full stop is the brand's dot, a circle where the face's period sits -->
+          <circle class="dot-a" cx="539.49" cy="149.48" r="10.52"/>
           <text class="svg-text" x="40" y="48" data-i18n="logo.cap-height">Cap height</text>
           <text class="svg-text" x="40" y="182" data-i18n="logo.baseline">Baseline</text>
         </svg>
@@ -366,7 +368,7 @@
 </section>
 
 <!-- ============ 05 Display ============ -->
-<section class="sheet wrap" id="type" data-nav="Type" data-i18n-attr="data-nav=nav.type">
+<section class="sheet wrap" id="type">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>05</b> / 18</span>
     <h2 class="sheet-title" data-i18n="type.title">Display</h2>
@@ -396,7 +398,7 @@
       </ul>
     </div>
 
-    <div class="c-8">
+    <div class="c-12">
       <div class="block-head"><span class="label ink" data-i18n="type.type-tester">Type tester</span><span class="label" data-tester-out>56 px</span></div>
       <textarea class="tester" spellcheck="false" aria-label="Type tester" data-tester data-i18n-attr="aria-label=type.type-tester" data-i18n="type.hairlines-grids-a-drop">Hairlines, grids &amp; a drop of color</textarea>
       <div class="tester-ctrl">
@@ -406,12 +408,14 @@
         <input type="range" min="300" max="600" step="100" value="500" data-tester-weight aria-label="Weight" data-i18n-attr="aria-label=type.weight">
       </div>
     </div>
-    <div class="c-4">
+    <div class="c-12">
       <div class="block-head"><span class="label ink" data-i18n="type.weights">Weights</span><span class="label">4</span></div>
-      <div class="weights display" style="grid-template-columns:1fr 1fr">
-        <div style="font-weight:300">Light</div><div style="font-weight:400">Regular</div>
-        <div style="font-weight:500">Medium</div><div style="font-weight:600">Semibold</div>
-      </div>
+      <ul class="scale display">
+        <li><span class="label">Light</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:300" data-i18n="type.start-from-type">Start from type</span><span class="label">300</span></li>
+        <li><span class="label">Regular</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:400" data-i18n="type.start-from-type">Start from type</span><span class="label">400</span></li>
+        <li><span class="label">Medium</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:500" data-i18n="type.start-from-type">Start from type</span><span class="label">500</span></li>
+        <li><span class="label">Semibold</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:600" data-i18n="type.start-from-type">Start from type</span><span class="label">600</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -446,19 +450,21 @@
       </ul>
     </div>
 
-    <div class="c-8">
+    <div class="c-12">
       <div class="block-head"><span class="label ink" data-i18n="text.ink">Ink</span><span class="label" data-i18n="text.printed-not-rendered">Printed, not rendered</span></div>
       <div class="ink-pair">
         <div><p class="ink-sample" data-i18n="text.ink-gain">Ink gain</p><p class="small muted" data-i18n="text.every-letter-carries-a">Every letter carries a trace of spread, as ink does on uncoated paper: a hair heavier than the font. The PDF stays clean, the press adds its own.</p></div>
         <div><p class="ink-sample display" data-i18n="text.paper">Paper</p><p class="small muted" data-i18n="text.the-sheet-carries-a">The sheet carries a paper texture that scales with it: dark specks on the paper, light ones in the ink, which never quite covers the fibers.</p></div>
       </div>
     </div>
-    <div class="c-4">
+    <div class="c-12">
       <div class="block-head"><span class="label ink" data-i18n="type.weights">Weights</span><span class="label">4</span></div>
-      <div class="weights" style="grid-template-columns:1fr 1fr">
-        <div style="font-weight:300">Light</div><div style="font-weight:400">Regular</div>
-        <div style="font-weight:500">Medium</div><div style="font-weight:600">Semibold</div>
-      </div>
+      <ul class="scale">
+        <li><span class="label">Light</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:300" data-i18n="type.start-from-type">Start from type</span><span class="label">300</span></li>
+        <li><span class="label">Regular</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:400" data-i18n="type.start-from-type">Start from type</span><span class="label">400</span></li>
+        <li><span class="label">Medium</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:500" data-i18n="type.start-from-type">Start from type</span><span class="label">500</span></li>
+        <li><span class="label">Semibold</span><span style="font-size:32px;line-height:40px;letter-spacing:-0.02em;font-weight:600" data-i18n="type.start-from-type">Start from type</span><span class="label">600</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -484,18 +490,18 @@
       <p class="mono-cells feature-cells" aria-hidden="true"><span>i</span><span>l</span><span>m</span><span>W</span><span>0</span><span>1</span><span>{</span><span>}</span></p>
     </div>
 
-    <div class="c-8">
-      <div class="block-head"><span class="label ink" data-i18n="mono.lettering">Lettering</span><span class="label" data-i18n="mono.2-templates-1-size">2 templates · 1 size</span></div>
-      <ul class="scale">
-        <li><span class="label" data-i18n="type.label">Label</span><span class="label ink" data-i18n="type.start-from-type-and">Start from type and grid</span><span class="label">300 · 12 / 16</span></li>
-        <li><span class="label" data-i18n="mono.value">Value</span><span class="mono">#FF4A1C · 1440 × 900 · 8 px</span><span class="label">300 · 12 / 24</span></li>
-        <li><span class="label" data-i18n="mono.code">Code</span><span class="mono">--accent: #ff4a1c;</span><span class="label">300 · 12 / 24</span></li>
-      </ul>
-    </div>
     <div class="c-4 stack">
       <div class="block-head" style="margin-bottom:0"><span class="label ink" data-i18n="mono.highlight">Highlight</span><span class="label" data-i18n="mono.once-a-sheet">Once a sheet</span></div>
       <p class="feature feature-sample" data-i18n="mono.start-from-type">Start from type.</p>
       <div class="card"><h4 data-i18n="mono.a-special-face">A special face</h4><p data-i18n="mono.one-line-a-quote">One line, a quote or a note in the margin, the way a brochure set one line in a face of its own. Never running text, never figures.</p></div>
+    </div>
+    <div class="c-8">
+      <div class="block-head"><span class="label ink" data-i18n="mono.lettering">Lettering</span><span class="label" data-i18n="mono.2-templates-1-size">2 templates · 1 size</span></div>
+      <ul class="scale" style="--span:8">
+        <li><span class="label" data-i18n="type.label">Label</span><span class="label ink" data-i18n="type.start-from-type-and">Start from type and grid</span><span class="label">300 · 12 / 16</span></li>
+        <li><span class="label" data-i18n="mono.value">Value</span><span class="mono">#FF4A1C · 1440 × 900 · 8 px</span><span class="label">300 · 12 / 24</span></li>
+        <li><span class="label" data-i18n="mono.code">Code</span><span class="mono">--accent: #ff4a1c;</span><span class="label">300 · 12 / 24</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -614,7 +620,7 @@
 </section>
 
 <!-- ============ 10 Imagery ============ -->
-<section class="sheet wrap" id="imagery" data-nav="Media" data-i18n-attr="data-nav=nav.media">
+<section class="sheet wrap" id="imagery">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>10</b> / 18</span>
     <h2 class="sheet-title" data-i18n="imagery.title">Imagery</h2>
@@ -666,7 +672,7 @@
 </section>
 
 <!-- ============ 11 Components ============ -->
-<section class="sheet wrap" id="ui" data-nav="UI" data-i18n-attr="data-nav=nav.ui">
+<section class="sheet wrap" id="ui">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>11</b> / 18</span>
     <h2 class="sheet-title" data-i18n="ui.title">Components</h2>
@@ -855,7 +861,7 @@
 
   <div class="grid mkt">
     <figure class="c-4">
-      <div class="post"><div class="row"><span class="label">System</span><span class="label">01</span></div><h4 data-i18n="marketing.start-from-type" data-i18n-html>Start from type<span style="color:var(--accent)">.</span></h4></div>
+      <div class="post"><div class="row"><span class="label">System</span><span class="label">01</span></div><h4 data-i18n="marketing.start-from-type" data-i18n-html>Start from type<span class="pt">.</span></h4></div>
       <figcaption class="label" style="margin-top:12px" data-i18n="marketing.post-1-1-1080">Post · 1:1 · 1080 × 1080</figcaption>
     </figure>
     <figure class="c-3">
@@ -888,7 +894,7 @@
       <div class="grid" style="--cols:2">
         <div class="paper-card">
           <div class="row" style="justify-content:space-between">
-            <span class="wordmark" data-when="no-logo">System<span style="color:var(--accent)">.</span></span>
+            <span class="wordmark" data-when="no-logo">System<span class="pt">.</span></span>
             <svg data-when="logo" viewBox="0 0 240 120" style="width:64px;height:32px"><use href="#mark" width="240" height="120" style="color:var(--ink);--dot:var(--accent)"/></svg>
             <span class="label" data-i18n="print.front">Front</span>
           </div>
@@ -896,7 +902,7 @@
         </div>
         <div class="paper-card ink">
           <span class="label" data-i18n="print.back">Back</span>
-          <span class="wordmark" style="font-size:40px">System<span style="color:var(--accent)">.</span></span>
+          <span class="wordmark" style="font-size:40px">System<span class="pt">.</span></span>
         </div>
       </div>
       <p class="small muted" data-i18n="print.front-in-ink-on">Front in ink on uncoated white, back flooded in ink. The name is the only line set larger than 12 pt.</p>
@@ -905,7 +911,7 @@
       <div class="block-head" style="margin-bottom:0"><span class="label ink" data-i18n="print.letterhead">Letterhead</span><span class="label">A4 · 210 × 297 mm</span></div>
       <div class="grid" style="--cols:2">
         <div class="a4">
-          <div class="row" style="justify-content:space-between"><span class="wordmark" style="font-size:16px">System<span style="color:var(--accent)">.</span></span><span class="label" style="font-size:8px">2026-10-09</span></div>
+          <div class="row" style="justify-content:space-between"><span class="wordmark" style="font-size:16px">System<span class="pt">.</span></span><span class="label" style="font-size:8px">2026-10-09</span></div>
           <div class="skel"><i></i><i></i></div>
           <div class="skel grow" style="align-content:start"><i></i><i style="width:100%"></i><i style="width:92%"></i><i style="width:100%"></i><i style="width:64%"></i></div>
           <span class="label" style="font-size:8px" data-i18n="print.system-example-prague">system.example · Prague</span>
@@ -913,7 +919,7 @@
         <div class="a4" style="background:var(--fill)">
           <span class="label" style="font-size:8px" data-i18n="print.envelope-dl">Envelope · DL</span>
           <span class="grow"></span>
-          <span class="wordmark" style="font-size:32px">System<span style="color:var(--accent)">.</span></span>
+          <span class="wordmark" style="font-size:32px">System<span class="pt">.</span></span>
         </div>
       </div>
     </div>
@@ -921,7 +927,7 @@
 </section>
 
 <!-- ============ 17 Downloads ============ -->
-<section class="sheet wrap" id="downloads" data-nav="Files" data-i18n-attr="data-nav=nav.files">
+<section class="sheet wrap" id="downloads">
   <div class="grid sheet-head">
     <span class="sheet-no"><b>17</b> / 18</span>
     <h2 class="sheet-title" data-i18n="downloads.title">Downloads</h2>

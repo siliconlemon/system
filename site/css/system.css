@@ -387,7 +387,6 @@ body:not(:has(.deck))::after {
   text-box: trim-both cap alphabetic;
   white-space: nowrap;
 }
-.cover-word .ac { color: var(--accent); }
 .cover-guides {
   position: relative;
 }
@@ -676,6 +675,21 @@ body:not(:has(.deck))::after {
 }
 
 .wordmark { font-family: var(--display); font-weight: 600; letter-spacing: -0.03em; line-height: 1; text-box: trim-both cap alphabetic; }
+/* The full stop is the brand's dot, the circle of the mark, never the face's square period.
+   It takes the period's place exactly: Overused Grotesk 600 draws a 0.1366 em square with
+   0.0418 em before and 0.0406 em after, so the circle is that square's height on the
+   baseline. The period stays in the text, for copying and screen readers, but out of sight. */
+.pt {
+  display: inline-block;
+  width: 0.1366em;
+  height: 0.1366em;
+  margin: 0 0.0406em 0 0.0418em;
+  border-radius: 50%;
+  background: var(--accent);
+  color: transparent;
+  overflow: hidden;
+  vertical-align: baseline;
+}
 
 /* ---------- Color ---------- */
 
@@ -717,6 +731,7 @@ body:not(:has(.deck))::after {
 .setting { max-width: 36em; }
 .setting + .setting { margin-top: calc(var(--u) * 2); }
 .ink-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+.ink-pair .small { max-width: 36em; }
 .ink-sample { font-size: 72px; line-height: 80px; letter-spacing: -0.03em; margin-bottom: calc(var(--u) * 2); }
 .feature-sample { font-size: 40px; line-height: 48px; }
 .specimen-guides { position: relative; padding-block: 0; }
@@ -725,15 +740,22 @@ body:not(:has(.deck))::after {
   left: 0; right: 0;
   border-top: 1px solid var(--rule-2);
 }
+/* The rows run on the sheet's own columns: the sample starts on the fourth, so it sits on
+   that ruler, and the size takes the last two. --span is how many sheet columns the list
+   spans. The legend keeps its inset inside its own track, so it moves no column. */
+.scale { --span: 12; }
 .scale li {
+  --col: calc((100% - (var(--span) - 1) * var(--gap)) / var(--span));
   display: grid;
-  grid-template-columns: calc((100% - 11 * var(--gap)) / 4 + 2 * var(--gap)) 1fr calc((100% - 11 * var(--gap)) / 6 + var(--gap));
+  grid-template-columns: calc(3 * var(--col) + 2 * var(--gap)) 1fr calc(2 * var(--col) + var(--gap));
   column-gap: var(--gap);
+  row-gap: calc(var(--u) * 2);
   align-items: baseline;
-  gap: calc(var(--u) * 2);
   padding-block: calc(var(--u) * 2);
   border-bottom: 1px solid var(--rule-2);
 }
+.scale li > :first-child { padding-left: var(--inset); }
+.scale li > :last-child { padding-right: var(--inset); }
 .scale li > :nth-child(2) { white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: -0.02em; }
 .scale li > :last-child { text-align: right; }
 .tester {
@@ -787,13 +809,10 @@ body:not(:has(.deck))::after {
 }
 .tester-ctrl input[type="range"]:focus { outline: none; }
 .tester-ctrl input[type="range"]:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
-.weights { display: grid; grid-template-columns: repeat(4, 1fr); }
-.weights div { padding-block: calc(var(--u) * 2); border-bottom: 1px solid var(--rule-2); font-size: 32px; line-height: 40px; letter-spacing: -0.02em; }
 @container board (max-width: 720px) {
   .scale li { grid-template-columns: calc(var(--u) * 7) 1fr; }
   .scale li > :last-child { display: none; }
   .tester { font-size: 36px; line-height: 44px; }
-  .weights { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---------- Grid & spacing ---------- */
@@ -1091,7 +1110,7 @@ body:not(:has(.deck))::after {
 
   /* registration: the accent plate sits off by the sheet's own --rx, --ry (canvas.js), in
      drawing units inside a drawing so the shift is the same on the sheet at any size */
-  .board :is(.ac, .label.accent, .dot-a, .sk-a, .svg-text.cs, .chip.on) {
+  .board :is(.ac, .pt, .label.accent, .dot-a, .sk-a, .svg-text.cs, .chip.on) {
     translate: calc(var(--rx, 0px) * var(--vu, 1)) calc(var(--ry, 0px) * var(--vu, 1));
   }
   /* a transform needs a box: the inline accents become inline blocks */
@@ -1326,9 +1345,7 @@ html { -webkit-tap-highlight-color: transparent; }
    on the cell itself snaps to device pixels; a separate 1 px line at a
    fractional offset smeared over two on scaled screens */
 .seg > :is(a, button) + :is(a, button) { border-left: 1px solid var(--rule-2); }
-/* the sheet cells lead with a gray number, so a touch more room on the right balances them;
-   All has no number and sits on the window edge, so it takes the same on the left */
-.seg > a { padding-right: calc(var(--inset) + 4px); }
+/* the sheet cells are one word each, the sheet's title; All sits on the window edge, so a touch more room on its left */
 .seg > a:first-of-type { padding-left: calc(var(--inset) + 4px); }
 /* A quiet segment, for the language: no block and no accent edge, the
    labels only change color, so the one accent in the bar stays on the
@@ -1337,11 +1354,6 @@ html { -webkit-tap-highlight-color: transparent; }
 .seg.quiet > button { min-width: calc(var(--u) * 5); color: var(--ink-3); transition: color var(--t) var(--ease); }
 .seg.quiet > button[aria-checked="true"] { color: var(--ink); }
 @media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
-/* the sheet number, a step quieter than the name on paper and on ink alike */
-.seg > a b { font-weight: 300; color: var(--ink-3); }
-@media (max-width: 720px) {
-  .seg > a b { display: none; }
-}
 
 /* ---------- Legend inset ----------
    Big type, body copy and pictures sit flush on the ruler lines. Small
@@ -1355,7 +1367,7 @@ figcaption.label, figure > p.label, .stack > p.label, .grid > div > p.label,
 .prop-legend { padding-inline: var(--inset); }
 .sheet-tag { padding-right: var(--inset); }
 .block-head { padding-inline: var(--inset); }
-.toc a, .flag, .spacing li, .files li, .log li, .scale li { padding-inline: var(--inset); }
+.toc a, .flag, .spacing li, .files li, .log li { padding-inline: var(--inset); }
 .table th:first-child, .table td:first-child { padding-left: var(--inset); }
 .table th:last-child, .table td:last-child { padding-right: var(--inset); }
 .swatch dl { padding-inline: var(--inset); }
