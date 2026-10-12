@@ -318,7 +318,7 @@ window.STRINGS.cs = {
   "utility.favicon-rules": "Pravidla",
   "utility.light-and-dark-tabs": "Světlé i tmavé záložky",
   "utility.the-mark-in-a": "Značka v černém kruhu",
-  "utility.circle-in-white-square": "Kruh bílý, čtverec v akcentu, na kotouči v inkoustu. Kotouč ji nese na světlých i tmavých záložkách, takže se ikona nikdy neřídí motivem systému.",
+  "utility.circle-in-white-square": "Kruh v akcentu, tečka značky, a čtverec bílý, na kotouči v inkoustu. Kotouč ji nese na světlých i tmavých záložkách, takže se ikona nikdy neřídí motivem systému.",
   "utility.optically-centered": "Opticky na středu",
   "utility.the-mark-is-9": "Značka je v mřížce 32 vysoká 12 jednotek a široká 24, tak velká, jak kotouč s rovnoměrným okrajem dovolí, a sedí o 3 % své šířky vlevo od středu, stejně jako samotná značka všude jinde.",
   "utility.tokens-the-8-px": "Tokeny, 8px mřížka a nekonečné linky.",

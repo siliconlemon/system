@@ -318,7 +318,7 @@ window.STRINGS.en = {
   "utility.favicon-rules": "Rules",
   "utility.light-and-dark-tabs": "Light and dark tabs",
   "utility.the-mark-in-a": "The mark in a black disc",
-  "utility.circle-in-white-square": "The circle in white, the square in the accent, on a disc of ink. The disc carries it on light tab strips and dark ones alike, so the icon never follows the system theme.",
+  "utility.circle-in-white-square": "The circle in the accent, the brand’s dot, and the square in white, on a disc of ink. The disc carries it on light tab strips and dark ones alike, so the icon never follows the system theme.",
   "utility.optically-centered": "Optically centered",
   "utility.the-mark-is-9": "The mark is 12 units tall on the 32 grid and 24 wide, as large as the disc allows with an even margin, and sits 3% of its width left of center, like the mark alone anywhere else.",
   "utility.tokens-the-8-px": "Tokens, the 8 px grid and the infinite ruler lines.",
