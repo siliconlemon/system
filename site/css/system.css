@@ -179,6 +179,8 @@ p, li, dd, td, figcaption { text-wrap: pretty; }
 :root {
   --bleed: 0.35px;
   --paper-tex: url("../assets/paper.png");
+  /* how strongly the paper shows through: the tile at full strength read as grain, not stock */
+  --paper-grain: 0.6;
 }
 
 /* without the canvas (no script) the paper lies over the window instead */
@@ -189,6 +191,7 @@ body:not(:has(.deck))::after {
   z-index: 20;
   pointer-events: none;
   background: var(--paper-tex) 0 0 / 256px 256px;
+  opacity: var(--paper-grain);
 }
 
 /* A sheet is one screen of the manual. Its top hairline runs past the
@@ -1082,6 +1085,7 @@ body:not(:has(.deck))::after {
   z-index: 20;
   pointer-events: none;
   background: var(--paper-tex) 0 0 / 256px 256px;
+  opacity: var(--paper-grain);
 }
 /* The print code at the foot of every sheet, as on the back of a brochure. canvas.js adds it. */
 .board > .slug {
