@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/lockups.png" alt="System lockups" width="888"></p>
+
 # System
 
 A Swiss-minimal, blueprint-style template for brand manuals, landing pages and design systems. It covers web, apps, type and marketing, and comes with a skill that sets it up per project.
