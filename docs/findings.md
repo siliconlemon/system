@@ -92,6 +92,8 @@ The skill asks "what do you have?" up front and sets the flags.
 - The PDF is a file rendered by `scripts/pdf.py`, like Viewgraft's, not a print dialog.
 - The bottom bar is a row of rectangular cells split by hairlines. One ink block with an accent top edge marks the current cell. When it moves, the leading edge runs ahead and the trailing edge follows, so it wipes across like a shutter. Labels use `mix-blend-mode: difference`, so they invert where the block passes.
 - Logo sheet after Viewgraft's: lockups A to E (primary, stacked, on ink, reversed, mark only) and clear space of half the mark height around, two thirds after the name. The horizontal lockups centre on that clear space, so the open end of the word gets its room. The mark alone sits on its optical centre: the square outweighs the circle, so it shifts 7.2 units (3% of its width) left, shown with rulers on the sheet.
+- Languages: English and Czech. The top bar runs crumb, language, theme, PDF. The language switch is the theme switch's quiet twin: the same accent edge moves, with no ink block, so the two never merge. The language comes from ?lang=, then the saved choice, then the browser's languages.
+- Strings live in strings/<lang>.js by key (sheet.thing, common.thing for copy shared across sheets, split by context when a word translates differently, Name as Jméno or Název). scripts/strings.py keeps them complete.
 - The goo blob was dropped: round pills do not fit a Swiss sheet.
 
 ## Plumbing (to confirm in the sweep)

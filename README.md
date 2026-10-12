@@ -10,8 +10,10 @@ First template build in `site/`: a static page with no build step, served from `
 - `site/css/system.css`: tokens, the 8 px grid, ruler lines, every component
 - `site/js/canvas.js`: the pannable, zoomable canvas the artboards float on, ported from Viewgraft
 - `site/js/system.js`: with/without flags, theme, type tester, the bar cells, runt control
-- `site/system.pdf`: the manual as one PDF, a page per sheet at its real size. The PDF button links to it
-- `scripts/pdf.py`: renders `site/system.pdf` with headless Chrome or Edge. Rerun it after changing a sheet
+- `site/strings/en.js`, `site/strings/cs.js`: every string on the page, by key. English is the source, the markup carries the key and the English as a fallback
+- `site/system.pdf`, `site/system.cs.pdf`: the manual as one PDF per language, a page per sheet at its real size. The PDF button links to the one for the language
+- `scripts/pdf.py`: renders both PDFs with headless Chrome or Edge. Rerun it after changing a sheet or a string
+- `scripts/strings.py`: checks the string resources: every used key exists, every language has every key, nothing unused, the fallbacks match
 
 ## House rules
 
@@ -19,10 +21,10 @@ First template build in `site/`: a static page with no build step, served from `
 - Ruler lines mark the content edges only: the outer margins, the title column and the centre.
 - Big type, body copy and pictures sit flush on a ruler line. Small legend text keeps `--inset` clear of it.
 - Rectangles everywhere, the bars included. No pills.
-- No block ends on a line with one or two words.
+- No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.
+- Every string is a resource. New copy gets a key in `strings/en.js` and every other language file, then `python scripts/strings.py` passes.
 
 ## Next
 
-- Bottom bar: EN/CZ.
 - Dense and breathing variants of each sheet, so the designer picks the density per project.
 - The sweep of Viewgraft and jobka-web-reference, then the skill and the script snippets.
