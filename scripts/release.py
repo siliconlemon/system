@@ -8,7 +8,7 @@ about, git tag -a 1.0.1 -m "...". The rest is generated.
 
 The checks: the tag is X.Y.Z, annotated, and matches the version in .claude-plugin/plugin.json, every language has its
 full PDF (system.pdf, system.cs.pdf: every sheet, logo, icons and imagery on), and no PDF is older than the last
-commit that changed what it renders. The release attaches only the full PDFs, named system.1.0.1.en.pdf and so
+commit that changed what it renders. The release attaches only the full PDFs, named system.1.0.1-en.pdf and so
 on. The other flag sets stay on the live deck's PDF button.
 
 The CI release workflow runs this, then hands the notes and the PDFs to gh release create, which appends
@@ -102,7 +102,7 @@ def notes(tag, out):
     sheets = 0
     for lang in languages():
         pdf = full_pdf(lang)
-        shutil.copyfile(pdf, out / f"system.{version}.{lang}.pdf")
+        shutil.copyfile(pdf, out / f"system.{version}-{lang}.pdf")
         sheets = max(sheets, pages(pdf))
     codes = [l.upper() for l in languages()]
     langs = ", ".join(codes)
