@@ -64,6 +64,8 @@
   // current is the sheet or the overview the view is fitted to, null for a free view
   var view = { x: 0, y: 0, s: 1 }, z = 1, /** @type {Focus | null} */ current = "all";
   var cols = 0, box = { w: 0, h: 0 }, /** @type {Rect[]} */ rects = [];
+  // zoomers hear when the sheets are laid out again at a new zoom
+  var /** @type {((z: number) => void)[]} */ zoomers = [];
   var /** @type {((f: Focus, pct: number) => void)[]} */ listeners = [],
     /** @type {Focus | undefined} */ lastFocus, /** @type {number | undefined} */ lastPct;
 
@@ -247,7 +249,7 @@
     clearTimeout(settleTimer);
     if (following) { cancelAnimationFrame(following); following = 0; }
     cam.classList.remove("fly", "moving");
-    if (z !== view.s) { z = view.s; deck.style.zoom = String(z); }
+    if (z !== view.s) { z = view.s; deck.style.zoom = String(z); zoomers.forEach(function (fn) { fn(z); }); }
     hair(z);
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px)";
     crosses(view.x, view.y, view.s);
@@ -658,6 +660,7 @@
     focus: focus,
     // after anything that changes the sheets' size, like a language switch
     relayout: refresh,
-    onchange: function (fn) { listeners.push(fn); fn(focus(), Math.round(view.s * 100)); }
+    onchange: function (fn) { listeners.push(fn); fn(focus(), Math.round(view.s * 100)); },
+    onzoom: function (fn) { zoomers.push(fn); }
   };
 })();

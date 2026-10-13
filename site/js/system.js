@@ -218,9 +218,10 @@
 
     /** @param {boolean} [instant] */
     function place(instant) {
-      if (active < 0 || !slots[active]) return;
+      if (active < 0 || !slots[active] || !totalW) return;
       if (instant) block.classList.add("still");
-      block.style.transform = "translateX(" + slots[active].x + "px) scaleX(" + slots[active].w + ")";
+      // the block is the row's width, totalW, so it scales by the cell's share of it
+      block.style.transform = "translateX(" + slots[active].x + "px) scaleX(" + slots[active].w / totalW + ")";
       if (instant) {
         block.getBoundingClientRect();
         block.classList.remove("still");
@@ -244,8 +245,8 @@
         var r = el.getBoundingClientRect(), l = snap(r.left);
         return { x: (l - origin) / k, w: (snap(r.right) - l) / k, end: el.offsetLeft + el.offsetWidth };
       });
-      var last = slots[slots.length - 1];
-      totalW = last ? last.end : 0;
+      // the far edge of the cells shown: on phones the theme row hides all but the current one, the last included
+      totalW = slots.reduce(function (m, s) { return Math.max(m, s.end); }, 0);
       boxW = box.clientWidth;
       layer.style.width = totalW + "px";
       place(true);
@@ -276,13 +277,18 @@
 
   /* ---------- Tabs on the interface sheet: the bottom bar's cells, as a demo ---------- */
 
+  /** @type {CellRow[]} */
+  var sheetSegs = [];
   /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-seg="tabs"]')).forEach(function (box) {
     var seg = Seg(box);
     segs.push(seg);
+    sheetSegs.push(seg);
     var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
     btns.forEach(function (b, i) { b.addEventListener("click", function () { seg.set(i); }); });
     seg.set(0, true);
   });
+  // a row on a sheet is laid out again at every zoom, and its cells come out a touch wider or narrower
+  if (window.canvas) window.canvas.onzoom(function () { sheetSegs.forEach(function (g) { g.measure(); }); });
 
   /* ---------- Theme: auto, light, dark ---------- */
 

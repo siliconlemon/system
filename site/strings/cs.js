@@ -227,7 +227,7 @@ window.STRINGS.cs = {
   "marketing.story-9-16-1080": "Story · 9:16 · 1080 × 1920",
   "marketing.tag": "Sítě · OG · Reklama",
   "marketing.then-add-the-rest": "Pak přidávejte zbytek",
-  "meta.title": "System | Manuál značky",
+  "meta.title": "System | Design manuál",
   "mono.2-templates-1-size": "2 šablony · 1 velikost",
   "mono.a-special-face": "Doplňkové písmo",
   "mono.code": "Kód",

@@ -12,6 +12,8 @@ interface Canvas {
   /** after anything that changes the sheets' size, like a language switch */
   relayout(): void;
   onchange(fn: (focus: Focus, pct: number) => void): void;
+  /** once a zoom settles and the sheets are laid out at it, with the zoom */
+  onzoom(fn: (z: number) => void): void;
 }
 
 /** One language's strings by key, as in strings/en.js */

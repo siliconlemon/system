@@ -227,7 +227,7 @@ window.STRINGS.en = {
   "marketing.story-9-16-1080": "Story · 9:16 · 1080 × 1920",
   "marketing.tag": "Social · OG · Ads",
   "marketing.then-add-the-rest": "Then add the rest",
-  "meta.title": "System | Brand manual",
+  "meta.title": "System | Design manual",
   "mono.2-templates-1-size": "2 templates · 1 size",
   "mono.a-special-face": "A special face",
   "mono.code": "Code",

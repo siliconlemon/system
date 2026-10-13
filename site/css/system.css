@@ -553,6 +553,12 @@ body:not(:has(.deck))::after {
   .btn.solid:hover { background: var(--paper); color: var(--ink); }
   .btn.accent:hover { background: var(--paper); color: var(--accent); }
 }
+/* touch has no hover: the press inverts it instead, for as long as the finger is down */
+@media (hover: none) {
+  .btn:not([disabled]):active { background: var(--ink); color: var(--paper); }
+  .btn.solid:not([disabled]):active { background: var(--paper); color: var(--ink); }
+  .btn.accent:not([disabled]):active { background: var(--paper); color: var(--accent); }
+}
 .btn.sm { height: calc(var(--u) * 4); padding-inline: calc(var(--u) * 2); font-size: 14px; }
 .btn[disabled] { border-color: var(--ink-3); color: var(--ink-3); background: transparent; cursor: not-allowed; }
 
@@ -1037,6 +1043,10 @@ body:not(:has(.deck))::after {
     gap: 160px;
     align-items: start;
     transform-origin: 0 0;
+    /* Text sets the same at every zoom. Where glyphs snap to whole pixels (Android, Linux),
+       a sheet laid out zoomed out ran wider or narrower than at the zoom it lands on, and
+       every sheet shifted as a zoom settled. This drops the snapping on the canvas only */
+    text-rendering: geometricPrecision;
   }
   @supports not (width: round(nearest, 1px, 1px)) {
     main.deck {
@@ -1302,12 +1312,14 @@ html { -webkit-tap-highlight-color: transparent; }
   height: 100%;
   pointer-events: none;
 }
+/* as wide as the row, scaled down to one cell. A 1 px block scaled up came out several cells
+   wide on a zoomed-out sheet: under a device pixel, its layer was rounded up to a whole one first */
 .seg-block {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 1px;
+  width: 100%;
   background: var(--ink);
   transform: scaleX(0);
   transform-origin: 0 0;
