@@ -112,6 +112,7 @@ scripts/
   prune.py          --keep logo,color,type   cut to the sheets you name
   strings.py        check no word is missing anywhere
   pdf.py            render the PDFs (needs Chrome or Edge)
+  release.py        check a release, write its notes (CI runs it on a tag)
 skills/design-deck/ the skill + notes on every sheet
 ```
 
