@@ -1,0 +1,52 @@
+# An annotated vX.Y.Z tag on main publishes a GitHub release: the checks, notes that open with the tag message,
+# a details table, the full PDF per language attached, and GitHub's generated notes below.
+# scripts/release.py does the work, so it runs the same locally.
+name: Release
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the stale PDF check reads the history
+          persist-credentials: false
+
+      - name: Tag is on main
+        run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+
+      # checkout leaves the pushed tag lightweight, fetch the annotated one for its message
+      - name: Annotated tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
+
+      - name: Strings
+        run: python3 scripts/strings.py
+
+      - name: Notes and PDFs
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python3 scripts/release.py "$TAG" --out "$RUNNER_TEMP/release"
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" "$RUNNER_TEMP"/release/*.pdf \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --title "$TAG" \
+            --notes-file "$RUNNER_TEMP/release/notes.md" --generate-notes
