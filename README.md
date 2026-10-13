@@ -1,4 +1,4 @@
-<p align="center"><a href="https://siliconlemon-system.vercel.app"><img src="docs/lockups.png" alt="System lockups" width="888"></a></p>
+<p align="center"><a href="https://siliconlemon-system.vercel.app"><img src="docs/lockups-v2.png" alt="System lockups" width="888"></a></p>
 
 # System
 
