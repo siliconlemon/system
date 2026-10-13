@@ -1,5 +1,7 @@
-"""Render site/system.pdf and site/system.cs.pdf, the files the PDF button links to, one per language.
-Rerun it after changing a sheet or a string.
+"""Render the PDFs the PDF button links to: one per language and set of with/without flags, so a download is the
+manual as it looked on screen. system.pdf and system.cs.pdf have everything, system.no-logo.pdf,
+system.cs.no-icons-imagery.pdf and the rest switch flags off, named as system.js names them.
+Rerun it after changing a sheet or a string. Pass a language (en, cs) to render only that one.
 
 One page per sheet, each page cut to its sheet's real size (canvas.js writes the @page sizes), rendered with
 headless Chrome or Edge, like the Viewgraft manual. Set CHROME to use another browser.
@@ -13,8 +15,13 @@ import tempfile
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent / "site"
-# language -> file, ?lang= picks the language for the render
-PDFS = {"en": SITE / "system.pdf", "cs": SITE / "system.cs.pdf"}
+LANGS = sys.argv[1:] or ["en", "cs"]
+# the flags in system.js's order; every subset of them switched off
+FLAGS = ["logo", "icons", "imagery"]
+OFF = [[f for i, f in enumerate(FLAGS) if n >> i & 1] for n in range(2 ** len(FLAGS))]
+# file -> query, ?lang= picks the language and ?without= the flags for the render
+PDFS = {SITE / ("system" + ("" if lang == "en" else "." + lang) + (".no-" + "-".join(off) if off else "") + ".pdf"):
+        f"?lang={lang}" + (f"&without={','.join(off)}" if off else "") for lang in LANGS for off in OFF}
 
 CANDIDATES = [
     os.environ.get("CHROME"),
@@ -37,11 +44,11 @@ if not chrome:
 # the page may then run before the capture, so they are in before it. The PDF is checked for them after
 FONT_WAIT_MS = 30000
 FONTS = ("OverusedGrotesk", "HankenGrotesk", "AzeretMono", "CourierPrime")
-for lang, pdf in PDFS.items():
+for pdf, query in PDFS.items():
     with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
         subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
                         f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
-                        (SITE / "index.html").as_uri() + f"?lang={lang}"], check=True, capture_output=True)
+                        (SITE / "index.html").as_uri() + query], check=True, capture_output=True)
     data = pdf.read_bytes()
     # Embedded font names drop the spaces and may add hyphens, AAAAAA+HankenGrotesk-Medium
     embedded = re.sub(rb"[^a-z]", b"", b" ".join(re.findall(rb"/FontName\s*/([^\s/<>\[\]]+)", data)).lower())
