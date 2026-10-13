@@ -46,9 +46,17 @@ FONT_WAIT_MS = 30000
 FONTS = ("OverusedGrotesk", "HankenGrotesk", "AzeretMono", "CourierPrime")
 for pdf, query in PDFS.items():
     with tempfile.TemporaryDirectory() as profile:  # separate profile, so a running Chrome doesn't interfere
-        subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
-                        f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
-                        (SITE / "index.html").as_uri() + query], check=True, capture_output=True)
+        # headless Chrome now and then stalls on a render and never exits: give it two minutes, then one more try
+        for attempt in (1, 2):
+            try:
+                subprocess.run([chrome, "--headless=new", "--disable-gpu", f"--user-data-dir={profile}",
+                                f"--virtual-time-budget={FONT_WAIT_MS}", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
+                                (SITE / "index.html").as_uri() + query], check=True, capture_output=True, timeout=120)
+                break
+            except subprocess.TimeoutExpired:
+                if attempt == 2:
+                    sys.exit(f"{pdf.name} stalled twice, rerun")
+                print(f"{pdf.name} stalled, trying again")
     data = pdf.read_bytes()
     # Embedded font names drop the spaces and may add hyphens, AAAAAA+HankenGrotesk-Medium
     embedded = re.sub(rb"[^a-z]", b"", b" ".join(re.findall(rb"/FontName\s*/([^\s/<>\[\]]+)", data)).lower())
