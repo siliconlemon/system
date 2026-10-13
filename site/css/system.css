@@ -1280,6 +1280,8 @@ html { -webkit-tap-highlight-color: transparent; }
   :root[data-theme="light"] .bar .bar-theme > [data-theme-set="light"],
   :root[data-theme="dark"] .bar .bar-theme > [data-theme-set="dark"],
   :root:not([data-theme]) .bar .bar-theme > [data-theme-set="auto"] { display: flex; }
+  /* the one cell that shows may not be the first, so it drops its divider: the box's own edge is the line */
+  .bar :is(.bar-theme, .bar-lang) > button { border-left: 0; }
   .bar .bar-lang > button { display: none; }
   :root[lang="en"] .bar .bar-lang > [data-lang-set="en"],
   :root[lang="cs"] .bar .bar-lang > [data-lang-set="cs"] { display: flex; }

@@ -122,6 +122,23 @@
         if (v != null) el.setAttribute(pair.slice(0, i), v);
       });
     });
+    pdfLink();
+  }
+
+  /* ---------- The PDF for this configuration ----------
+     scripts/pdf.py renders one per language and set of flags: system.pdf,
+     system.cs.pdf, system.no-logo.pdf, system.cs.no-icons-imagery.pdf and so
+     on, so the button hands over the manual as it looks right now. The ?v=
+     on the link in the markup carries over. */
+
+  var FLAGS = ["logo", "icons", "imagery"];
+  var pdfA = document.querySelector(".bar-pdf");
+  var pdfV = pdfA ? (pdfA.getAttribute("href").split("?")[1] || "") : "";
+  function pdfLink() {
+    if (!pdfA) return;
+    var off = FLAGS.filter(function (f) { return root.getAttribute("data-" + f) === "without"; });
+    pdfA.setAttribute("href", "system" + (lang === "en" ? "" : "." + lang) +
+      (off.length ? ".no-" + off.join("-") : "") + ".pdf" + (pdfV ? "?" + pdfV : ""));
   }
 
   /* ---------- With / without flags ---------- */
@@ -134,6 +151,13 @@
       sw.setAttribute("aria-checked", String(on));
       root.setAttribute("data-" + flag, on ? "with" : "without");
       store("system:flags", function (s) { s[flag] = on ? "with" : "without"; });
+      pdfLink();
+      // a ?without= from a shared link has done its job, and a reload keeps what was just switched
+      var q = new URLSearchParams(location.search);
+      if (q.has("without")) {
+        q.delete("without");
+        history.replaceState(history.state, "", location.pathname + (q + "" ? "?" + q : "") + location.hash);
+      }
       relayout();
     });
   });
@@ -200,10 +224,12 @@
       // offsetLeft and offsetWidth round to whole CSS pixels and left a sliver of paper or a
       // second line between the block and the next cell's divider
       // A row on a sheet sits under the canvas zoom: its screen edges are divided back into the row's own
-      // pixels, unsnapped, since a device pixel there is many of the row's
-      var br = box.getBoundingClientRect(), k = box.offsetWidth ? br.width / box.offsetWidth : 1;
-      var dpr = window.devicePixelRatio || 1, snap = Math.abs(k - 1) < 0.001 ? function (v) { return Math.round(v * dpr) / dpr; } : function (v) { return v; };
-      var origin = br.left + (box.clientLeft - box.scrollLeft) * k;
+      // pixels, unsnapped, since a device pixel there is many of the row's. The bars are never zoomed, and
+      // offsetWidth rounds, so they keep k at exactly 1
+      var br = box.getBoundingClientRect(), k = box.closest(".board") && box.offsetWidth ? br.width / box.offsetWidth : 1;
+      var dpr = window.devicePixelRatio || 1, snap = k === 1 ? function (v) { return Math.round(v * dpr) / dpr; } : function (v) { return v; };
+      // the real border, not clientLeft: that rounds, and a 1 px border is 0.8 px at 125 %
+      var origin = br.left + (parseFloat(getComputedStyle(box).borderLeftWidth) - box.scrollLeft) * k;
       slots = items.map(function (el) {
         var r = el.getBoundingClientRect(), l = snap(r.left);
         return { x: (l - origin) / k, w: (snap(r.right) - l) / k, end: el.offsetLeft + el.offsetWidth };
