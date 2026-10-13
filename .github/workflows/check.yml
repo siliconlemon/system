@@ -1,4 +1,4 @@
-# Every push to main and every pull request: the strings match the page and the PDFs are not stale.
+# Every push to main and every pull request: the types check, the strings match the page and the PDFs are not stale.
 name: Check
 
 on:
@@ -23,8 +23,17 @@ jobs:
           fetch-depth: 0 # the stale PDF check reads the history
           persist-credentials: false
 
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24 # runs scripts/*.ts as they are
+
+      - name: Types
+        run: |
+          npm ci
+          npm run check
+
       - name: Strings
-        run: python3 scripts/strings.py
+        run: node scripts/strings.ts
 
       - name: Release ready
-        run: python3 scripts/release.py --check
+        run: node scripts/release.ts --check
