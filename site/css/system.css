@@ -533,9 +533,6 @@ body:not(:has(.deck))::after {
 /* ---------- Buttons and controls ---------- */
 
 .btn {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -546,29 +543,16 @@ body:not(:has(.deck))::after {
   font-size: 16px;
   font-weight: 500;
   line-height: 1;
-  transition: color 0.2s var(--ease) 0.08s, border-color var(--t) var(--ease);
   white-space: nowrap;
 }
 .btn.solid { background: var(--ink); color: var(--paper); }
 .btn.accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-/* Hover rolls the new color across like an ink roller, left to right, and rolls it off to
-   the right when the pointer leaves. Only the roller's transform animates. */
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--ink);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.36s var(--detent);
+/* Hover inverts the button in place, at once: no roll, no fade. The slide lives in the tabs. */
+@media (hover: hover) {
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn.solid:hover { background: var(--paper); color: var(--ink); }
+  .btn.accent:hover { background: var(--paper); color: var(--accent); }
 }
-.btn.solid::before, .btn.accent::before { background: var(--paper); }
-.btn:hover::before { transform: none; transform-origin: left; }
-.btn:hover { color: var(--paper); }
-.btn.solid:hover { color: var(--ink); }
-.btn.accent:hover { color: var(--accent); }
-.btn[disabled]::before { content: none; }
 .btn.sm { height: calc(var(--u) * 4); padding-inline: calc(var(--u) * 2); font-size: 14px; }
 .btn[disabled] { border-color: var(--ink-3); color: var(--ink-3); background: transparent; cursor: not-allowed; }
 
@@ -905,7 +889,7 @@ body:not(:has(.deck))::after {
 .motion-demo .curve :is(.sk, .sk-a) { stroke: var(--tone, var(--ink)); }
 .track i { position: absolute; left: 0; top: 15px; width: 10px; height: 10px; background: var(--tone, var(--ink)); }
 /* the run is a transform, measured in the track's own width (cqw), so it plays on the compositor */
-.motion-demo:hover .track i, .motion-demo.play .track i { transform: translateX(calc((100cqw - 10px) / var(--over, 1))); }
+.motion-demo.play .track i { transform: translateX(calc((100cqw - 10px) / var(--over, 1))); }
 .track i { transition-property: transform; }
 
 /* ---------- Favicon ---------- */
@@ -1372,6 +1356,10 @@ html { -webkit-tap-highlight-color: transparent; }
 .seg.quiet > button { min-width: calc(var(--u) * 5); color: var(--ink-3); transition: color var(--t) var(--ease); }
 .seg.quiet > button[aria-checked="true"] { color: var(--ink); }
 @media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
+/* the bottom bar's cells, as tabs on a sheet: a bar-tall row in a hairline frame, never wider than half the page */
+.seg.tabs { height: var(--bar); width: fit-content; max-width: min(100%, 50vw); border: 1px solid var(--rule-2); }
+@media (max-width: 720px) { .seg.tabs { max-width: 100%; } }
+.motion-demo { cursor: pointer; }
 
 /* ---------- Legend inset ----------
    Big type, body copy and pictures sit flush on the ruler lines. Small

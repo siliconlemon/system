@@ -161,7 +161,7 @@
     setType();
   }
 
-  /* ---------- Motion demos play on tap too ---------- */
+  /* ---------- Motion demos: a click plays, the next one plays it back ---------- */
 
   document.querySelectorAll(".motion-demo").forEach(function (d) {
     d.addEventListener("click", function () { d.classList.toggle("play"); });
@@ -199,11 +199,14 @@
       // from the cells' real, fractional edges snapped to device pixels, as their borders are:
       // offsetLeft and offsetWidth round to whole CSS pixels and left a sliver of paper or a
       // second line between the block and the next cell's divider
-      var dpr = window.devicePixelRatio || 1, snap = function (v) { return Math.round(v * dpr) / dpr; };
-      var origin = box.getBoundingClientRect().left + box.clientLeft - box.scrollLeft;
+      // A row on a sheet sits under the canvas zoom: its screen edges are divided back into the row's own
+      // pixels, unsnapped, since a device pixel there is many of the row's
+      var br = box.getBoundingClientRect(), k = box.offsetWidth ? br.width / box.offsetWidth : 1;
+      var dpr = window.devicePixelRatio || 1, snap = Math.abs(k - 1) < 0.001 ? function (v) { return Math.round(v * dpr) / dpr; } : function (v) { return v; };
+      var origin = br.left + (box.clientLeft - box.scrollLeft) * k;
       slots = items.map(function (el) {
-        var r = el.getBoundingClientRect(), l = snap(r.left), x = l - origin;
-        return { x: x, w: snap(r.right) - l, end: el.offsetLeft + el.offsetWidth };
+        var r = el.getBoundingClientRect(), l = snap(r.left);
+        return { x: (l - origin) / k, w: (snap(r.right) - l) / k, end: el.offsetLeft + el.offsetWidth };
       });
       var last = slots[slots.length - 1];
       totalW = last ? last.end : 0;
@@ -232,6 +235,16 @@
     measure();
     return { measure: measure, set: set };
   }
+
+  /* ---------- Tabs on the interface sheet: the bottom bar's cells, as a demo ---------- */
+
+  document.querySelectorAll('[data-seg="tabs"]').forEach(function (box) {
+    var seg = Seg(box);
+    segs.push(seg);
+    var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
+    btns.forEach(function (b, i) { b.addEventListener("click", function () { seg.set(i); }); });
+    seg.set(0, true);
+  });
 
   /* ---------- Theme: auto, light, dark ---------- */
 
