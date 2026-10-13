@@ -1,6 +1,6 @@
 # Findings
 
-Agreed in the planning chat, 2026-10-09. Repo: `GIT/Personal/system` (github.com/siliconlemon/system, private).
+Agreed in the planning chat, 2026-10-09. Repo: `GIT/Personal/system` (github.com/siliconlemon/system).
 
 ## Goal
 
