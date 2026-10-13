@@ -1,0 +1,13 @@
+{
+  // The deck, plain JS for the browser, its types in JSDoc and site/js/types.d.ts. Checks only, nothing is built
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "es2017",
+    "lib": ["es2023", "dom", "dom.iterable"],
+    "allowJs": true,
+    "checkJs": true,
+    "types": []
+  },
+  "include": ["site/js/*.js", "site/js/*.d.ts", "site/strings/*.js"]
+}

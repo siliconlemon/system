@@ -2,11 +2,13 @@
    Ported from the Viewgraft manual. Sheets here are tall and of different
    heights, so a sheet fits to its width and you pan down it, and the overview
    packs rows by their tallest sheet. Print ignores all of this. */
+// @ts-check
 (function () {
   "use strict";
 
   var root = document.documentElement;
-  var deck = document.querySelector("main");
+  // typed as there, which it is past the check below
+  var deck = /** @type {HTMLElement} */ (document.querySelector("main"));
   var template = document.querySelector(".rules");
   var topbar = document.querySelector(".bar.top");
   var bottombar = document.querySelector(".bar.bottom");
@@ -18,6 +20,7 @@
 
   deck.classList.add("deck");
   var foot = deck.querySelector(":scope > footer");
+  /** @type {HTMLElement[]} */
   var boards = Array.prototype.slice.call(deck.querySelectorAll(":scope > section")).map(function (sec, i) {
     var board = document.createElement("div");
     board.className = "board";
@@ -46,11 +49,11 @@
   });
   if (foot && boards.length) boards[boards.length - 1].appendChild(foot);
   if (template) template.remove();
-  var ids = boards.map(function (b) { return b.querySelector("section").id; });
+  var ids = boards.map(function (b) { return /** @type {HTMLElement} */ (b.querySelector("section")).id; });
 
   var cam = document.createElement("div");
   cam.className = "cam";
-  deck.parentNode.insertBefore(cam, deck);
+  /** @type {Node} */ (deck.parentNode).insertBefore(cam, deck);
   cam.appendChild(deck);
   var marks = document.createElement("canvas");
   marks.className = "marks";
@@ -58,9 +61,11 @@
   document.body.insertBefore(marks, document.body.firstChild);
 
   var GAP = 160;
-  var view = { x: 0, y: 0, s: 1 }, z = 1, current = "all";
-  var cols = 0, box = { w: 0, h: 0 }, rects = [];
-  var listeners = [], lastFocus, lastPct;
+  // current is the sheet or the overview the view is fitted to, null for a free view
+  var view = { x: 0, y: 0, s: 1 }, z = 1, /** @type {Focus | null} */ current = "all";
+  var cols = 0, box = { w: 0, h: 0 }, /** @type {Rect[]} */ rects = [];
+  var /** @type {((f: Focus, pct: number) => void)[]} */ listeners = [],
+    /** @type {Focus | undefined} */ lastFocus, /** @type {number | undefined} */ lastPct;
 
   function phone() { return innerWidth <= 720; }
 
@@ -78,12 +83,14 @@
      column's edge. */
 
   var STEP = 400, ARM = 6, ARM_PHONE = 4;
-  var ctx = marks.getContext("2d"), markColor = null, drawn = "", lastS = 0, dirtyW = 0, dirtyH = 0;
+  var ctx = /** @type {CanvasRenderingContext2D} */ (marks.getContext("2d")),
+    /** @type {string | null} */ markColor = null, drawn = "", lastS = 0, dirtyW = 0, dirtyH = 0;
   /* While crosses sit close together, as in the overview, the canvas is drawn once a tile larger
      than the screen and panning only slides it, modulo one spacing, with a GPU transform: no
      redraw and no re-upload per frame, which stuttered on phones. The backing buffer is sized
      once from the window (with room for the largest tile), never from the spacing t, so zooming
      never reallocates the GPU canvas texture or dirties layout. */
+  /** @param {number} x @param {number} y @param {number} s */
   function crosses(x, y, s) {
     var dpr = window.devicePixelRatio || 1;
     var W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
@@ -116,10 +123,14 @@
       draw(W, H, x0, y0, t, arm, lw, reach);
     }
   }
+  /**
+   * @param {number} cw @param {number} ch @param {number} x0 @param {number} y0
+   * @param {number} t @param {number} arm @param {number} lw @param {number} reach
+   */
   function draw(cw, ch, x0, y0, t, arm, lw, reach) {
     ctx.clearRect(0, 0, Math.max(cw, dirtyW), Math.max(ch, dirtyH));
     dirtyW = cw; dirtyH = ch;
-    ctx.fillStyle = markColor;
+    ctx.fillStyle = /** @type {string} */ (markColor);
     var i0 = Math.ceil((-reach - x0) / t), j0 = Math.ceil((-reach - y0) / t);
     for (var i = i0; x0 + i * t < cw + reach; i++) {
       var px = Math.round(x0 + i * t);
@@ -136,6 +147,7 @@
 
   // A row is as tall as its tallest sheet, and the next one starts the same 160 gap below it as the
   // columns keep between them, so rows grow with their sheets and never pad out to a grid line.
+  /** @param {number[]} hs @param {number} n */
   function rows(hs, n) {
     var out = [];
     for (var i = 0; i < hs.length; i += n) {
@@ -144,6 +156,7 @@
     }
     return out;
   }
+  /** @param {number[]} hs */
   function measure(hs) {
     deck.style.gridTemplateColumns = "repeat(" + cols + ", 1440px)";
     deck.style.gridTemplateRows = rows(hs, cols).map(function (h) { return h + "px"; }).join(" ");
@@ -151,9 +164,10 @@
     rects = boards.map(function (b) { return { x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; });
     box = { w: deck.offsetWidth, h: deck.offsetHeight };
   }
+  /** @param {boolean} [keepZoom] */
   function layout(keepZoom) {
     var z0 = deck.style.zoom;
-    if (!keepZoom) deck.style.zoom = 1;
+    if (!keepZoom) deck.style.zoom = "1";
     var a = measureArea(), best = 1, bestS = 0;
     var w = boards[0].offsetWidth;
     var hs = boards.map(function (b) { return b.offsetHeight; });
@@ -171,9 +185,9 @@
   // The space between the two bars, measured on layout/resize so frames never query layout
   var win = { top: 0, left: 0, W: innerWidth, H: innerHeight };
   function measureArea() {
-    var shown = function (el) { return el && getComputedStyle(el).display !== "none"; };
-    var top = shown(topbar) ? topbar.getBoundingClientRect().bottom : 0;
-    var bottom = shown(bottombar) ? bottombar.getBoundingClientRect().top : innerHeight;
+    var shown = function (/** @type {Element | null} */ el) { return el && getComputedStyle(el).display !== "none"; };
+    var top = shown(topbar) ? /** @type {Element} */ (topbar).getBoundingClientRect().bottom : 0;
+    var bottom = shown(bottombar) ? /** @type {Element} */ (bottombar).getBoundingClientRect().top : innerHeight;
     win = { top: top, left: 0, W: root.getBoundingClientRect().width, H: bottom - top };
     return win;
   }
@@ -205,6 +219,7 @@
     hair(m.a * z, true);
     following = requestAnimationFrame(follow);
   }
+  /** @param {"live" | "fly" | null} [mode] live follows the input, fly glides there, anything else lands */
   function apply(mode) {
     if (frame) { cancelAnimationFrame(frame); frame = 0; }
     if (mode !== "live") stopGlide();
@@ -223,14 +238,16 @@
     else { crosses(view.x, view.y, view.s); hair(view.s, true); }
     tell();
   }
+  /** @param {boolean} on */
   function moving(on) { cam.classList.toggle("moving", on); }
+  /** @type {number | undefined} */
   var settleTimer;
   function settle() {
     flush();
     clearTimeout(settleTimer);
     if (following) { cancelAnimationFrame(following); following = 0; }
     cam.classList.remove("fly", "moving");
-    if (z !== view.s) { z = view.s; deck.style.zoom = z; }
+    if (z !== view.s) { z = view.s; deck.style.zoom = String(z); }
     hair(z);
     cam.style.transform = "translate(" + view.x + "px," + view.y + "px)";
     crosses(view.x, view.y, view.s);
@@ -240,8 +257,10 @@
   cam.addEventListener("transitionend", function (e) { if (e.target === cam) settle(); });
 
   // After a drag the canvas coasts on, a long way after a flick on touch, a bit with the mouse
+  /** @type {number | null} */
   var glide = null;
   function stopGlide() { if (glide) { cancelAnimationFrame(glide); glide = null; } }
+  /** @param {number} vx @param {number} vy @param {number} friction */
   function coast(vx, vy, friction) {
     if (Math.hypot(vx, vy) < 0.1) return settle();
     var last = performance.now();
@@ -273,6 +292,7 @@
     var a = area(), p = phone() ? 16 : 40;
     return Math.min((a.W - 2 * p) / box.w, (a.H - 2 * p) / box.h);
   }
+  /** @returns {Focus} */
   function focus() {
     if (typeof current === "number") return current;
     if (current === "all" || view.s <= allScale() * 1.001) return "all";
@@ -286,6 +306,7 @@
   }
 
   // A sheet fits to its width. Short ones sit in the middle, tall ones start at the top and pan down.
+  /** @param {Focus} target @param {boolean} [fly] */
   function go(target, fly) {
     current = target;
     var a = area();
@@ -315,6 +336,7 @@
   });
 
   // Zoom in steps of whole 10%, around the middle of the canvas
+  /** @param {number} dir 1 in, -1 out */
   function zoomStep(dir) {
     var p = view.s * 100;
     var next = dir > 0 ? (Math.floor(p / 10 + 1e-6) + 1) * 10 : (Math.ceil(p / 10 - 1e-6) - 1) * 10;
@@ -345,6 +367,7 @@
   // settle, so lines never swell and then snap back; a zoom out may thin them to four fifths
   // first (phones wait for it to settle). When the zoom settles it lands exactly.
   var lastK = 0;
+  /** @param {number} s @param {boolean} [live] */
   function hair(s, live) {
     var k = s * (window.devicePixelRatio || 1);
     if (live) {
@@ -354,18 +377,23 @@
     }
     if (k === lastK) return;
     lastK = k;
-    deck.style.setProperty("--k", k);
+    deck.style.setProperty("--k", String(k));
   }
 
+  /** @type {HTMLStyleElement | null} */
   var steadySheet = null;
+  /** @param {boolean} [keepZoom] */
   function steady(keepZoom) {
     if (steadySheet) steadySheet.remove();
     Array.prototype.forEach.call(deck.querySelectorAll("[data-steady]"), function (el) { el.removeAttribute("data-steady"); });
-    var z0 = deck.style.zoom, rules = [], map = {}, hits = [], n = 0;
-    if (!keepZoom) deck.style.zoom = 1;
+    var z0 = deck.style.zoom, /** @type {string[]} */ rules = [], /** @type {Record<string, number>} */ map = {},
+      /** @type {[Element, number][]} */ hits = [], n = 0;
+    if (!keepZoom) deck.style.zoom = "1";
+    /** @type {Record<string, number[]>} */
     var sides = { Top: [0, 1], Right: [-1, 0], Bottom: [0, -1], Left: [1, 0] };
     Array.prototype.forEach.call(deck.querySelectorAll("*"), function (el) {
-      var cs = getComputedStyle(el), decl = [], shadows = [];
+      // read by name: borderTopWidth, paddingLeft and the rest
+      var cs = /** @type {CSSStyleDeclaration & Record<string, string>} */ (getComputedStyle(el)), decl = [], shadows = [];
       Object.keys(sides).forEach(function (side) {
         var w = parseFloat(cs["border" + side + "Width"]);
         if (!w || w > 3 || cs["border" + side + "Style"] !== "solid") return;
@@ -373,7 +401,7 @@
         // never thinner than one device pixel, so no line drops out when zoomed out
         // the shared line widths from system.css: 1 px borders draw as --line, 2 px ones as --line-2
         var v = w < 1.5 ? "var(--line)" : "var(--line-2)";
-        var t = function (d) { return d ? "calc(" + d + " * " + v + ")" : "0"; };
+        var t = function (/** @type {number} */ d) { return d ? "calc(" + d + " * " + v + ")" : "0"; };
         shadows.push("inset " + t(sides[side][0]) + " " + t(sides[side][1]) + " 0 0 " + cs["border" + side + "Color"]);
       });
       if (!decl.length) return;
@@ -387,7 +415,7 @@
       }
       hits.push([el, id]);
     });
-    hits.forEach(function (h) { h[0].setAttribute("data-steady", h[1]); });
+    hits.forEach(function (h) { h[0].setAttribute("data-steady", String(h[1])); });
     steadySheet = document.createElement("style");
     steadySheet.textContent = "@media screen {\n" + rules.join("\n") + "\n}";
     document.head.appendChild(steadySheet);
@@ -402,7 +430,7 @@
       restyle = 0;
       markColor = null; drawn = "";
       var z0 = deck.style.zoom;
-      deck.style.zoom = 1;
+      deck.style.zoom = "1";
       steady(true);
       layout(true);
       deck.style.zoom = z0;
@@ -419,9 +447,10 @@
      inside a sheet work as usual. A click on another sheet flies to it. */
 
   var CONTROLS = "a, button, input, select, textarea, label, [role='switch'], .motion-demo";
+  /** @type {number | undefined} */
   var wheelEnd;
   addEventListener("wheel", function (e) {
-    if (e.target.closest(".bar")) return;
+    if (/** @type {Element} */ (e.target).closest(".bar")) return;
     e.preventDefault(); stopGlide();
     if (e.ctrlKey || e.metaKey) {
       var s = Math.min(4, Math.max(0.05, view.s * Math.exp(-e.deltaY * 0.01)));
@@ -436,13 +465,14 @@
     clearTimeout(wheelEnd); wheelEnd = setTimeout(settle, 250);
   }, { passive: false });
 
+  /** @param {number} x @param {number} y */
   function overText(x, y) {
     var r = document.caretRangeFromPoint ? document.caretRangeFromPoint(x, y) : null;
     if (!r && document.caretPositionFromPoint) {
       var c = document.caretPositionFromPoint(x, y);
       if (c) { r = document.createRange(); r.setStart(c.offsetNode, c.offset); }
     }
-    if (!r || r.startContainer.nodeType !== 3 || !r.startContainer.textContent.trim()) return false;
+    if (!r || r.startContainer.nodeType !== 3 || !/** @type {string} */ (r.startContainer.textContent).trim()) return false;
     var whole = document.createRange();
     whole.selectNodeContents(r.startContainer);
     return Array.prototype.some.call(whole.getClientRects(), function (b) {
@@ -450,14 +480,16 @@
     });
   }
 
-  var drag = null, press = null, space = false, touches = {}, pinch = null, dragged = false, jumped = false;
+  var /** @type {Drag | null} */ drag = null, /** @type {Press | null} */ press = null, space = false,
+    /** @type {Record<string, { x: number, y: number }>} */ touches = {}, /** @type {Pinch | null} */ pinch = null,
+    dragged = false, jumped = false;
   function pinchState() {
     var p = Object.keys(touches).map(function (k) { return touches[k]; });
     return { d: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 };
   }
   // Two fingers: pinch zoom around their midpoint and pan with it
   addEventListener("pointerdown", function (e) {
-    if (e.pointerType !== "touch" || e.target.closest(".bar")) return;
+    if (e.pointerType !== "touch" || /** @type {Element} */ (e.target).closest(".bar")) return;
     touches[e.pointerId] = { x: e.clientX, y: e.clientY };
     if (Object.keys(touches).length === 2) { drag = press = null; pinch = pinchState(); moving(true); }
   }, true);
@@ -470,6 +502,7 @@
     view.y = now.y - (pinch.y - view.y) * (s / view.s);
     view.s = s; pinch = now; current = null; live();
   }, true);
+  /** @param {PointerEvent} e */
   function lift(e) {
     if (!touches[e.pointerId]) return;
     var was = !!pinch;
@@ -483,10 +516,11 @@
   addEventListener("pointerdown", function (e) {
     stopGlide();
     dragged = jumped = false;
-    if (e.target.closest(".bar") || pinch) return;
-    var board = e.target.closest(".board");
+    var target = /** @type {Element} */ (e.target);
+    if (target.closest(".bar") || pinch) return;
+    var board = /** @type {HTMLElement | null} */ (target.closest(".board"));
     // A control works as itself on the sheet in view. On any other sheet, a tap or click flies there first
-    if (!space && e.target.closest(CONTROLS) && boards.indexOf(board) === focus()) {
+    if (!space && target.closest(CONTROLS) && boards.indexOf(/** @type {HTMLElement} */ (board)) === focus()) {
       if (e.pointerType === "touch") drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, board: null, moved: false, touch: true, hist: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }], soft: true };
       return;
     }
@@ -495,7 +529,7 @@
       return;
     }
     e.preventDefault();
-    getSelection().removeAllRanges();
+    /** @type {Selection} */ (getSelection()).removeAllRanges();
     drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, board: board, moved: false,
       touch: e.pointerType === "touch", hist: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] };
   });
@@ -504,7 +538,7 @@
     var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!drag.moved && Math.abs(dx) + Math.abs(dy) < (drag.soft ? 8 : 4)) return;
     // a range slider keeps its own drag
-    if (drag.soft && document.activeElement && document.activeElement.type === "range") { drag = null; return; }
+    if (drag.soft && document.activeElement && /** @type {HTMLInputElement} */ (document.activeElement).type === "range") { drag = null; return; }
     if (!drag.moved) moving(true);
     drag.moved = dragged = true;
     document.body.classList.add("panning");
@@ -512,16 +546,18 @@
     drag.hist.push({ x: e.clientX, y: e.clientY, t: e.timeStamp });
     while (e.timeStamp - drag.hist[0].t > 100) drag.hist.shift();
   });
+  /** @param {PointerEvent} e */
   function release(e) {
-    var h = drag.hist, a = h[0], b = h[h.length - 1], dt = b.t - a.t;
+    var d = /** @type {Drag} */ (drag);
+    var h = d.hist, a = h[0], b = h[h.length - 1], dt = b.t - a.t;
     if (dt <= 0 || e.timeStamp - b.t > 60) return settle();
-    var boost = drag.touch ? 1 : 0.5;
-    coast((b.x - a.x) / dt * boost, (b.y - a.y) / dt * boost, drag.touch ? 0.95 : 0.85);
+    var boost = d.touch ? 1 : 0.5;
+    coast((b.x - a.x) / dt * boost, (b.y - a.y) / dt * boost, d.touch ? 0.95 : 0.85);
   }
   addEventListener("pointerup", function (e) {
     var clicked = drag && !drag.moved ? drag.board
-      : press && Math.abs(e.clientX - press.x) + Math.abs(e.clientY - press.y) < 4 && getSelection().isCollapsed ? press.board : null;
-    var i = boards.indexOf(clicked);
+      : press && Math.abs(e.clientX - press.x) + Math.abs(e.clientY - press.y) < 4 && /** @type {Selection} */ (getSelection()).isCollapsed ? press.board : null;
+    var i = boards.indexOf(/** @type {HTMLElement} */ (clicked));
     if (clicked && i !== focus()) { jumped = true; go(i, true); }
     if (drag && drag.moved && !pinch) release(e);
     drag = press = null;
@@ -531,15 +567,18 @@
      panned), a double click on a sheet's paper, not on a control or on
      text (that still selects a word), flies to that sheet fitted, as the
      sheet nav would. Touch gets the same as a double tap. */
+  /** @param {MouseEvent} e */
   function refit(e) {
-    var board = e.target.closest(".board"), i = boards.indexOf(board);
-    if (i < 0 || e.target.closest(CONTROLS) || overText(e.clientX, e.clientY)) return;
+    var target = /** @type {Element} */ (e.target);
+    var board = /** @type {HTMLElement} */ (target.closest(".board")), i = boards.indexOf(board);
+    if (i < 0 || target.closest(CONTROLS) || overText(e.clientX, e.clientY)) return;
     if (current === i) return;
     e.preventDefault();
-    getSelection().removeAllRanges();
+    /** @type {Selection} */ (getSelection()).removeAllRanges();
     go(i, true);
   }
   deck.addEventListener("dblclick", refit);
+  /** @type {Sample | null} */
   var lastTap = null;
   addEventListener("pointerup", function (e) {
     if (e.pointerType !== "touch" || dragged || pinch) return;
@@ -553,24 +592,25 @@
 
   // Links to a sheet fly to it. A click that ended a drag does nothing.
   deck.addEventListener("click", function (e) {
-    var a = e.target.closest("a[href^='#']");
+    var a = /** @type {Element} */ (e.target).closest("a[href^='#']");
     // a click that ended a drag, or that flew to its sheet, does nothing more
     if (dragged || jumped) { e.preventDefault(); e.stopPropagation(); jumped = false; return; }
     if (!a) return;
-    var i = ids.indexOf(a.getAttribute("href").slice(1));
+    var i = ids.indexOf(/** @type {string} */ (a.getAttribute("href")).slice(1));
     if (i < 0) return;
     e.preventDefault();
     go(i, true);
   }, true);
 
-  function typing(e) { return e.target.closest("input, textarea, select, [contenteditable]"); }
+  /** @param {KeyboardEvent} e */
+  function typing(e) { return /** @type {Element} */ (e.target).closest("input, textarea, select, [contenteditable]"); }
   addEventListener("keyup", function (e) {
     if (e.key === " ") { space = false; if (!drag) document.body.classList.remove("panning"); }
   });
   addEventListener("keydown", function (e) {
     if (typing(e) || e.altKey || e.ctrlKey || e.metaKey) return;
     var f = focus(), i = f === "all" ? -1 : f;
-    if (e.key === " " && !e.target.closest("button, a")) { e.preventDefault(); space = true; document.body.classList.add("panning"); return; }
+    if (e.key === " " && !/** @type {Element} */ (e.target).closest("button, a")) { e.preventDefault(); space = true; document.body.classList.add("panning"); return; }
     if (e.key === "ArrowRight") go(Math.min(boards.length - 1, i + 1), true);
     else if (e.key === "ArrowLeft") go(i <= 0 ? "all" : i - 1, true);
     else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -596,12 +636,12 @@
   if (document.fonts) document.fonts.ready.then(refresh);
 
   /* ---------- PDF pages ----------
-     Print, and scripts/pdf.py which renders system.pdf with it, gets one
+     Print, and scripts/pdf.ts which renders system.pdf with it, gets one
      page per sheet, each cut to its sheet's real size. */
 
   function pages() {
     var css = boards.map(function (b, i) {
-      b.setAttribute("data-page", i);
+      b.setAttribute("data-page", String(i));
       return "@page s" + i + " { size: " + rects[i].w + "px " + rects[i].h + "px; margin: 0; }\n" +
         '.board[data-page="' + i + '"] { page: s' + i + "; height: " + rects[i].h + "px; break-inside: avoid; }";
     }).join("\n");
@@ -610,6 +650,7 @@
     sheet.textContent = "@media print {\n" + css + "\n}";
   }
 
+  /** @type {Canvas} */
   window.canvas = {
     boards: boards,
     go: go,

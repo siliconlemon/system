@@ -1,11 +1,14 @@
 /* System: flags, theme, type tester, the cell controls in the bars, and runt control. */
+// @ts-check
 (function () {
   "use strict";
 
   var root = document.documentElement;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  /** @type {CellRow[]} */
   var segs = [];
 
+  /** @param {string} key @param {(all: Record<string, string>) => void} fn */
   function store(key, fn) {
     try {
       var all = JSON.parse(localStorage.getItem(key) || "{}");
@@ -26,7 +29,9 @@
      a resize or a language switch, since those change the glyphs. The Aa
      specimens are also sized so their ink ends on the next ruler line. */
   var BIG = ".cover-word, .sheet-title, .specimen, .tester, .e404, .landing-hero h3, .ink-sample, .feature-sample, .scale li > :nth-child(2), .wordmark, .paper-card p";
+  /** @type {Record<string, Ink>} */
   var inkCache = {};
+  /** @param {string} font @param {string} text @param {number} [spacing] @returns {Ink} */
   function inkOf(font, text, spacing) {
     spacing = spacing || 0;
     var key = font + "|" + spacing + "|" + text;
@@ -34,7 +39,7 @@
     var S = 400, W = Math.ceil(S * (0.5 + 0.8 * text.length)), H = Math.ceil(S * 1.6), ox = S / 2, oy = Math.round(S * 1.15);
     var c = document.createElement("canvas");
     c.width = W; c.height = H;
-    var x = c.getContext("2d", { willReadFrequently: true });
+    var x = /** @type {CanvasRenderingContext2D} */ (c.getContext("2d", { willReadFrequently: true }));
     x.font = font.replace("{size}", S + "px");
     x.fillStyle = "#000";
     x.textBaseline = "alphabetic";
@@ -55,23 +60,23 @@
     return (inkCache[key] = { left: (left - ox) / S, right: (right - ox) / S, top: (oy - top) / S, bottom: (bottom - oy) / S });
   }
   function onRulers() {
-    document.querySelectorAll(BIG).forEach(function (el) {
+    /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll(BIG)).forEach(function (el) {
       // a field's text is its value, which the reader may retype
-      var text = (el.tagName === "TEXTAREA" ? el.value : el.textContent).trim();
+      var text = (el.tagName === "TEXTAREA" ? /** @type {HTMLTextAreaElement} */ (el).value : /** @type {string} */ (el.textContent)).trim();
       if (!text) return;
       var cs = getComputedStyle(el);
       var font = cs.fontStyle + " " + cs.fontWeight + " {size} " + cs.fontFamily;
       el.style.textIndent = (-inkOf(font, text.charAt(0)).left).toFixed(4) + "em";
       if (el.classList.contains("specimen")) {
         // the Aa's ink runs from the sheet's first ruler to the next one, three columns and three gaps over
-        var g = getComputedStyle(el.closest(".grid")), track = 3 * (parseFloat(g.gridTemplateColumns) + parseFloat(g.columnGap));
+        var g = getComputedStyle(/** @type {Element} */ (el.closest(".grid"))), track = 3 * (parseFloat(g.gridTemplateColumns) + parseFloat(g.columnGap));
         var ink = inkOf(font, text, (parseFloat(cs.letterSpacing) || 0) / parseFloat(cs.fontSize));
         el.style.fontSize = (track / (ink.right - ink.left)).toFixed(3) + "px";
       }
       if (el.classList.contains("cover-word")) {
         // the cap height is the top of a flat capital; the word's ink climbs over it by the overshoot
         var rise = inkOf(font, text).top - inkOf(font, "H").top;
-        el.parentNode.style.setProperty("--ink-rise", (Math.max(0, rise) * parseFloat(cs.fontSize)).toFixed(2) + "px");
+        /** @type {HTMLElement} */ (el.parentNode).style.setProperty("--ink-rise", (Math.max(0, rise) * parseFloat(cs.fontSize)).toFixed(2) + "px");
       }
     });
   }
@@ -82,9 +87,9 @@
      --line or --line-2 times --vu. Widths are read as a share of the
      sheet, so the canvas zoom and pan don't enter into it. */
   function letter() {
-    document.querySelectorAll("main svg[viewBox]").forEach(function (svg) {
+    /** @type {NodeListOf<SVGSVGElement>} */ (document.querySelectorAll("main svg[viewBox]")).forEach(function (svg) {
       var vb = svg.viewBox.baseVal, w = svg.getBoundingClientRect().width;
-      var board = svg.closest(".board");
+      var board = /** @type {HTMLElement | null} */ (svg.closest(".board"));
       if (board) w = w / board.getBoundingClientRect().width * board.offsetWidth;
       if (vb && vb.width && w) svg.style.setProperty("--vu", (vb.width / w).toFixed(4));
     });
@@ -100,10 +105,12 @@
 
   var STRINGS = window.STRINGS || {};
   var lang = root.getAttribute("lang") || "en";
+  /** @param {string} key */
   function t(key) {
     var l = STRINGS[lang] || {};
     return key in l ? l[key] : (STRINGS.en || {})[key];
   }
+  /** @param {Element} el @param {string} attr */
   function attrKey(el, attr) {
     var m = (el.getAttribute("data-i18n-attr") || "").match(new RegExp("(?:^|\\s)" + attr + "=(\\S+)"));
     return m ? m[1] : null;
@@ -111,13 +118,13 @@
   function applyStrings() {
     document.title = t("meta.title") || document.title;
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var v = t(el.getAttribute("data-i18n"));
+      var v = t(/** @type {string} */ (el.getAttribute("data-i18n")));
       if (v == null) return;
       if (el.hasAttribute("data-i18n-html")) el.innerHTML = v;
       else el.textContent = v;
     });
     document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
-      el.getAttribute("data-i18n-attr").split(/\s+/).forEach(function (pair) {
+      /** @type {string} */ (el.getAttribute("data-i18n-attr")).split(/\s+/).forEach(function (pair) {
         var i = pair.indexOf("="), v = t(pair.slice(i + 1));
         if (v != null) el.setAttribute(pair.slice(0, i), v);
       });
@@ -126,14 +133,14 @@
   }
 
   /* ---------- The PDF for this configuration ----------
-     scripts/pdf.py renders one per language and set of flags: system.pdf,
+     scripts/pdf.ts renders one per language and set of flags: system.pdf,
      system.cs.pdf, system.no-logo.pdf, system.cs.no-icons-imagery.pdf and so
      on, so the button hands over the manual as it looks right now. The ?v=
      on the link in the markup carries over. */
 
   var FLAGS = ["logo", "icons", "imagery"];
   var pdfA = document.querySelector(".bar-pdf");
-  var pdfV = pdfA ? (pdfA.getAttribute("href").split("?")[1] || "") : "";
+  var pdfV = pdfA ? (/** @type {string} */ (pdfA.getAttribute("href")).split("?")[1] || "") : "";
   function pdfLink() {
     if (!pdfA) return;
     var off = FLAGS.filter(function (f) { return root.getAttribute("data-" + f) === "without"; });
@@ -144,7 +151,7 @@
   /* ---------- With / without flags ---------- */
 
   document.querySelectorAll("[data-flag]").forEach(function (sw) {
-    var flag = sw.getAttribute("data-flag");
+    var flag = /** @type {string} */ (sw.getAttribute("data-flag"));
     sw.setAttribute("aria-checked", String(root.getAttribute("data-" + flag) !== "without"));
     sw.addEventListener("click", function () {
       var on = sw.getAttribute("aria-checked") !== "true";
@@ -164,16 +171,17 @@
 
   /* ---------- Type tester ---------- */
 
-  var tester = document.querySelector("[data-tester]");
-  var size = document.querySelector("[data-tester-size]");
-  var weight = document.querySelector("[data-tester-weight]");
-  var out = document.querySelector("[data-tester-out]");
+  // typed as there, which they are once the check below passes
+  var tester = /** @type {HTMLTextAreaElement} */ (document.querySelector("[data-tester]"));
+  var size = /** @type {HTMLInputElement} */ (document.querySelector("[data-tester-size]"));
+  var weight = /** @type {HTMLInputElement} */ (document.querySelector("[data-tester-weight]"));
+  var out = /** @type {HTMLElement} */ (document.querySelector("[data-tester-out]"));
   function setType() {
     var px = +size.value;
     tester.style.fontSize = px + "px";
     tester.style.lineHeight = Math.ceil((px * 1.12) / 8) * 8 + "px";
     tester.style.fontWeight = weight.value;
-    [size, weight].forEach(function (r) { r.style.setProperty("--p", (r.value - r.min) / (r.max - r.min) * 100); });
+    [size, weight].forEach(function (r) { r.style.setProperty("--p", String((+r.value - +r.min) / (+r.max - +r.min) * 100)); });
     out.textContent = px + " px · " + weight.value;
     // the weight changes the first letter's side bearing, so the line is pulled onto the ruler again
     onRulers();
@@ -197,6 +205,7 @@
      resizing at once, with no stretch. A first placement or a jump
      lands without the move. */
 
+  /** @param {HTMLElement} box @returns {CellRow} */
   function Seg(box) {
     var layer = document.createElement("div");
     layer.className = "seg-layer";
@@ -205,8 +214,9 @@
     block.className = "seg-block";
     layer.appendChild(block);
     box.insertBefore(layer, box.firstChild);
-    var items = [], slots = [], totalW = 0, boxW = 0, active = -1;
+    var /** @type {HTMLElement[]} */ items = [], /** @type {Slot[]} */ slots = [], totalW = 0, boxW = 0, active = -1;
 
+    /** @param {boolean} [instant] */
     function place(instant) {
       if (active < 0 || !slots[active]) return;
       if (instant) block.classList.add("still");
@@ -227,7 +237,7 @@
       // pixels, unsnapped, since a device pixel there is many of the row's. The bars are never zoomed, and
       // offsetWidth rounds, so they keep k at exactly 1
       var br = box.getBoundingClientRect(), k = box.closest(".board") && box.offsetWidth ? br.width / box.offsetWidth : 1;
-      var dpr = window.devicePixelRatio || 1, snap = k === 1 ? function (v) { return Math.round(v * dpr) / dpr; } : function (v) { return v; };
+      var dpr = window.devicePixelRatio || 1, snap = k === 1 ? function (/** @type {number} */ v) { return Math.round(v * dpr) / dpr; } : function (/** @type {number} */ v) { return v; };
       // the real border, not clientLeft: that rounds, and a 1 px border is 0.8 px at 125 %
       var origin = br.left + (parseFloat(getComputedStyle(box).borderLeftWidth) - box.scrollLeft) * k;
       slots = items.map(function (el) {
@@ -242,12 +252,14 @@
       reveal("auto");
     }
     // keep the active cell in view when the cells overflow, and the row at its start when they fit again
+    /** @param {ScrollBehavior} behavior */
     function reveal(behavior) {
       if (totalW <= boxW) { if (box.scrollLeft) box.scrollLeft = 0; return; }
       if (active < 0) return;
       var s = slots[active];
       box.scrollTo({ left: s.x - (boxW - s.w) / 2, behavior: behavior });
     }
+    /** @param {number} i @param {boolean} [jump] */
     function set(i, jump) {
       if (i === active || !slots[i]) return;
       var firstTime = active < 0;
@@ -264,7 +276,7 @@
 
   /* ---------- Tabs on the interface sheet: the bottom bar's cells, as a demo ---------- */
 
-  document.querySelectorAll('[data-seg="tabs"]').forEach(function (box) {
+  /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-seg="tabs"]')).forEach(function (box) {
     var seg = Seg(box);
     segs.push(seg);
     var btns = Array.prototype.slice.call(box.querySelectorAll("button"));
@@ -274,11 +286,12 @@
 
   /* ---------- Theme: auto, light, dark ---------- */
 
-  var themeBox = document.querySelector('[data-seg="theme"]');
+  var themeBox = /** @type {HTMLElement | null} */ (document.querySelector('[data-seg="theme"]'));
   if (themeBox) {
     var themeSeg = Seg(themeBox);
     segs.push(themeSeg);
     var themeBtns = Array.prototype.slice.call(themeBox.querySelectorAll("[data-theme-set]"));
+    /** @param {string} t auto, light or dark @param {boolean} [jump] */
     var applyTheme = function (t, jump) {
       if (t === "auto") root.removeAttribute("data-theme");
       else root.setAttribute("data-theme", t);
@@ -312,25 +325,27 @@
      and crumb always agree. The cover has no title and names itself with
      data-nav. The canvas says which sheet is in view and its cell lights up. */
 
-  var navBox = document.querySelector('[data-seg="nav"]');
+  // typed as there, which they are once the check below passes
+  var navBox = /** @type {HTMLElement} */ (document.querySelector('[data-seg="nav"]'));
   var here = document.querySelector("[data-here]");
   var zoomLabel = document.querySelector("[data-zoom-label]");
-  var canvas = window.canvas;
+  var canvas = /** @type {Canvas} */ (window.canvas);
   if (navBox && canvas) {
-    var number = function (board) {
+    var number = function (/** @type {Element} */ board) {
       var n = board.querySelector(".sheet-no b");
       return n ? n.textContent : "00";
     };
     // the sheet's one word and its string key: the title, or data-nav on the cover
-    var sheetName = function (board) {
-      var sec = board.querySelector("section"), title = sec.querySelector(".sheet-title");
-      return title ? { key: title.getAttribute("data-i18n"), name: title.textContent }
+    var sheetName = function (/** @type {Element} */ board) {
+      var sec = /** @type {Element} */ (board.querySelector("section")), title = sec.querySelector(".sheet-title");
+      return title ? { key: title.getAttribute("data-i18n"), name: /** @type {string} */ (title.textContent) }
         : { key: attrKey(sec, "data-nav"), name: sec.getAttribute("data-nav") || "" };
     };
+    /** @param {string | null} key @param {string} name @param {Focus} go */
     var cell = function (key, name, go) {
       var a = document.createElement("a");
       var label = document.createElement("span");
-      a.href = go === "all" ? "#" : "#" + canvas.boards[go].querySelector("section").id;
+      a.href = go === "all" ? "#" : "#" + /** @type {Element} */ (canvas.boards[go].querySelector("section")).id;
       if (key) label.setAttribute("data-i18n", key);
       label.textContent = name;
       a.appendChild(label);
@@ -361,8 +376,9 @@
 
     var allBtn = document.querySelector("[data-all]");
     var cur = document.querySelector("[data-cur]");
-    var steps = document.querySelectorAll("[data-step]");
+    var steps = /** @type {NodeListOf<HTMLButtonElement>} */ (document.querySelectorAll("[data-step]"));
     var last = canvas.boards.length - 1;
+    /** @param {Element} el @param {Focus} f */
     var crumb = function (el, f) {
       el.innerHTML = "";
       var nb = document.createElement("b");
@@ -380,12 +396,13 @@
     // the pager runs All, cover, ..., the last sheet
     Array.prototype.forEach.call(steps, function (b) {
       b.addEventListener("click", function () {
-        var f = canvas.focus(), i = f === "all" ? -1 : f, to = i + +b.getAttribute("data-step");
+        var f = canvas.focus(), i = f === "all" ? -1 : f, to = i + +/** @type {string} */ (b.getAttribute("data-step"));
         canvas.go(to < 0 ? "all" : Math.min(last, to), true);
       });
     });
 
-    var lastF = null, lastPct = 0;
+    var /** @type {Focus | null} */ lastF = null, lastPct = 0;
+    /** @param {Focus} f @param {number} pct @param {boolean} [force] */
     var bars = function (f, pct, force) {
       if (f !== lastF || force) {
         lastF = f;
@@ -411,7 +428,7 @@
     canvas.onchange(bars);
     document.querySelectorAll("[data-zoom]").forEach(function (b) {
       b.addEventListener("click", function () {
-        var d = +b.getAttribute("data-zoom");
+        var d = +/** @type {string} */ (b.getAttribute("data-zoom"));
         if (d) canvas.zoom(d); else canvas.go("all", true);
       });
     });
@@ -425,13 +442,14 @@
      saved choice (the PDF render uses it too), and the head script falls
      back to the browser's languages. */
 
-  var langBox = document.querySelector('[data-seg="lang"]');
+  var langBox = /** @type {HTMLElement | null} */ (document.querySelector('[data-seg="lang"]'));
   if (langBox) {
     var langSeg = Seg(langBox);
     segs.push(langSeg);
     var langBtns = Array.prototype.slice.call(langBox.querySelectorAll("[data-lang-set]"));
     var langs = langBtns.map(function (b) { return b.getAttribute("data-lang-set"); });
     var phoneLang = window.matchMedia("(max-width: 720px)");
+    /** @param {string} l @param {boolean} [jump] */
     var setLang = function (l, jump) {
       lang = l;
       root.setAttribute("lang", l);
@@ -446,7 +464,7 @@
       }
       relayout();
       if (window.canvas) window.canvas.relayout();
-      if (typeof bars === "function") bars(lastF, lastPct, true);
+      if (typeof bars === "function") bars(/** @type {Focus} */ (lastF), lastPct, true);
     };
     setLang(langs.indexOf(lang) < 0 ? "en" : lang, true);
     langBtns.forEach(function (b) {
@@ -466,7 +484,8 @@
      The press run takes the first second from the start of the load, then
      the sheet lifts off and fades into the canvas. */
 
-  var splash = document.querySelector(".splash");
+  // typed as there, which it is once the check below passes
+  var splash = /** @type {Element} */ (document.querySelector(".splash"));
   if (splash) {
     setTimeout(function () {
       splash.classList.add("out");
@@ -485,13 +504,15 @@
     document.querySelectorAll("main p, main h2, main h3, main h4, main h5, main dd, main li, main figcaption").forEach(function (el) {
       if (lang === "cs") {
         var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), tn;
-        while ((tn = w.nextNode())) tn.nodeValue = tn.nodeValue.replace(/(^|[\s(„])([kvszouaiKVSZOUAI]) +/g, "$1$2 ");
+        while ((tn = w.nextNode())) tn.nodeValue = /** @type {string} */ (tn.nodeValue).replace(/(^|[\s(„])([kvszouaiKVSZOUAI]) +/g, "$1$2 ");
       }
       if (el.textContent.trim().split(/\s+/).length < 5) return;
-      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), node, last = null;
-      while ((node = walker.nextNode())) if (node.nodeValue.trim()) last = node;
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), node, /** @type {Node | null} */ last = null;
+      // a text node's value is never null
+      while ((node = walker.nextNode())) if (/** @type {string} */ (node.nodeValue).trim()) last = node;
       if (!last) return;
-      var v = last.nodeValue.replace(/\s+$/, ""), trail = last.nodeValue.slice(v.length);
+      var text = /** @type {string} */ (last.nodeValue);
+      var v = text.replace(/\s+$/, ""), trail = text.slice(v.length);
       for (var n = 0; n < 2; n++) {
         var i = v.lastIndexOf(" ");
         if (i < 0) break;

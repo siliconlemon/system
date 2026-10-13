@@ -1,4 +1,4 @@
-/* English strings, the source. Every key here needs one in every other language file; scripts/strings.py checks it. */
+/* English strings, the source. Every key here needs one in every other language file; scripts/strings.ts checks it. */
 window.STRINGS = window.STRINGS || {};
 window.STRINGS.en = {
   "app.01-welcome": "01 · Welcome",
