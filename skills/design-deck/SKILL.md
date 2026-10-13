@@ -31,7 +31,7 @@ Ask only what the repo didn't answer, in a single round (use AskUserQuestion if 
 - What exists: logo, icon set, photography or illustration, colors, fonts
 - Languages
 - Two or three words for how it should feel, and one brand it must not look like
-- Is this a prototype to decide the direction, or a manual someone will build from?
+- Is this a prototype to decide the direction, or a manual someone builds from?
 
 ### 3. Pick the sheets
 
@@ -39,7 +39,7 @@ Read [references/sheets.md](references/sheets.md). Start from the minimum for th
 
 Set the three flags from what exists: logo, icons, imagery, each `with` or `without`. Without one, its sheets show the template's fallback (wordmark, glyph cells, drafting frames) instead of a hole.
 
-Show the plan before building: the sheets kept, with one line each on what it will show for this project; the flags; the languages. Wait for a yes.
+Show the plan before building: the sheets kept, with one line each on what it shows for this project; the flags; the languages. Wait for a yes.
 
 ### 4. Find the idea before the tokens
 
@@ -65,7 +65,7 @@ Test it: hide the name on the cover. If the deck could belong to another client,
 Tokens first: both themes in `:root`, the faces, the accent, the unit if the idea needs a different rhythm. After that, go through every kept sheet, cover first:
 
 - Real content only: the product's name, its screens, its copy, its states, its numbers. No lorem ipsum, no "Acme".
-- Replace the template's demo components with the product's own, such as its table, its card or its empty state, and use the names the code will use.
+- Replace the template's demo components with the product's own, such as its table, its card or its empty state, and use the names the code uses.
 - Keep the plumbing working: every new string is a key in every language file, motion animates only transform and opacity, and `?v=` is bumped on a release.
 - Change the look as far as the idea asks. The Swiss blueprint layer (rulers, paper grain, crop marks, register crosses) is System's own identity. Keep it only if it suits this brand.
 
