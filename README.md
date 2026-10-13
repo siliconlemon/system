@@ -2,84 +2,123 @@
 
 # System
 
-A starting point for designing a brand, a website or an app. It is a design manual you can zoom around, with every decision a product needs laid out on sheets of paper: the logo, the colors, the type, the grid, the icons, the buttons, the screens, how things move, how the words sound, even the business card.
+An interactive design manual template, made to get a brand, site or app off the ground before anyone writes real code.
+Ideal for quick prototyping and doing client revisions over a web link.
 
-**See it live:** [siliconlemon-system.vercel.app](https://siliconlemon-system.vercel.app)
+Logo, color, type, grid, icons, buttons, screens, motion, voice, all the way to damn business cards. All on one canvas.
+
+**Live @** [siliconlemon-system.vercel.app](https://siliconlemon-system.vercel.app)
 
 ## Start familiar, then make it yours
 
-System is dressed in Swiss style: big tight type, thin lines, lots of white space, one strong color. It is one of the most copied looks in design, and that is the point. You start from something you already know works, then turn it into your own.
+I'm at least somewhat faithfully mimicking Swiss-minimal here: big tight type, hairlines, lots of white space, one loud color accent.
 
-Don't keep it as it is. A manual that is only System with new colors still looks like System. Find something that belongs to your project and let it change the sheets:
+Yes, it's one of the most copied looks out there. That's actually the point. This should allow you to start somewhere familiar, then make it your own kind of weird.
 
-- **What does your project do?** A plant shop could name its colors after soil, leaf and bloom. A game could number its sheets like levels.
-- **Pick one shape that's only yours,** such as a cut corner, a dot or a tab, and use it on the logo and on the buttons alike.
-- **Pick one rule you'll keep everywhere,** such as one color per page, only round corners, or everything on a 4 px grid.
-- **Throw out what you don't need.** System has 19 sheets because it tries to cover every project. Yours probably needs five to eight.
+Try not to swap an accent color and two fonts and call it a day. That'd kinda miss what I'm putting down here.
 
-Hide your name on the cover. If the page could still belong to someone else, keep going.
+A few ways in:
 
-## What's inside
+- **Borrow from what you're building.** Use terminology, fonts, color schemes and layouts that feel like your idea.
+- **Own one shape.** There should be a clear design language that ties it all together. My example is the orange dot in `System.`
+- **Set rules and stick to them.** One color per page, no straight corners, everything on 4px, whatever feels like a good bet at the start.
+- **Cut hard.** There are 19 sheets because it covers everything. That's absolute overkill for most projects. You might really need about 5 to 10, and don't get me started on locales or theming.
 
-| Sheet | What it decides |
+_Quick check: hide the name on the cover. Could it be mistaken for someone else's? If so, iterate. If not, keep going._
+
+## What's in the box
+
+| Sheet | Decides |
 | --- | --- |
-| Cover, Contents | The name, and the list of everything that follows |
-| Landing | What the first page of the website says and does |
-| Logo | How the logo is built, how much room it needs, and how not to use it |
-| Color | The palette, how much of each color, and which pairs are readable |
-| Display, Text, Mono | The typefaces for headings, for reading and for numbers and labels |
-| Grid | Columns, spacing and screen sizes |
-| Icons, Imagery | The icon set and how pictures are treated |
-| Components | Buttons, fields, cards and tabs |
-| Apps | Screens for welcome, empty, loading and error |
-| Motion | How things move, with curves you can click to play |
-| Voice | How the product talks, with before-and-after sentences |
-| Marketing, Print | Social posts, banners, business card and letterhead |
-| Downloads, Utility | Brand files to hand out, the 404 page and the favicon |
+| Cover, Contents | The name, and what's inside |
+| Landing | What the homepage says and does |
+| Logo | Construction, clear space, lockups, don'ts |
+| Color | Palette, proportions, readable pairs |
+| Display, Text, Mono | Faces for headings, reading, and labels and numbers |
+| Grid | Columns, spacing, breakpoints |
+| Icons, Imagery | The icon set, how pictures are treated |
+| Components | Buttons, fields, cards, tabs |
+| Apps | Welcome, empty, loading, error |
+| Motion | Easing curves you can click to play |
+| Voice | How it talks, with before-and-after sentences |
+| Marketing, Print | Social, banners, business card, letterhead |
+| Downloads, Utility | Brand files, the 404, the favicon |
 
-A few things come with every sheet:
+Also included:
 
-- **No logo yet? No pictures?** The switches on the contents sheet swap in clean fallbacks, so there are no empty boxes.
-- **Light and dark**, in English and Czech.
-- **A PDF of whatever you're looking at.** The PDF button downloads the manual with the same switches and language you have on screen.
-- **It works on a phone.** Pinch and drag around the sheets.
+- **Fallbacks:** No logo, icons or photos yet? Flip a switch and the sheets swap in a wordmark, glyphs or drafting frames. No empty boxes.
+- **Light, dark** and **EN / CS**.
+- **PDF button:** Downloads exactly what you're looking at, with the same switches and language.
+    - The PDF matches your current configuration, so make sure you haven't hidden anything you want in that document.
+- **Works on phones:** Figured that out for you. Just copy the business logic and you should be fine to present over a web link on any platform.
+- **Plain HTML, CSS, JS:** No build, no deps. Should read like a Figma export and drop into any site without extra config.
 
-It is plain HTML, CSS and JavaScript with nothing to install or build. The files look like what you'd export from Figma, and you can drop them into any website.
+## Claude Code integration
 
-## Set up in Claude Code
+Ships with a `design-deck` skill that turns the template into *your* project's manual:
 
-System comes with a skill: a set of instructions that teaches Claude how to turn the template into your project's own design. The skill asks about your project, picks the sheets you need, helps you find your idea, and builds the manual in your project's folder.
+```mermaid
+flowchart LR
+  A[Reads your repo] --> B[Asks a few questions]
+  B --> C[Picks the sheets]
+  C --> D[Finds your idea]
+  D --> E[Copies + prunes]
+  E --> F[Rebuilds every sheet]
+  F --> G[Renders PDFs]
+```
 
-**Option 1: install it as a plugin.** Do this once, and the skill works in every project. In Claude Code, run:
+_You can feed it a bunch of screenshots or a PDF of a design book you like, and let it go ham.
+I'd strongly advise going over the result on your own afterwards, since automating with bots doesn't really breed originality, now does it?_
+
+**Option 1: plugin** (set up once, works in every project)
 
 ```
 /plugin marketplace add siliconlemon/system
 /plugin install system@system
 ```
 
-Then open your project and say:
+Then, in your project:
 
 ```
-Start the design for this project with the design-deck skill.
-```
-
-You can tell it more right away, too:
-
-```
-Start the design for this project. It's a <what it is, in one sentence>.
+Start the design for this project. It's a <what it is>.
 We have <a logo / nothing yet>, and it should feel <two or three words>.
 ```
 
-**Option 2: make your own copy.** Click **Use this template** at the top of this page on GitHub. You get a fresh repo of your own, with none of this one's history or settings. Open Claude Code inside it and tell it where your project lives, or just start changing things.
+The manual lands in `design/` in your repo, or wherever you tell it to, in case your stack already uses that name (looking at you, Kotlin).
 
-Either way, your design is made in your project, and you can keep coming back to System for reference.
+**Option 2: your own copy**
 
-**Without Claude:** make your own copy as above and open `site/index.html` in a browser. Change the colors and fonts at the top of `site/css/system.css`, and the words in `site/strings/en.js`.
+Hit **Use this template** on GitHub. You get a fresh repo with none of this one's history or settings.
+
+Open Claude Code in it and point it at your project, or just start messing with it in place.
+
+Locations:
+
+- Colors and fonts: top of `site/css/system.css`
+- Localized resources: `site/strings/en.js`
+
+The rest should be found in the places a web dev would expect.
 
 ## Under the hood
 
-- `site/`: the manual itself. `index.html` holds the sheets, `css/system.css` the colors, fonts and every component, `strings/` every word in every language, and `js/` the zoomable canvas and the controls.
-- `scripts/`: small Python helpers. `prune.py --keep logo,color,type` cuts the manual down to the sheets you name. `strings.py` checks that no word is missing in any language. `pdf.py` renders the PDFs.
-- `skills/design-deck/`: the skill, with notes on every sheet, on making a design your own, and on how the files fit together.
+```
+site/
+  index.html        every sheet
+  css/system.css    tokens + every component
+  js/canvas.js      the zoomable canvas
+  js/system.js      switches, theme, language, the bars
+  strings/*.js      every word, per language
+scripts/
+  prune.py          --keep logo,color,type   cut to the sheets you name
+  strings.py        check no word is missing anywhere
+  pdf.py            render the PDFs (needs Chrome or Edge)
+skills/design-deck/ the skill + notes on every sheet
+```
 
-The fonts are Overused Grotesk, Hanken Grotesk, Azeret Mono and Courier Prime, all free under the SIL Open Font License.
+## Fonts
+
+- Overused Grotesk for headings and big text.
+- Hanken Grotesk for body text.
+- Azeret Mono and Courier Prime for mono, one technical and one decorative.
+
+All free under the SIL Open Font License, but I do encourage you to find your own on Google Fonts or similar.
