@@ -15,7 +15,8 @@ python scripts/strings.py                 # must pass after any copy change
 python scripts/pdf.py                     # 16 PDFs: en and cs, each with every set of flags
 python scripts/pdf.py en                  # one language only
 python scripts/prune.py --list            # the sheets and their ids
-python scripts/release.py --check         # ready to tag: version, full PDFs, none stale
+python scripts/release.py --check         # ready to tag: version, ?v=, full PDFs, none stale
+python scripts/release.py --bump X.Y.Z    # set the version and every ?v=, rerender stale PDFs
 ```
 
 Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
@@ -29,4 +30,4 @@ Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
 - Print effects never filter or blend, and motion only moves transform and opacity. Panning has to stay smooth.
 - Every string is a resource: a key in `strings/en.js` and every other language file.
 - No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.
-- A release is an annotated `X.Y.Z` tag (no v) on main matching `.claude-plugin/plugin.json`, its message one brief sentence on what the release is about; CI publishes it with the full PDF per language. Bump every `?v=` in `site/index.html` on a release. Rerun `pdf.py` when a sheet or a string changes, and bump the PDF link's `?v=` too.
+- The version in `.claude-plugin/plugin.json` and every `?v=` in `site/index.html` are always the same; `release.py --bump` sets both and rerenders the PDFs, and CI fails when they differ. A release is an annotated `X.Y.Z` tag (no v) on main matching that version, its message one brief sentence on what the release is about, any lines after it following as they are; CI publishes it with the full PDF per language. The notes stay editable on GitHub after a release, the tag and the PDFs do not. Rerun `pdf.py` when a sheet or a string changes.
