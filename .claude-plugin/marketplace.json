@@ -1,0 +1,14 @@
+{
+  "name": "system",
+  "owner": { "name": "siliconlemon" },
+  "metadata": {
+    "description": "System: a zoomable brand and product deck in plain HTML, CSS and JS, and the skill that cuts it down and makes it a project's own"
+  },
+  "plugins": [
+    {
+      "name": "system",
+      "source": "./",
+      "description": "The design-deck skill, with the whole System template beside it as its reference: sheets, scripts, tokens and plumbing"
+    }
+  ]
+}
