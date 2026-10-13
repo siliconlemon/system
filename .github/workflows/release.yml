@@ -48,5 +48,5 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           gh release create "$TAG" "$RUNNER_TEMP"/release/*.pdf \
-            --repo "$GITHUB_REPOSITORY" --verify-tag --title "$TAG" \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --title "system.${TAG#v}" \
             --notes-file "$RUNNER_TEMP/release/notes.md" --generate-notes
