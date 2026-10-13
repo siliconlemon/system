@@ -309,7 +309,7 @@ window.STRINGS.en = {
   "ui.email-needs-an": "Email · needs an @",
   "ui.fields": "Fields",
   "ui.labels-annotations": "Labels, annotations",
-  "ui.lede": "Hairlines instead of boxes, pills for actions, and the accent saved for the one thing the screen wants you to do.",
+  "ui.lede": "Hairlines instead of boxes, solid blocks for actions, and the accent saved for the one thing the screen wants you to do.",
   "ui.name": "Name",
   "ui.one-thing-per-screen": "One thing per screen",
   "ui.page-background": "Page background",
