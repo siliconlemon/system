@@ -29,4 +29,4 @@ Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
 - Print effects never filter or blend, and motion only moves transform and opacity. Panning has to stay smooth.
 - Every string is a resource: a key in `strings/en.js` and every other language file.
 - No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.
-- A release is an annotated `vX.Y.Z` tag on main matching `.claude-plugin/plugin.json`, its message one brief sentence on what the release is about; CI publishes it with the full PDF per language. Bump every `?v=` in `site/index.html` on a release. Rerun `pdf.py` when a sheet or a string changes, and bump the PDF link's `?v=` too.
+- A release is an annotated `X.Y.Z` tag (no v) on main matching `.claude-plugin/plugin.json`, its message one brief sentence on what the release is about; CI publishes it with the full PDF per language. Bump every `?v=` in `site/index.html` on a release. Rerun `pdf.py` when a sheet or a string changes, and bump the PDF link's `?v=` too.

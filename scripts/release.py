@@ -1,12 +1,12 @@
 """Check the repo is ready to release and write the release: notes and the PDFs to attach. Exits 1 on any problem.
 
   python scripts/release.py --check            the checks only, on any commit
-  python scripts/release.py v1.0.1 --out DIR   the checks, then DIR/notes.md and one PDF per language
+  python scripts/release.py 1.0.1 --out DIR     the checks, then DIR/notes.md and one PDF per language
 
 A release is an annotated tag, and its message opens the notes: one brief sentence on what the release is
-about, git tag -a v1.0.1 -m "...". The rest is generated.
+about, git tag -a 1.0.1 -m "...". The rest is generated.
 
-The checks: the tag is vX.Y.Z, annotated, and matches the version in .claude-plugin/plugin.json, every language has its
+The checks: the tag is X.Y.Z, annotated, and matches the version in .claude-plugin/plugin.json, every language has its
 full PDF (system.pdf, system.cs.pdf: every sheet, logo, icons and imagery on), and no PDF is older than the last
 commit that changed what it renders. The release attaches only the full PDFs, named system.1.0.1.en.pdf and so
 on. The other flag sets stay on the live deck's PDF button.
@@ -78,9 +78,9 @@ def check(tag):
     problems = []
     version = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
     if tag is not None:
-        if not re.fullmatch(r"v\d+\.\d+\.\d+", tag):
-            problems.append(f"{tag} is not a vX.Y.Z tag")
-        elif tag[1:] != version:
+        if not re.fullmatch(r"\d+\.\d+\.\d+", tag):
+            problems.append(f"{tag} is not an X.Y.Z tag")
+        elif tag != version:
             problems.append(f"{tag} does not match version {version} in .claude-plugin/plugin.json")
         if not message(tag):
             problems.append(f"{tag} has no message, tag it with git tag -a {tag} -m \"what the release is about\"")
@@ -96,7 +96,7 @@ def check(tag):
 
 
 def notes(tag, out):
-    version, base = tag[1:], f"https://github.com/{repo()}"
+    version, base = tag, f"https://github.com/{repo()}"
     sha = git("rev-parse", "HEAD")
     date = datetime.datetime.fromtimestamp(int(git("log", "-1", "--format=%ct")), datetime.UTC).date().isoformat()
     sheets = 0
@@ -131,7 +131,7 @@ def notes(tag, out):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("tag", nargs="?", help="the release tag, vX.Y.Z")
+    ap.add_argument("tag", nargs="?", help="the release tag, X.Y.Z")
     ap.add_argument("--check", action="store_true", help="run the checks only")
     ap.add_argument("--out", type=Path, help="where to write notes.md and the PDFs")
     a = ap.parse_args()

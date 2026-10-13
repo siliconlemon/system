@@ -1,11 +1,11 @@
-# An annotated vX.Y.Z tag on main publishes a GitHub release: the checks, notes that open with the tag message,
+# An annotated X.Y.Z tag on main publishes a GitHub release: the checks, notes that open with the tag message,
 # a details table, the full PDF per language attached, and GitHub's generated notes below.
 # scripts/release.py does the work, so it runs the same locally.
 name: Release
 
 on:
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    tags: ["[0-9]+.[0-9]+.[0-9]+"]
 
 permissions: {}
 
@@ -48,5 +48,5 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           gh release create "$TAG" "$RUNNER_TEMP"/release/*.pdf \
-            --repo "$GITHUB_REPOSITORY" --verify-tag --title "system.${TAG#v}" \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --title "system.$TAG" \
             --notes-file "$RUNNER_TEMP/release/notes.md" --generate-notes
