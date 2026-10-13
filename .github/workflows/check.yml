@@ -1,0 +1,30 @@
+# Every push to main and every pull request: the strings match the page and the PDFs are not stale.
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the stale PDF check reads the history
+          persist-credentials: false
+
+      - name: Strings
+        run: python3 scripts/strings.py
+
+      - name: Release ready
+        run: python3 scripts/release.py --check
