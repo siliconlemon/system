@@ -625,11 +625,11 @@ body:not(:has(.deck))::after {
 }
 .lockups .pn { position: relative; display: grid; place-items: center; min-width: 0; }
 .lockups .pn.wide { grid-column: span 2; }
-/* the horizontal lockups center on their clear space, ⅔ after the name, so they sit a touch left of the ink's middle */
-.lockups .pn svg { width: 76%; height: auto; overflow: visible; }
-.lockups .pn.wide svg { width: 68%; }
-.lockups .pn svg.stack { width: auto; height: 46%; }
-.lockups .pn svg.mark { width: 36%; }
+/* Every viewBox is the lockup plus its clear space, ½ of the mark height around and ⅔ after the name,
+   fitted inside the panel, so no panel edge ever cuts into it. The horizontal ones center on that
+   space and sit a touch left of the ink's middle. */
+.lockups .pn svg { position: absolute; left: 8%; top: 8%; width: 84%; height: 84%; overflow: visible; }
+.lockups .pn.wide svg { left: 16%; width: 68%; }
 .lockups .pn i {
   position: absolute;
   left: var(--inset);
