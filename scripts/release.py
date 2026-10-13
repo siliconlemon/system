@@ -1,13 +1,17 @@
 """Check the repo is ready to release and write the release: notes and the PDFs to attach. Exits 1 on any problem.
 
   python scripts/release.py --check            the checks only, on any commit
+  python scripts/release.py --bump 1.0.2       set the version, rerender the PDFs if they are stale, then the checks
   python scripts/release.py 1.0.1 --out DIR     the checks, then DIR/notes.md and one PDF per language
 
-A release is an annotated tag, and its message opens the notes: one brief sentence on what the release is
-about, git tag -a 1.0.1 -m "...". The rest is generated.
+The version lives in .claude-plugin/plugin.json and in every ?v= in site/index.html, and the two always match.
+--bump writes both, so commit its changes and the PDFs together. A release is an annotated tag, and its message
+opens the notes: one brief sentence on what the release is about, git tag -a 1.0.2 -m "...". Lines after the
+first follow it as they are, bullets included. The rest is generated. The notes stay editable on GitHub after the
+release, the tag and the PDFs do not.
 
-The checks: the tag is X.Y.Z, annotated, and matches the version in .claude-plugin/plugin.json, every language has its
-full PDF (system.pdf, system.cs.pdf: every sheet, logo, icons and imagery on), and no PDF is older than the last
+The checks: every ?v= matches the version, the tag is X.Y.Z, annotated, and matches the version, every language
+has its full PDF (system.pdf, system.cs.pdf: every sheet, logo, icons and imagery on), and no PDF is older than the last
 commit that changed what it renders. The release attaches only the full PDFs, named system.1.0.1-en.pdf and so
 on. The other flag sets stay on the live deck's PDF button.
 
@@ -30,6 +34,10 @@ LIVE = "https://siliconlemon-system.vercel.app"
 NAMES = {"en": "English", "cs": "Čeština"}  # a language without a name here shows its code
 # Everything a render reads. A commit touching any of it after the PDFs means they are stale
 RENDERED = ["site/index.html", "site/css", "site/js", "site/strings", "site/assets"]
+PLUGIN = ROOT / ".claude-plugin" / "plugin.json"
+INDEX = SITE / "index.html"
+CACHE = re.compile(r"\?v=([^\"'&\s>]+)")  # the ?v= on every stylesheet, script, icon and the PDF link
+X_Y_Z = re.compile(r"\d+\.\d+\.\d+")
 
 
 def git(*args):
@@ -74,14 +82,28 @@ def message(tag):
     return "\n\n".join(p for p in (subject, body) if p)
 
 
+def version():
+    return json.loads(PLUGIN.read_text(encoding="utf-8"))["version"]
+
+
+def key(v):
+    return tuple(map(int, v.split(".")))
+
+
 def check(tag):
     problems = []
-    version = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
+    current = version()
+    if not X_Y_Z.fullmatch(current):
+        problems.append(f"version {current} in .claude-plugin/plugin.json is not X.Y.Z")
+    off = sorted({v for v in CACHE.findall(INDEX.read_text(encoding="utf-8")) if v != current})
+    if off:
+        problems.append(f"site/index.html has ?v={', ?v='.join(off)} where the version {current} belongs, "
+                        f"run python scripts/release.py --bump {current}")
     if tag is not None:
-        if not re.fullmatch(r"\d+\.\d+\.\d+", tag):
+        if not X_Y_Z.fullmatch(tag):
             problems.append(f"{tag} is not an X.Y.Z tag")
-        elif tag != version:
-            problems.append(f"{tag} does not match version {version} in .claude-plugin/plugin.json")
+        elif tag != current:
+            problems.append(f"{tag} does not match version {current} in .claude-plugin/plugin.json")
         if not message(tag):
             problems.append(f"{tag} has no message, tag it with git tag -a {tag} -m \"what the release is about\"")
     rendered = last_change(*RENDERED)
@@ -95,11 +117,31 @@ def check(tag):
     return problems
 
 
+def tags():
+    return [t for t in git("tag", "--list").splitlines() if X_Y_Z.fullmatch(t)]
+
+
 def previous(tag):
     """The highest X.Y.Z tag below this one, or None for the first release."""
-    key = lambda t: tuple(map(int, t.split(".")))
-    older = [t for t in git("tag", "--list").splitlines() if re.fullmatch(r"\d+\.\d+\.\d+", t) and key(t) < key(tag)]
-    return max(older, key=key, default=None)
+    return max((t for t in tags() if key(t) < key(tag)), key=key, default=None)
+
+
+def bump(new):
+    """Write the version to plugin.json and every ?v=, then rerender the PDFs, which the change left stale."""
+    if not X_Y_Z.fullmatch(new):
+        sys.exit(f"{new} is not X.Y.Z")
+    released = max(tags(), key=key, default=None)
+    if released and key(new) < key(released):
+        sys.exit(f"{new} is below the released {released}")
+    # bytes in and out, so the files keep their line endings
+    plugin = PLUGIN.read_bytes().decode("utf-8")
+    PLUGIN.write_bytes(re.sub(r'("version"\s*:\s*")[^"]*"', rf'\g<1>{new}"', plugin, count=1).encode("utf-8"))
+    INDEX.write_bytes(CACHE.sub(f"?v={new}", INDEX.read_bytes().decode("utf-8")).encode("utf-8"))
+    # A render-affecting change not yet committed, the bump's own included, leaves the PDFs behind
+    if git("status", "--porcelain", "--", *RENDERED) or check(None):
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "pdf.py")], check=True)
+    else:
+        print("the PDFs are current")
 
 
 def notes(tag, out):
@@ -111,15 +153,11 @@ def notes(tag, out):
         pdf = full_pdf(lang)
         shutil.copyfile(pdf, out / f"system.{version}-{lang}.pdf")
         sheets = max(sheets, pages(pdf))
-    codes = [l.upper() for l in languages()]
-    langs = ", ".join(codes)
-    spoken = " and ".join([", ".join(codes[:-1]), codes[-1]] if len(codes) > 1 else codes)
+    langs = ", ".join(l.upper() for l in languages())
+    prev = previous(tag)
+    changes = [f"| Changes | [{prev}...{tag}]({base}/compare/{prev}...{tag}) |"] if prev else []
     text = "\n".join([
         message(tag),
-        "",
-        f"- {sheets} sheets, light & dark theme, in {spoken}.",
-        "- The PDFs in Assets have every sheet, with logo, icons and imagery on.",
-        f"- The other flag sets download from the PDF button on the [live deck]({LIVE}).",
         "",
         f"| Release | `{tag}` |",
         "| --- | --- |",
@@ -141,9 +179,13 @@ def main():
     ap.add_argument("tag", nargs="?", help="the release tag, X.Y.Z")
     ap.add_argument("--check", action="store_true", help="run the checks only")
     ap.add_argument("--out", type=Path, help="where to write notes.md and the PDFs")
+    ap.add_argument("--bump", metavar="X.Y.Z", help="set the version everywhere and rerender stale PDFs, then check")
     a = ap.parse_args()
+    if a.bump:
+        bump(a.bump)
+        a.check = True
     if not a.check and (a.tag is None or a.out is None):
-        ap.error("give a tag and --out, or --check")
+        ap.error("give a tag and --out, --bump X.Y.Z, or --check")
     problems = check(a.tag)
     for p in problems:
         print(p, file=sys.stderr)
