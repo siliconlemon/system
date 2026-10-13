@@ -52,6 +52,7 @@ Also included:
     - The PDF matches your current configuration, so make sure you haven't hidden anything you want in that document.
 - **Works on phones:** Figured that out for you. Just copy the business logic and you should be fine to present over a web link on any platform.
 - **Plain HTML, CSS, JS:** No build, no deps. Should read like a Figma export and drop into any site without extra config.
+- **TypeScript, minus the build step:** The scripts are TypeScript that Node runs as they are. The deck stays plain JS with its types in JSDoc comments, so `tsc` checks all of it while the browser gets the files untouched.
 
 ## Claude Code integration
 
@@ -107,13 +108,20 @@ site/
   css/system.css    tokens + every component
   js/canvas.js      the zoomable canvas
   js/system.js      switches, theme, language, the bars
+  js/types.d.ts     the deck's types, for the check only
   strings/*.js      every word, per language
 scripts/
-  prune.py          --keep logo,color,type   cut to the sheets you name
-  strings.py        check no word is missing anywhere
-  pdf.py            render the PDFs (needs Chrome or Edge)
-  release.py        bump the version, check a release, write its notes (CI runs it on a tag)
+  prune.ts          --keep logo,color,type   cut to the sheets you name
+  strings.ts        check no word is missing anywhere
+  pdf.ts            render the PDFs (needs Chrome or Edge)
+  release.ts        bump the version, check a release, write its notes (CI runs it on a tag)
 skills/design-deck/ the skill + notes on every sheet
+```
+
+The scripts need Node 22.18 or newer and nothing else, no install. `npm install` only pulls in TypeScript for the type check:
+
+```bash
+npm run check
 ```
 
 ## Fonts

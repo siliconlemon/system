@@ -1,6 +1,6 @@
 # System
 
-A template for starting the design of a new app, website or business: a zoomable deck of brand and product sheets in plain HTML, CSS and JS, with the scripts that cut it down, check it and render it to PDF. It is for the prototyping phase, before real code. It has more sheets than any one project needs, by design.
+A template for starting the design of a new app, website or business: a zoomable deck of brand and product sheets in plain HTML, CSS and JS, with the TypeScript scripts that cut it down, check it and render it to PDF. It is for the prototyping phase, before real code. It has more sheets than any one project needs, by design.
 
 ## Two kinds of session
 
@@ -11,15 +11,17 @@ A template for starting the design of a new app, website or business: a zoomable
 ## Commands
 
 ```bash
-python scripts/strings.py                 # must pass after any copy change
-python scripts/pdf.py                     # 16 PDFs: en and cs, each with every set of flags
-python scripts/pdf.py en                  # one language only
-python scripts/prune.py --list            # the sheets and their ids
-python scripts/release.py --check         # ready to tag: version, ?v=, full PDFs, none stale
-python scripts/release.py --bump X.Y.Z    # set the version and every ?v=, rerender stale PDFs
+npm install                             # once: TypeScript, for the check only
+npm run check                           # tsc over the scripts and the deck
+node scripts/strings.ts                 # must pass after any copy change
+node scripts/pdf.ts                     # 16 PDFs: en and cs, each with every set of flags
+node scripts/pdf.ts en                  # one language only
+node scripts/prune.ts --list            # the sheets and their ids
+node scripts/release.ts --check         # ready to tag: version, ?v=, full PDFs, none stale
+node scripts/release.ts --bump X.Y.Z    # set the version and every ?v=, rerender stale PDFs
 ```
 
-Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
+The scripts need Node 22.18 or newer, which runs `.ts` as it is. Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
 
 ## House rules
 
@@ -28,6 +30,7 @@ Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178.
 - Rectangles everywhere, the bars included. No pills.
 - Ruler lines mark the content edges only. Big type, body copy and pictures sit flush on a ruler line. Small legend text keeps `--inset` clear of it.
 - Print effects never filter or blend, and motion only moves transform and opacity. Panning has to stay smooth.
+- TypeScript without a build. The scripts are `.ts` that Node runs directly, so only syntax Node can erase: no enums, namespaces or parameter properties. The deck stays `.js` under `// @ts-check`, its types in JSDoc and `site/js/types.d.ts`. A type is a comment or a cast, never a change to what runs. `npm run check` passes after any change to either.
 - Every string is a resource: a key in `strings/en.js` and every other language file.
 - No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.
-- The version in `.claude-plugin/plugin.json` and every `?v=` in `site/index.html` are always the same; `release.py --bump` sets both and rerenders the PDFs, and CI fails when they differ. The version is the newest tag or one step after it (after 1.0.1: 1.0.2, 1.1.0 or 2.0.0), so a pending bump is never bumped past. A release is an annotated `X.Y.Z` tag (no v) on main matching that version, its message one brief sentence on what the release is about, any lines after it following as they are; CI publishes it with the full PDF per language. The notes stay editable on GitHub after a release, the tag and the PDFs do not. Rerun `pdf.py` when a sheet or a string changes.
+- The version in `.claude-plugin/plugin.json` and every `?v=` in `site/index.html` are always the same; `release.ts --bump` sets both and rerenders the PDFs, and CI fails when they differ. The version is the newest tag or one step after it (after 1.0.1: 1.0.2, 1.1.0 or 2.0.0), so a pending bump is never bumped past. A release is an annotated `X.Y.Z` tag (no v) on main matching that version, its message one brief sentence on what the release is about, any lines after it following as they are; CI publishes it with the full PDF per language. The notes stay editable on GitHub after a release, the tag and the PDFs do not. Rerun `pdf.ts` when a sheet or a string changes.

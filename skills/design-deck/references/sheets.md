@@ -1,6 +1,6 @@
 # The sheets
 
-Nineteen sheets, `00 cover` to `18 utility`. Ids are the `<section id>`, which is what `prune.py --keep` takes. The cover and the contents always stay.
+Nineteen sheets, `00 cover` to `18 utility`. Ids are the `<section id>`, which is what `prune.ts --keep` takes. The cover and the contents always stay.
 
 ## Minimum per surface
 
@@ -24,7 +24,7 @@ Start here, then add a sheet only when the brief gives it something real to say.
 | Id | Shows | Keep when | Rewrite for the project |
 | --- | --- | --- | --- |
 | `cover` | The wordmark large, with cap-height and baseline guides, a lede and the surfaces | Always | The name, the lede and the surfaces line. The cover should show the idea at a glance. |
-| `contents` | The sheet index, the with/without switches and what each falls back to | Always | Nothing by hand: `prune.py` renumbers it. Cut the switch for a flag whose sheets are gone. |
+| `contents` | The sheet index, the with/without switches and what each falls back to | Always | Nothing by hand: `prune.ts` renumbers it. Cut the switch for a flag whose sheets are gone. |
 | `landing` | A landing page mock: nav, headline, one action, three reasons | There is a marketing site | The real headline, the real action and the product's own three reasons |
 | `logo` | Construction, clear space, optical center, lockups A–E, wordmark, rules. With `without`, a typographic wordmark | Always, unless the name has no mark and isn't getting one | The mark's own geometry and its reasoning. Lockups only in the layouts the project uses. |
 | `color` | Swatches with HEX, RGB and CMYK, proportion bar, contrast pairs | Always | The palette, named from the idea rather than "primary/secondary", with real proportions and pairs that pass contrast |

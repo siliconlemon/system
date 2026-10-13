@@ -9,7 +9,7 @@ The template is a bazooka: 19 sheets for every surface a brand could have. Most 
 
 ## Where things are
 
-- **Template:** `${CLAUDE_PLUGIN_ROOT}` when this runs as an installed plugin. When the session runs inside the template repo itself, it is the repo root. Either way it holds `site/` (the deck) and `scripts/` (`prune.py`, `strings.py`, `pdf.py`).
+- **Template:** `${CLAUDE_PLUGIN_ROOT}` when this runs as an installed plugin. When the session runs inside the template repo itself, it is the repo root. Either way it holds `site/` (the deck) and `scripts/` (`prune.ts`, `strings.ts`, `pdf.ts`). The scripts are TypeScript and need Node 22.18 or newer, which runs them as they are; check `node --version` before the scaffold.
 - **Target:** the new project's repo. If the user has not said where it is, ask. The deck goes in `<target>/design/`, unless the user names another folder or `design/` is already taken (Kotlin and Android projects often use it). Then ask.
 - **References**, read when the step says so:
   - [references/sheets.md](references/sheets.md): what each sheet is for, when to keep it, and what to rewrite in it
@@ -35,7 +35,7 @@ Ask only what the repo didn't answer, in a single round (use AskUserQuestion if 
 
 ### 3. Pick the sheets
 
-Read [references/sheets.md](references/sheets.md). Start from the minimum for the surfaces, then add a sheet only when the brief gives it something real to say. A sheet with nothing project-specific on it is cut, not kept "for later": `prune.py` can't bring it back, but the template still has it.
+Read [references/sheets.md](references/sheets.md). Start from the minimum for the surfaces, then add a sheet only when the brief gives it something real to say. A sheet with nothing project-specific on it is cut, not kept "for later": `prune.ts` can't bring it back, but the template still has it.
 
 Set the three flags from what exists: logo, icons, imagery, each `with` or `without`. Without one, its sheets show the template's fallback (wordmark, glyph cells, drafting frames) instead of a hole.
 
@@ -54,8 +54,8 @@ Test it: hide the name on the cover. If the deck could belong to another client,
 ### 5. Scaffold
 
 1. Copy the template's `site/` and `scripts/` into `<target>/design/`. Delete the template's `system*.pdf` files from the copy.
-2. Run `python design/scripts/prune.py --keep <ids>` (`--list` shows the ids). It renumbers the sheets and the contents and drops the strings nothing uses.
-3. Rename System everywhere it is the template's own name; [references/anatomy.md](references/anatomy.md) lists every place. That covers the wordmark, title and meta, the `system:` storage keys, the PDF file stem in `pdf.py` and `system.js`, the favicon, and the footer.
+2. Run `node design/scripts/prune.ts --keep <ids>` (`--list` shows the ids). It renumbers the sheets and the contents and drops the strings nothing uses.
+3. Rename System everywhere it is the template's own name; [references/anatomy.md](references/anatomy.md) lists every place. That covers the wordmark, title and meta, the `system:` storage keys, the PDF file stem in `pdf.ts` and `system.js`, the favicon, and the footer.
 4. Set the flag defaults on `<html data-logo data-icons data-imagery>`.
 5. Languages: keep `strings/en.js` as the source, add or delete the other language files, and update the language switch and the `?lang=` pattern in the head script.
 6. Add a `.claude/launch.json` entry that serves `design/site`, so the deck can be previewed.
@@ -71,9 +71,9 @@ Tokens first: both themes in `:root`, the faces, the accent, the unit if the ide
 
 ### 7. Verify
 
-- `python design/scripts/strings.py` passes.
+- `node design/scripts/strings.ts` passes.
 - Preview every sheet in light and dark, at desktop size and at phone width. Check the bars, the flags, the language switch and the zoom.
-- Run `python design/scripts/pdf.py` and open one PDF: fonts are embedded and every sheet is on its own page.
+- Run `node design/scripts/pdf.ts` and open one PDF: fonts are embedded and every sheet is on its own page.
 - Run the cover test from step 4 again.
 
 ### 8. Hand over
