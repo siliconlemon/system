@@ -1,0 +1,15 @@
+{
+  "name": "system",
+  "private": true,
+  "description": "The deck runs as plain files. Node runs the scripts in scripts/, and TypeScript only checks the types.",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "check": "tsc && tsc -p tsconfig.site.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "typescript": "7.0.2"
+  }
+}

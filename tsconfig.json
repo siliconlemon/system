@@ -1,0 +1,13 @@
+{
+  // The scripts. Checks only: Node runs scripts/*.ts as they are. tsconfig.site.json checks the deck
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "es2023",
+    "module": "nodenext",
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["scripts/*.ts"]
+}
