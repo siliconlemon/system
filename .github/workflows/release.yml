@@ -1,5 +1,5 @@
 # An annotated X.Y.Z tag on main publishes a GitHub release: the checks, notes that open with the tag message,
-# a details table, the full PDF per language attached, and GitHub's generated notes below.
+# a details table with the changes since the previous release, and the full PDF per language attached.
 # scripts/release.py does the work, so it runs the same locally.
 name: Release
 
@@ -49,4 +49,4 @@ jobs:
         run: |
           gh release create "$TAG" "$RUNNER_TEMP"/release/*.pdf \
             --repo "$GITHUB_REPOSITORY" --verify-tag --title "system.$TAG" \
-            --notes-file "$RUNNER_TEMP/release/notes.md" --generate-notes
+            --notes-file "$RUNNER_TEMP/release/notes.md"

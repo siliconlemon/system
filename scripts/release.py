@@ -11,8 +11,8 @@ full PDF (system.pdf, system.cs.pdf: every sheet, logo, icons and imagery on), a
 commit that changed what it renders. The release attaches only the full PDFs, named system.1.0.1-en.pdf and so
 on. The other flag sets stay on the live deck's PDF button.
 
-The CI release workflow runs this, then hands the notes and the PDFs to gh release create, which appends
-GitHub's generated notes below them.
+The CI release workflow runs this, then hands the notes and the PDFs to gh release create. The notes link the
+changes since the previous X.Y.Z tag, when there is one.
 """
 import argparse
 import datetime
@@ -95,6 +95,13 @@ def check(tag):
     return problems
 
 
+def previous(tag):
+    """The highest X.Y.Z tag below this one, or None for the first release."""
+    key = lambda t: tuple(map(int, t.split(".")))
+    older = [t for t in git("tag", "--list").splitlines() if re.fullmatch(r"\d+\.\d+\.\d+", t) and key(t) < key(tag)]
+    return max(older, key=key, default=None)
+
+
 def notes(tag, out):
     version, base = tag, f"https://github.com/{repo()}"
     sha = git("rev-parse", "HEAD")
@@ -114,9 +121,8 @@ def notes(tag, out):
         "- The PDFs in Assets have every sheet, with logo, icons and imagery on.",
         f"- The other flag sets download from the PDF button on the [live deck]({LIVE}).",
         "",
-        "| | |",
+        f"| Release | `{tag}` |",
         "| --- | --- |",
-        f"| Tag | `{tag}` |",
         f"| Commit | [`{sha[:7]}`]({base}/commit/{sha}) |",
         f"| Date | {date} |",
         f"| Sheets | {sheets} |",
@@ -124,6 +130,7 @@ def notes(tag, out):
         f"| Live deck | [{LIVE.removeprefix('https://')}]({LIVE}) |",
         f"| Template | [Use this template]({base}/generate) |",
         f"| Plugin | `/plugin install system@system`, version {version} |",
+        *changes,
         "",
     ])
     (out / "notes.md").write_text(text, encoding="utf-8")
