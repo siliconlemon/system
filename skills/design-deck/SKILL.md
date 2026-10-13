@@ -55,7 +55,7 @@ Test it: hide the name on the cover. If the deck could belong to another client,
 
 1. Copy the template's `site/` and `scripts/` into `<target>/design/`. Delete the template's `system*.pdf` files from the copy.
 2. Run `node design/scripts/prune.ts --keep <ids>` (`--list` shows the ids). It renumbers the sheets and the contents and drops the strings nothing uses.
-3. Rename System everywhere it is the template's own name; [references/anatomy.md](references/anatomy.md) lists every place. That covers the wordmark, title and meta, the `system:` storage keys, the PDF file stem in `pdf.ts` and `system.js`, the favicon, and the footer.
+3. Rename System everywhere it is the template's own name; [references/anatomy.md](references/anatomy.md) lists every place. That covers the wordmark, title and meta, the `system:` storage keys, the PDF file stem in `pdf.ts` and `system.js`, the favicon, the link preview (`og.png` and the `og:` tags, with the project's own address), and the footer.
 4. Set the flag defaults on `<html data-logo data-icons data-imagery>`.
 5. Languages: keep `strings/en.js` as the source, add or delete the other language files, and update the language switch and the `?lang=` pattern in the head script.
 6. Add a `.claude/launch.json` entry that serves `design/site`, so the deck can be previewed.

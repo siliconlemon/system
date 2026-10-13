@@ -13,7 +13,7 @@ site/
   js/types.d.ts       the types canvas.js and system.js share, for the type check only. No page loads it
   strings/en.js       every string by key. English is the source
   strings/cs.js       every other language, the same keys
-  assets/             the display font, the paper tile, the favicon
+  assets/             the display font, the paper tile, the favicon, og.png (the link preview)
   system*.pdf         rendered by pdf.ts, one per language and flag set
 scripts/
   prune.ts            cut sheets, renumber, drop unused strings
@@ -93,6 +93,7 @@ The dark theme overrides the colors twice: under `prefers-color-scheme: dark` fo
 - The `system:` localStorage keys in the head script and `system.js`
 - The PDF stem in `pdf.ts` and in `pdfLink()` in `system.js`
 - The favicon in `assets/`
+- The link preview: `assets/og.png`, 1200 × 630, and the `og:` tags in the head of `index.html`, whose image and page addresses are absolute and point at the template's live deck
 - Optionally the file names `system.css` and `system.js`, and their links
 
 "Design system" in copy is a phrase, not the name. Leave it.
