@@ -1376,6 +1376,9 @@ html { -webkit-tap-highlight-color: transparent; }
 .seg.quiet > button { min-width: calc(var(--u) * 5); color: var(--ink-3); transition: color var(--t) var(--ease); }
 .seg.quiet > button[aria-checked="true"] { color: var(--ink); }
 @media (hover: hover) { .seg.quiet > button:hover { color: var(--ink); } }
+/* the theme keeps its ink block, the modes not chosen read grey like the language */
+.bar-theme > button:not([aria-checked="true"]) { color: var(--ink-3); }
+@media (hover: hover) { .bar-theme > button:not([aria-checked="true"]):hover { color: var(--ink); } }
 /* the bottom bar's cells, as tabs on a sheet: a bar-tall row in a hairline frame, never wider than half the page */
 .seg.tabs { height: var(--bar); width: fit-content; max-width: min(100%, 50vw); border: 1px solid var(--rule-2); }
 @media (max-width: 720px) { .seg.tabs { max-width: 100%; } }
