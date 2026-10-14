@@ -53,7 +53,7 @@ window.STRINGS.cs = {
   "color.title": "Barva",
   "color.white-on-accent": "Bílá na akcentu",
   "common.apps": "Aplikace",
-  "common.build-the-brand-once": "Značka se staví jednou a používá všude",
+  "common.build-the-brand-once": "Univerzální design, sestavený jednou na začátku projektu",
   "common.color": "Barva",
   "common.components": "Komponenty",
   "common.desktop": "Desktop",
