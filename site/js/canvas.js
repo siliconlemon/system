@@ -218,7 +218,7 @@
     if (!cam.classList.contains("fly")) return;
     var m = new DOMMatrix(getComputedStyle(cam).transform);
     crosses(m.e, m.f, m.a * z);
-    hair(m.a * z, true);
+    hair(m.a * z, true, { x: m.e, y: m.f, s: m.a * z });
     following = requestAnimationFrame(follow);
   }
   /** @param {"live" | "fly" | null} [mode] live follows the input, fly glides there, anything else lands */
@@ -232,7 +232,7 @@
     if (mode === "fly") {
       // on phones the lines take the target weight once: as a zoom in starts, or as a zoom out
       // ends (settle), so they never draw heavier than the view they're in
-      if (phone() && view.s > z) hair(view.s);
+      if (phone() && view.s > z) step(view.s * (window.devicePixelRatio || 1), view);
       clearTimeout(settleTimer);
       settleTimer = setTimeout(settle, 750);
       if (!following) following = requestAnimationFrame(follow);
@@ -368,18 +368,36 @@
   // not one a frame. A zoom in steps early, before a line draws a tenth heavier than it will
   // settle, so lines never swell and then snap back; a zoom out may thin them to four fifths
   // first (phones wait for it to settle). When the zoom settles it lands exactly.
-  var lastK = 0;
-  /** @param {number} s @param {boolean} [live] */
-  function hair(s, live) {
+  // A step while the view moves sets --k on the sheets on screen only, which is all anyone sees of
+  // it, so it restyles a sheet or two instead of the whole deck. A sheet coming on screen mid-move
+  // takes the stepped weight as it shows. When the view settles the deck takes --k and the sheets
+  // drop theirs, in the frame that lays every sheet out again anyway.
+  var lastK = 0, deckK = 0, /** @type {HTMLElement[]} */ stepped = [];
+  /** @param {number} s @param {boolean} [live] @param {View} [v] where the view is drawn now: the camera mid-flight, or the view itself */
+  function hair(s, live, v) {
     var k = s * (window.devicePixelRatio || 1);
     if (live) {
+      if (stepped.length) step(lastK, v || view);
       if (k >= 1 && lastK >= 1) return;
       var drawn = Math.min(1, lastK) / Math.min(1, k);
       if (drawn > 0.9 && (phone() || drawn < 1.25)) return;
+      if (k !== lastK) step(k, v || view);
+      return;
     }
-    if (k === lastK) return;
     lastK = k;
-    deck.style.setProperty("--k", String(k));
+    stepped.forEach(function (b) { b.style.removeProperty("--k"); });
+    stepped = [];
+    if (k !== deckK) { deckK = k; deck.style.setProperty("--k", String(k)); }
+  }
+  /** @param {number} k @param {View} v */
+  function step(k, v) {
+    lastK = k;
+    boards.forEach(function (board, i) {
+      var b = rects[i];
+      if ((b.x + b.w) * v.s + v.x <= 0 || b.x * v.s + v.x >= innerWidth || (b.y + b.h) * v.s + v.y <= 0 || b.y * v.s + v.y >= innerHeight) return;
+      board.style.setProperty("--k", String(k));
+      if (stepped.indexOf(board) < 0) stepped.push(board);
+    });
   }
 
   /** @type {HTMLStyleElement | null} */

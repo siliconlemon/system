@@ -28,6 +28,9 @@ interface Window {
 /** A board's box on the canvas, in sheet pixels */
 interface Rect { x: number; y: number; w: number; h: number }
 
+/** Where the canvas is drawn: its offset on screen and its scale */
+interface View { x: number; y: number; s: number }
+
 /** A pointer at a moment, for the coast after a drag */
 interface Sample { x: number; y: number; t: number }
 

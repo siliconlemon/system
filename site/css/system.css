@@ -1048,8 +1048,14 @@ body:not(:has(.deck))::after {
        every sheet shifted as a zoom settled. This drops the snapping on the canvas only */
     text-rendering: geometricPrecision;
   }
+  /* A sheet works its lines out from --k on its own too: while the view moves, canvas.js steps
+     --k on the sheets on screen only */
+  main.deck > .board {
+    --line: calc(max(1px, round(nearest, 1px * var(--k, 1), 1px)) / var(--k, 1));
+    --line-2: calc(max(1px, round(nearest, 2px * var(--k, 1), 1px)) / var(--k, 1));
+  }
   @supports not (width: round(nearest, 1px, 1px)) {
-    main.deck {
+    main.deck, main.deck > .board {
       --line: calc(max(1px, 1px * var(--k, 1)) / var(--k, 1));
       --line-2: calc(max(1px, 2px * var(--k, 1)) / var(--k, 1));
     }
