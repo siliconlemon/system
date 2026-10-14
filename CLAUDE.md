@@ -34,3 +34,10 @@ The scripts need Node 22.18 or newer, which runs `.ts` as it is. Preview: the `s
 - Every string is a resource: a key in `strings/en.js` and every other language file.
 - No block ends on a line with one or two words. In Czech no line ends on a one-letter word either.
 - The version in `.claude-plugin/plugin.json` and every `?v=` in `site/index.html` are always the same; `release.ts --bump` sets both and rerenders the PDFs, and CI fails when they differ. The version is the newest tag or one step after it (after 1.0.1: 1.0.2, 1.1.0 or 2.0.0), so a pending bump is never bumped past. A release is an annotated `X.Y.Z` tag (no v) on main matching that version, its message one brief sentence on what the release is about, any lines after it following as they are; CI publishes it with the full PDF per language. The notes stay editable on GitHub after a release, the tag and the PDFs do not. Rerun `pdf.ts` when a sheet or a string changes.
+
+## Commits
+
+- One line of about 10 words at most. No body, no `Scope:` prefixes, no colons, semicolons or dashes. A hyphen only when there is no way around it.
+- If a change does not fit in about 10 words, the commit is too big. Split it into smaller commits.
+- Generated files such as rerendered PDFs go in the commit that changes their source, not in a commit of their own.
+- No `Co-Authored-By` or other attribution lines.
