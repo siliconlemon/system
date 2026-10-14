@@ -565,19 +565,31 @@
     drag = press = null;
     if (!space) document.body.classList.remove("panning");
   });
-  /* Whenever the view isn't the fitted sheet (zoomed in, zoomed out or
-     panned), a double click on a sheet's paper, not on a control or on
-     text (that still selects a word), flies to that sheet fitted, as the
-     sheet nav would. Touch gets the same as a double tap. */
+  /* A double click on a sheet, not on a control or with the mouse on text
+     (that still selects a word), works as a zoom toggle for design review.
+     Fitted to that sheet, it zooms in to twice the size, snapped to the
+     nearest whole 10%, around the point clicked. Anywhere else (zoomed in,
+     zoomed out or panned) it flies back to the sheet fitted, as the sheet
+     nav would. Touch gets the same as a double tap. While the view is still
+     flying, as when the first click flew to another sheet, it does nothing. */
+  /** @param {number} i @returns {boolean} the view is fitted to sheet i */
+  function fitted(i) { return current === i; }
+  /** @param {number} x @param {number} y */
+  function zoomInAt(x, y) {
+    var s = Math.min(4, Math.round(view.s * 20) / 10);
+    view.x = x - (x - view.x) * (s / view.s);
+    view.y = y - (y - view.y) * (s / view.s);
+    view.s = s; current = null; apply("fly");
+  }
   /** @param {MouseEvent} e */
   function refit(e) {
     var target = /** @type {Element} */ (e.target);
     var board = /** @type {HTMLElement} */ (target.closest(".board")), i = boards.indexOf(board);
-    if (i < 0 || target.closest(CONTROLS) || overText(e.clientX, e.clientY)) return;
-    if (current === i) return;
+    if (i < 0 || target.closest(CONTROLS) || cam.classList.contains("fly")) return;
+    if (/** @type {PointerEvent} */ (e).pointerType !== "touch" && overText(e.clientX, e.clientY)) return;
     e.preventDefault();
     /** @type {Selection} */ (getSelection()).removeAllRanges();
-    go(i, true);
+    if (fitted(i)) zoomInAt(e.clientX, e.clientY); else go(i, true);
   }
   deck.addEventListener("dblclick", refit);
   /** @type {Sample | null} */
