@@ -51,6 +51,7 @@ Also included:
 - **PDF button:** Downloads exactly what you're looking at, with the same switches and language.
     - The PDF matches your current configuration, so make sure you haven't hidden anything you want in that document.
 - **Works on phones:** Figured that out for you. Just copy the business logic and you should be fine to present over a web link on any platform.
+- **Smooth, on purpose:** The best design in the world still dies the moment the zoom stutters. Nobody remembers your type pairing, they remember the lag. So the canvas is tuned hard: it moves on the compositor, restyles only what's on screen mid-zoom, and re-renders crisp once when it lands. Treat that as a feature, and keep it smooth when you build on top.
 - **Plain HTML, CSS, JS:** No build, no deps. Should read like a Figma export and drop into any site without extra config.
 - **TypeScript, minus the build step:** The scripts are TypeScript that Node runs as they are. The deck stays plain JS with its types in JSDoc comments, so `tsc` checks all of it while the browser gets the files untouched.
 

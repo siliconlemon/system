@@ -100,7 +100,8 @@ The dark theme overrides the colors twice: under `prefers-color-scheme: dark` fo
 
 ## Plumbing to keep
 
-- **Performance:** motion animates only `transform` and `opacity`, and print effects never filter or blend. Panning has to stay smooth on a phone.
+- **Performance:** a deck that stutters loses the appeal whatever the design, so smoothness is a core part of the deliverable. Motion animates only `transform` and `opacity`, and print effects never filter or blend. Panning and zooming have to stay smooth on a phone.
+- **Line weights:** `--line` and `--line-2` come from `--k`, the zoom in device pixels. While the view moves, `canvas.js` steps `--k` on the boards on screen only, not on the whole deck, so a step restyles one or two boards instead of all of them. That only works because `main.deck > .board` repeats the `--line` declarations. A new line token derived from `--k` goes in both places.
 - **Cache:** bump every `?v=` in `index.html` on a release, so no browser pairs new markup with an old stylesheet.
 - **The canvas:** each `<section>` in `<main>` becomes a board. Don't nest sections. `canvas.js` measures the boards, so change their look in CSS, not in the script.
 - **The bars:** the bottom bar's cells come from the sheet titles. The ink block (`Seg` in `system.js`) measures real cell edges, so restyle the cells in CSS and leave the measuring alone.

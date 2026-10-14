@@ -67,12 +67,14 @@ Tokens first: both themes in `:root`, the faces, the accent, the unit if the ide
 - Real content only: the product's name, its screens, its copy, its states, its numbers. No lorem ipsum, no "Acme".
 - Replace the template's demo components with the product's own, such as its table, its card or its empty state, and use the names the code uses.
 - Keep the plumbing working: every new string is a key in every language file, motion animates only transform and opacity, and `?v=` is bumped on a release.
+- Keep it smooth. However good the design, a deck that stutters on a pan or a zoom loses the room, so smoothness is part of what you hand over, not a polish pass at the end. No heavy filters, blurs or big shadows over large areas, no images far bigger than they show, and nothing that restyles every sheet while the view moves.
 - Change the look as far as the idea asks. The Swiss blueprint layer (rulers, paper grain, crop marks, register crosses) is System's own identity. Keep it only if it suits this brand.
 
 ### 7. Verify
 
 - `node design/scripts/strings.ts` passes.
 - Preview every sheet in light and dark, at desktop size and at phone width. Check the bars, the flags, the language switch and the zoom.
+- Pan, pinch and double-click zoom on a phone, or with the CPU throttled 4× in DevTools. It has to stay smooth; if it stutters, find what the sheets added that the template didn't, and fix that before handing over.
 - Run `node design/scripts/pdf.ts` and open one PDF: fonts are embedded and every sheet is on its own page.
 - Run the cover test from step 4 again.
 
@@ -87,3 +89,4 @@ Write `design/README.md`: what the deck decides, how to preview it and render th
 - Invent assets the client has, or claim ones they don't (that is what the flags are for).
 - Leave template copy in: "System", its ledes, its demo names.
 - Touch `canvas.js` or the bars to change the look. Restyle with CSS, and see what anatomy.md says the plumbing needs.
+- Hand over a deck that looks right and moves badly. Choppy is broken.
