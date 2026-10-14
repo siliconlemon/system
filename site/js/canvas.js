@@ -567,7 +567,8 @@
   });
   /* A double click on a sheet, not on a control or with the mouse on text
      (that still selects a word), works as a zoom toggle for design review.
-     Fitted to that sheet, it zooms in to twice the size, snapped to the
+     Fitted to that sheet, it zooms in to twice the size (three times on a
+     phone held upright, where a fitted sheet is small), snapped to the
      nearest whole 10%, around the point clicked. Anywhere else (zoomed in,
      zoomed out or panned) it flies back to the sheet fitted, as the sheet
      nav would. Touch gets the same as a double tap. While the view is still
@@ -576,7 +577,7 @@
   function fitted(i) { return current === i; }
   /** @param {number} x @param {number} y */
   function zoomInAt(x, y) {
-    var s = Math.min(4, Math.round(view.s * 20) / 10);
+    var k = matchMedia("(orientation: portrait) and (max-width: 720px)").matches ? 3 : 2, s = Math.min(4, Math.round(view.s * k * 10) / 10);
     view.x = x - (x - view.x) * (s / view.s);
     view.y = y - (y - view.y) * (s / view.s);
     view.s = s; current = null; apply("fly");
