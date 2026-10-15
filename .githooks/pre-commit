@@ -1,0 +1,8 @@
+#!/bin/sh
+# A commit that changes what the PDFs render rerenders them and takes them along, as release.ts --check wants no PDF
+# older than the last change to the deck. Renders the working tree, so stage the whole change
+changed=$(git diff --cached --name-only -- site/index.html site/css site/js site/strings site/assets)
+[ -z "$changed" ] && exit 0
+echo "pre-commit: the deck changed, rerendering the PDFs"
+node scripts/pdf.ts || exit 1
+git add site/*.pdf

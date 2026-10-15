@@ -21,6 +21,8 @@ node scripts/release.ts --check         # ready to tag: version, ?v=, full PDFs,
 node scripts/release.ts --bump X.Y.Z    # set the version and every ?v=, rerender stale PDFs
 ```
 
+Hooks: `.githooks/pre-commit` rerenders and stages the PDFs when a commit touches what they render, `.githooks/pre-push` runs the Check workflow's steps. Once per clone, `git config core.hooksPath .githooks`. Never skip them with `--no-verify`.
+
 The scripts need Node 22.18 or newer, which runs `.ts` as it is. Preview: the `site` entry in `.claude/launch.json` serves `site/` on port 5178. Show the user changes there, on localhost, not on the Vercel site, which lags behind the work.
 
 ## House rules

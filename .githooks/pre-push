@@ -1,0 +1,5 @@
+#!/bin/sh
+# Runs what the Check workflow runs, so a push never turns main red
+npm run check --silent &&
+  node scripts/strings.ts &&
+  node scripts/release.ts --check
