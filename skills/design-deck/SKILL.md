@@ -14,7 +14,7 @@ The template is a bazooka: 19 sheets for every surface a brand could have. Most 
 - **References**, read when the step says so:
   - [references/sheets.md](references/sheets.md): what each sheet is for, when to keep it, and what to rewrite in it
   - [references/make-it-yours.md](references/make-it-yours.md): how to find the brand's idea, with two real decks as examples
-  - [references/anatomy.md](references/anatomy.md): files, tokens, markup, strings, flags, PDFs, and the plumbing not to break
+  - [references/anatomy.md](references/anatomy.md): files, tokens, markup, strings, flags, PDFs, hooks, and the plumbing not to break
 
 ## Workflow
 
@@ -59,6 +59,7 @@ Test it: hide the name on the cover. If the deck could belong to another client,
 4. Set the flag defaults on `<html data-logo data-icons data-imagery>`.
 5. Languages: keep `strings/en.js` as the source, add or delete the other language files, and update the language switch and the `?lang=` pattern in the head script.
 6. Add a `.claude/launch.json` entry that serves `design/site`, so the deck can be previewed.
+7. Add the git hooks, so stale PDFs and broken strings never get committed or pushed. [references/anatomy.md](references/anatomy.md) has both scripts. If the project already runs hooks through Husky, lefthook or pre-commit, add the two steps there. Otherwise put them in `.githooks/`, keep them on LF in `.gitattributes`, run `git config core.hooksPath .githooks`, and note that once-per-clone command in the project's CLAUDE.md or README.
 
 ### 6. Build it out, sheet by sheet
 
@@ -76,6 +77,7 @@ Tokens first: both themes in `:root`, the faces, the accent, the unit if the ide
 - Preview every sheet in light and dark, at desktop size and at phone width. Check the bars, the flags, the language switch and the zoom.
 - Pan, pinch and double-click zoom on a phone, or with the CPU throttled 4× in DevTools. It has to stay smooth; if it stutters, find what the sheets added that the template didn't, and fix that before handing over.
 - Run `node design/scripts/pdf.ts` and open one PDF: fonts are embedded and every sheet is on its own page.
+- The first commit of the deck runs the hooks. Check that the PDFs came along in it and the pre-push passed.
 - Run the cover test from step 4 again.
 
 ### 8. Hand over

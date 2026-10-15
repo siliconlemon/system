@@ -84,6 +84,27 @@ The dark theme overrides the colors twice: under `prefers-color-scheme: dark` fo
 - The script fails if a font didn't embed. Fonts load from Google Fonts, so it needs a connection.
 - When a flag is gone for good, drop it from `FLAGS` in both places, which halves the number of files.
 
+## Hooks
+
+The PDFs go in the commit that changes what they render, and nothing gets pushed that the checks would fail. Two hooks do that on their own, as the template's own `.githooks/` does. In a project, the paths sit under `design/`:
+
+```sh
+#!/bin/sh
+# pre-commit: a commit that changes the deck rerenders the PDFs and takes them along. Renders the working tree
+changed=$(git diff --cached --name-only -- design/site ':(exclude)design/site/*.pdf')
+[ -z "$changed" ] && exit 0
+node design/scripts/pdf.ts || exit 1
+git add design/site/*.pdf
+```
+
+```sh
+#!/bin/sh
+# pre-push: the checks CI would run, so a push never turns main red
+node design/scripts/strings.ts
+```
+
+Add `node design/scripts/release.ts --check` to the pre-push when the project releases the deck with tags, and mirror any CI steps there too. Never skip the hooks with `--no-verify`.
+
 ## Renaming System
 
 `grep -rn -i system design/site design/scripts` and change every hit that is the template's own name:
